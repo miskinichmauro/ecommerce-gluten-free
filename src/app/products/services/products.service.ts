@@ -9,6 +9,7 @@ const baseUrl = environment.baseUrl;
 interface Options {
   limit? : number;
   offset? : number;
+  isFeatured?: boolean;
 }
 
 @Injectable({providedIn: 'root'})
@@ -19,16 +20,21 @@ export class ProductService {
   private readonly productCache = new Map<string, Product>();
 
   getProducts(options: Options = {}): Observable<ProductResponse> {
-    const { limit = 12, offset = 0 } = options;
-    const cacheKey = `${limit}-${offset}`;
-    if ( this.productsCache.has(cacheKey)) {
+    const { limit = 12, offset = 0, isFeatured = false } = options;
+
+    const cacheKey = isFeatured
+      ? 'isFeatured'
+      : `${limit}-${offset}`;
+
+    if (this.productsCache.has(cacheKey)) {
       return of(this.productsCache.get(cacheKey)!)
     }
 
     const response = this.http.get<ProductResponse>(`${baseUrl}/products`, {
       params: {
         limit,
-        offset
+        offset,
+        isFeatured
       },
       responseType: 'json'
     })

@@ -12,4 +12,4 @@ import { ProductImagePipe } from '../../pipes/product-image.pipe';
 })
 export class ProductCardComponent {
   product = input.required<Product>();
- }
+}

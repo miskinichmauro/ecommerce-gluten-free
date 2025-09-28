@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, input, AfterViewInit } from '@angular/core';
-import { ProductImagePipe } from '../../pipes/product-image.pipe';
+import { ProductCardComponent } from '../product-card/product-card.component';
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'product-carrusel',
-  imports: [CommonModule, ProductImagePipe],
+  imports: [CommonModule, ProductCardComponent],
   templateUrl: './product-carrusel.component.html',
   styleUrls: ['./product-carrusel.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProductCarruselComponent implements AfterViewInit {
-  images = input.required<string[]>();
+  products = input.required<Product[]>();
   spaceBetween = 20;
   slidesPerView = 3;
 
@@ -22,7 +23,7 @@ export class ProductCarruselComponent implements AfterViewInit {
       swiperEl.navigation = true;
       swiperEl.spaceBetween = this.spaceBetween;
       swiperEl.slidesPerView = this.slidesPerView;
-      swiperEl.loop = this.images.length > 1;
+      swiperEl.loop = this.products.length > 1;
       swiperEl.initialize();
     }
   }
