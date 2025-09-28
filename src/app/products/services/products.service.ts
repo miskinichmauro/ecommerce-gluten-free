@@ -1,0 +1,55 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Product, ProductResponse } from '../interfaces/product';
+import { Observable, of, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+const baseUrl = environment.baseUrl;
+
+interface Options {
+  limit? : number;
+  offset? : number;
+}
+
+@Injectable({providedIn: 'root'})
+export class ProductService {
+  constructor() { }
+  private readonly http = inject(HttpClient);
+  private readonly productsCache = new Map<string, ProductResponse>();
+  private readonly productCache = new Map<string, Product>();
+
+  getProducts(options: Options = {}): Observable<ProductResponse> {
+    const { limit = 12, offset = 0 } = options;
+    const cacheKey = `${limit}-${offset}`;
+    if ( this.productsCache.has(cacheKey)) {
+      return of(this.productsCache.get(cacheKey)!)
+    }
+
+    const response = this.http.get<ProductResponse>(`${baseUrl}/products`, {
+      params: {
+        limit,
+        offset
+      },
+      responseType: 'json'
+    })
+    .pipe(
+        tap((res) => this.productsCache.set(cacheKey, res))
+    );
+    return response;
+  }
+
+  getProductByIdSlug(idSlug: string): Observable<Product> {
+
+    if ( this.productCache.has(idSlug)) {
+      return of(this.productCache.get(idSlug)!)
+    }
+
+    const response = this.http.get<Product>(`${baseUrl}/products/${idSlug}`, {
+      responseType: 'json'
+    })
+    .pipe(
+        tap((res) => this.productCache.set(idSlug, res))
+    );
+    return response;
+  }
+}

@@ -1,0 +1,13 @@
+<swiper-container class="w-full h-64">
+  <swiper-slide *ngFor="let image of images()">
+    <img
+      [src]="image | productImage"
+      alt="Producto"
+      class="w-full h-full object-cover rounded-lg shadow-md"
+    />
+  </swiper-slide>
+
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</swiper-container>

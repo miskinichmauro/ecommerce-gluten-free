@@ -1,0 +1,24 @@
+<div class="card bg-base-100 w-96 shadow-sm">
+  <figure>
+    <div
+      class="hover:underline cursor-pointer"
+      [routerLink]="['/product', product().slug]"
+    >
+      <img [src]="product().imagesName | productImage" alt="Comida sin gluten">
+    </div>
+  </figure>
+  <div class="card-body">
+    <h2
+      class="card-title hover:underline cursor-pointer"
+      [routerLink]="['/product', product().slug]"
+    >
+      {{ product().title }}
+    </h2>
+    <p> {{ product().description | slice: 0 : 70}}</p>
+    <div class="card-actions justify-end">
+      <a [routerLink]="['/product', product().slug]" class="btn btn-primary">
+        Ver
+      </a>
+    </div>
+  </div>
+</div>

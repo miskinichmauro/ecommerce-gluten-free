@@ -1,0 +1,25 @@
+<div *ngIf="loading()">
+  <div class="flex flex-col justify-center items-center h-screen gap-4">
+    <span class="loading loading-spinner loading-lg"></span>
+    <p>Cargando producto...</p>
+  </div>
+</div>
+
+<div *ngIf="!loading() && product()">
+  <div class="grid grid-cols-1 sm:grid-cols-2 grap-3">
+    <product-carrusel
+      [images]="productImages"
+    />
+    <div>
+      <h2 class="text-2xl font-bold">
+        {{ product()?.title }}
+      </h2>
+
+      <div class="divider"></div>
+
+      <p>
+        {{ product()?.description}}
+      </p>
+    </div>
+  </div>
+</div>
