@@ -1,1 +1,31 @@
-<p>register works!</p>,
+<form
+  class="gap-2"
+  [formGroup]="registerForm"
+  (ngSubmit)="onSubmit()"
+>
+  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full p-6">
+    <legend class="fieldset-legend text-lg font-semibold">Register</legend>
+
+    <div class="flex flex-col gap-4">
+      <label class="label" for="fullName">Nombre completo</label>
+      <input type="fullName" class="input w-full" placeholder="Nombre completo" formControlName="fullName"/>
+
+      <label class="label" for="email">Email</label>
+      <input type="email" class="input w-full" placeholder="Email" formControlName="email"/>
+
+      <label class="label" for="password">Password</label>
+      <input type="password" class="input w-full" placeholder="Password" formControlName="password"/>
+
+      <label class="label" for="confirmPassword">Confirmar password</label>
+      <input type="password" class="input w-full" placeholder="Repite tu password" formControlName="confirmPassword"/>
+
+      <button class="btn btn-neutral w-full">Login</button>
+
+      @if (registerForm.hasError('passwordMismatch') && registerForm.touched) {
+        <div class="text-error text-sm mt-1">
+          Las contraseñas no coinciden
+        </div>
+      }
+    </div>
+  </fieldset>
+</form>

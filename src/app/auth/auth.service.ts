@@ -15,7 +15,7 @@ const baseUrlAuth = `${environment.baseUrl}/auth`;
 export class AuthService {
   private readonly _authStatus = signal<AuthStatus>('checking');
   private readonly _user = signal<User | null>(null);
-  private readonly _token = signal<string | null>(null);
+  private readonly _token = signal<string | null>(localStorage.getItem('access_token'));
 
   private readonly http = inject(HttpClient);
 
@@ -23,7 +23,7 @@ export class AuthService {
 
   authStatus = computed<AuthStatus>(() => {
     if (this._authStatus() === 'checking') {
-      return 'checking'
+      return 'checking';
     }
 
     if (this._user()) {
@@ -47,18 +47,25 @@ export class AuthService {
     );
   }
 
+  register(email: string, password: string, fullName: string) : Observable<boolean> {
+    return this.http.post<AuthResponse>(`${baseUrlAuth}/register`, {
+      email,
+      password,
+      fullName
+    })
+    .pipe(
+      map(resp => this.handleLoginSuccess(resp)),
+      catchError(() => this.handleLoginError())
+    );
+  }
+
   checkStatus() : Observable<boolean> {
-    const access_token = localStorage.getItem('access_token');
-    if (!access_token) {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
       this.logout();
       return of(false);
     }
-
-    return this.http.get<AuthResponse>(`${baseUrlAuth}/checkStatus`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`
-      }
-    })
+    return this.http.get<AuthResponse>(`${baseUrlAuth}/check-status`, {})
     .pipe(
       map(resp => this.handleLoginSuccess(resp)),
       catchError(() => this.handleLoginError())
@@ -69,16 +76,16 @@ export class AuthService {
     this._user.set(null);
     this._token.set(null);
     this._authStatus.set('not-authenticated');
+
     localStorage.removeItem('access_token');
   }
 
   private handleLoginSuccess(resp: AuthResponse) {
     this._user.set(resp.user);
-    this._authStatus.set('authenticated');
     this._token.set(resp.access_token);
+    this._authStatus.set('authenticated');
 
     localStorage.setItem('access_token', resp.access_token);
-
     return true;
   }
 

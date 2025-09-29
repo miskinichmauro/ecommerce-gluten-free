@@ -1,18 +1,23 @@
 <div class="navbar bg-base-100 shadow-sm">
   <div class="navbar-start">
     <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-primary lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
-      </div>
+      <button class="btn btn-ghost lg:hidden" aria-label="Abrir menú">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+        </svg>
+      </button>
+
       <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+      >
         <li>
           <a
             routerLink="/"
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
-          >Inicio</a>
+          >
+            Inicio
+          </a>
         </li>
         <li>
           <a
@@ -20,26 +25,33 @@
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
           >
-          Productos</a>
+            Productos
+          </a>
         </li>
         <li>
           <a
             routerLink="/recipe"
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
-          >Recetas</a>
+          >
+            Recetas
+          </a>
         </li>
         <li>
           <a
             routerLink="/contact"
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
-          >Contacto</a>
+          >
+            Contacto
+          </a>
         </li>
       </ul>
     </div>
+
     <a routerLink="/" class="btn btn-ghost text-xl">Gluten Free</a>
   </div>
+
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
       <li>
@@ -47,7 +59,9 @@
           routerLink="/"
           routerLinkActive="text-secondary"
           [routerLinkActiveOptions]="{exact: true}"
-        >Inicio</a>
+        >
+          Inicio
+        </a>
       </li>
       <li>
         <a
@@ -55,25 +69,53 @@
           routerLinkActive="text-secondary"
           [routerLinkActiveOptions]="{exact: true}"
         >
-        Productos</a>
+          Productos
+        </a>
       </li>
       <li>
         <a
           routerLink="/recipe"
           routerLinkActive="text-secondary"
           [routerLinkActiveOptions]="{exact: true}"
-        >Recetas</a>
+        >
+          Recetas
+        </a>
       </li>
       <li>
         <a
           routerLink="/contact"
           routerLinkActive="text-secondary"
           [routerLinkActiveOptions]="{exact: true}"
-        >Contacto</a>
+        >
+          Contacto
+        </a>
       </li>
     </ul>
   </div>
-  <div class="navbar-end">
-    <a class="btn">Carrito</a>
+
+  <div class="navbar-end gap-4">
+    @if (authService.authStatus() === 'authenticated') {
+      <button class="btn btn-ghost">
+        {{ authService.user()?.fullName }}
+      </button>
+      <button
+        class="btn btn-sm btn-error"
+        (click)="authService.logout()"
+      >
+        Salir
+      </button>
+    } @else if (authService.authStatus() === 'not-authenticated') {
+      <a
+        class="btn btn-secondary"
+        routerLink="/auth/login"
+      >
+        Login
+      </a>
+    } @else {
+      <a class="btn btn-ghost">
+        ...
+      </a>
+    }
+    <a class="btn">🛒</a>
   </div>
 </div>
