@@ -11,7 +11,7 @@ import { AuthService } from '../../auth.service';
 })
 export class RegisterComponent {
   fb = inject(FormBuilder)
-  hasError = signal(false);
+  error = signal<string | null>(null);
   isPosting = signal(false);
   router = inject(Router);
 
@@ -31,25 +31,19 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      this.hasError.set(true);
-      setTimeout(() => {
-        this.hasError.set(false);
-      }, 2000);
-    }
-
     const { email = '', password = '', fullName = '' } = this.registerForm.value;
-    this.authService.register(email!, password!, fullName!)
+    const response = this.authService.register(email!, password!, fullName!)
       .subscribe(isAuthenticated => {
         if (isAuthenticated) {
           this.router.navigateByUrl('/');
           return;
         }
 
-        this.hasError.set(true);
+        this.error.set('No se pudo crear la cuenta');
+        console.log(response);
         setTimeout(() => {
-          this.hasError.set(false);
-        }, 2000);
+          this.error.set(null);
+        }, 5000);
     });
   }
 }

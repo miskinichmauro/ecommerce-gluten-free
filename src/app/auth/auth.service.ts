@@ -3,8 +3,9 @@ import { User } from './interfaces/user.interfase';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from './interfaces/auth-response.interfase';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { IsAdmin } from './guards/is-admin.guard';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
 const baseUrlAuth = `${environment.baseUrl}/auth`;
@@ -35,6 +36,7 @@ export class AuthService {
 
   user = computed<User | null>(() => this._user());
   token = computed<string | null>(() => this._token());
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
 
   login(email: string, password: string) : Observable<boolean> {
     return this.http.post<AuthResponse>(`${baseUrlAuth}/login`, {
@@ -55,7 +57,9 @@ export class AuthService {
     })
     .pipe(
       map(resp => this.handleLoginSuccess(resp)),
-      catchError(() => this.handleLoginError())
+      catchError((resp) => {
+        console.log(resp);
+        return this.handleLoginError()})
     );
   }
 

@@ -29,3 +29,7 @@
     </div>
   </fieldset>
 </form>
+
+@if (error()) {
+  <p class="text-red-500">{{ error() }}</p>
+}

@@ -3,10 +3,7 @@ import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { firstValueFrom } from 'rxjs';
 
-export const NotAuthenticatedGuard: CanMatchFn = async (
-  route: Route,
-  segments: UrlSegment[]
-) => {
+export const NotAuthenticatedGuard: CanMatchFn = async () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 

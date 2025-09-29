@@ -1,0 +1,65 @@
+<div class="overflow-x-auto">
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>
+          <label>
+            Nro
+          </label>
+        </th>
+        <th>Titulo</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products(); track product.id; let i = $index) {
+        <tr>
+          <th>
+            <label>
+              {{ i + 1 }}
+            </label>
+          </th>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="avatar">
+                <div class="mask mask-squircle h-12 w-12">
+                  <img
+                    [src]="product.imagesName | productImage"
+                    [alt]="product.title" />
+                </div>
+              </div>
+              <div>
+                <a
+                  routerLink="'/admin/product', product.id"
+                  class="font-bold"
+                >
+                  {{ product.title }}
+                </a>
+                <div class="text-sm opacity-50">
+                  {{ product.description }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            {{ product.price | currency }}
+          </td>
+          <td>
+            {{ product.stock }}
+          </td>
+          <th>
+            <a
+              routerLink="'/admin/product', product.id"
+              class="btn btn-ghost text-primary btn-xs"
+            >
+              Detalles
+            </a>
+          </th>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
