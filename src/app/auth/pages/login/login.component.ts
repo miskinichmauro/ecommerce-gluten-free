@@ -10,7 +10,7 @@ import { AuthService } from '../../auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  fb = inject(FormBuilder)
+  fb = inject(FormBuilder);
   hasError = signal(false);
   isPosting = signal(false);
   router = inject(Router);

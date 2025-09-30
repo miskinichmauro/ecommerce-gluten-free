@@ -5,10 +5,11 @@ import { firstValueFrom } from 'rxjs';
 import { Product } from 'src/app/products/interfaces/product';
 import { ProductService } from 'src/app/products/services/products.service';
 import { ProductCarruselComponent } from "src/app/products/components/product-carrusel/product-carrusel.component";
+import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, ProductCarruselComponent],
+  imports: [CommonModule, ProductCarruselComponent, LoadingComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })

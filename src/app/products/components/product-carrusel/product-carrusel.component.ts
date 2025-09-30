@@ -7,7 +7,7 @@ import { Product } from '../../interfaces/product';
   selector: 'product-carrusel',
   imports: [CommonModule, ProductCardComponent],
   templateUrl: './product-carrusel.component.html',
-  styleUrls: ['./product-carrusel.component.css'],
+  styleUrl: './product-carrusel.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProductCarruselComponent implements AfterViewInit {

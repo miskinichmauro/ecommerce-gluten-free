@@ -10,7 +10,7 @@ import { AuthService } from '../../auth.service';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  fb = inject(FormBuilder)
+  fb = inject(FormBuilder);
   error = signal<string | null>(null);
   isPosting = signal(false);
   router = inject(Router);

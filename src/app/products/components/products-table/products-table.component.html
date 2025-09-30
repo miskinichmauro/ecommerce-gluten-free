@@ -33,8 +33,8 @@
               </div>
               <div>
                 <a
-                  routerLink="'/admin/product', product.id"
-                  class="font-bold"
+                  [routerLink]="['/admin/product', product.id]"
+                  class="font-bold hover:text-primary transition-colors duration-300"
                 >
                   {{ product.title }}
                 </a>
@@ -52,7 +52,7 @@
           </td>
           <th>
             <a
-              routerLink="'/admin/product', product.id"
+              [routerLink]="['/admin/product', product.id]"
               class="btn btn-ghost text-primary btn-xs"
             >
               Detalles

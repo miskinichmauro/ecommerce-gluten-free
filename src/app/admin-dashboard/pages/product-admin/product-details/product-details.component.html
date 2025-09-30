@@ -1,0 +1,70 @@
+<h1 class="text-2xl font-bold">{{ product().title }}</h1>
+<div class="divider"></div>
+
+<form
+  [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="flex flex-col gap-2">
+    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+    <input
+      type="text"
+      placeholder="Título"
+      class="input input-bordered w-full"
+      formControlName="title"
+    />
+
+    <input
+      type="text" placeholder="Slug"
+      class="input input-bordered w-full"
+      formControlName="slug"
+    />
+
+    <textarea
+      class="textarea textarea-bordered"
+      placeholder="Descripción"
+      rows="6"
+      formControlName="description"
+    ></textarea>
+
+    <h2 class="text-lg font-bold">Datos de venta</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <input
+        type="number"
+        placeholder="Precio"
+        class="input input-bordered w-full"
+        formControlName="price"
+      />
+
+      <input
+        type="number"
+        placeholder="Stock"
+        class="input input-bordered w-full"
+        formControlName="stock"
+      />
+    </div>
+
+    <div class="grid grid-cols-6 gap-2">
+      @for (tag of tags; track tag) {
+      <button class="btn btn-sm btn-outline" type="button">{{ tag }}</button>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-end h-12">
+      <button class="btn btn-secondary" type="submit">
+        Guardar
+      </button>
+    </div>
+
+    <!-- <product-carousel [images]="product().images" /> -->
+
+    <input
+      type="file"
+      class="file-input file-input-bordered w-full mt-4"
+      formControlName="images"
+    />
+  </div>
+</form>

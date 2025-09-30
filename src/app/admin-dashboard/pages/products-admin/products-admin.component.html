@@ -1,13 +1,25 @@
 <h1 class="text-2xl font-bold">Listado de productos</h1>
 <h3 class="text-lg">
   Total de productos
-  <span class="text-primary">10</span>
+  <span class="text-primary">{{ productResponse()?.count }}</span>
 </h3>
 
-<div>
+<div class="flex gap-2 items-center h-20">
+  <select
+    class="select select-bordered w-32"
+    (change)="updateProductsPerPage(+selectPerPage.value)"
+    #selectPerPage
+  >
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+
   <pagination
       [pages]="productResponse()?.pages ?? 0"
-  />
+      [currentPage]="paginationService.currentPage()"
+  ></pagination>
 </div>
 
-<products-table [products]="productResponse()?.products"/>
+<products-table [products]="productResponse()?.products ?? []"></products-table>

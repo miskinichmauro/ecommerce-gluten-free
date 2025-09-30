@@ -1,8 +1,9 @@
-import { Component, effect, inject, Signal } from '@angular/core';
+import { Component, effect, inject, signal, Signal } from '@angular/core';
 import { ProductsTableComponent } from 'src/app/products/components/products-table/products-table.component';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { PaginationComponent } from "src/app/shared/components/pagination/pagination.component";
+import { ProductResponse } from 'src/app/products/interfaces/product';
 
 @Component({
   selector: 'app-products-admin',
@@ -13,10 +14,11 @@ import { PaginationComponent } from "src/app/shared/components/pagination/pagina
 export class ProductsAdminComponent {
   readonly paginationService = inject(PaginationService);
 
-  productResponse: Signal<any>;
+  productResponse: Signal<ProductResponse | null>;
   loading: Signal<boolean>;
   error: Signal<any>;
   loadProducts: (params?: any) => Promise<void>;
+  productPerPage = signal(10);
 
   constructor() {
     const { productResponse, loading, error, loadProducts } = useProductsLoader();
@@ -27,7 +29,18 @@ export class ProductsAdminComponent {
     this.loadProducts = loadProducts;
 
     effect(() => {
-      this.loadProducts({ offset: (this.paginationService.currentPage() - 1) * 9 });
+      const page = this.paginationService.currentPage();
+      const perPage = this.productPerPage();
+
+      const offset = (page - 1) * perPage;
+      const limit = perPage;
+
+      this.loadProducts({ offset, limit });
     });
+  }
+
+  updateProductsPerPage(value: number) {
+    this.productPerPage.set(value);
+    this.paginationService.setPage(1);
   }
 }

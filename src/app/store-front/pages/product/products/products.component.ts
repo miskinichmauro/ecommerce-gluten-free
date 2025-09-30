@@ -3,16 +3,18 @@ import { PaginationService } from 'src/app/shared/components/pagination/paginati
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { ProductCardComponent } from "src/app/products/components/product-card/product-card.component";
 import { PaginationComponent } from "src/app/shared/components/pagination/pagination.component";
+import { ProductResponse } from 'src/app/products/interfaces/product';
+import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 @Component({
   selector: 'app-products',
-  imports: [ProductCardComponent, PaginationComponent],
+  imports: [ProductCardComponent, PaginationComponent, LoadingComponent],
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css'],
+  styleUrl: './products.component.css',
 })
 export class ProductsComponent {
   readonly paginationService = inject(PaginationService);
 
-  productResponse: Signal<any>;
+  productResponse: Signal<ProductResponse | null>;
   loading: Signal<boolean>;
   error: Signal<any>;
   loadProducts: (params?: any) => Promise<void>;
