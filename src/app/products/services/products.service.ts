@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Product, ProductResponse } from '../interfaces/product';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, tap, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 const baseUrl = environment.baseUrl;
@@ -57,5 +57,25 @@ export class ProductService {
         tap((res) => this.productCache.set(idSlug, res))
     );
     return response;
+  }
+
+  updateProduct(id:string, partialProduct: Partial<Product>): Observable<Product> {
+    const response = this.http.patch<Product>(`${baseUrl}/products/${id}`, partialProduct)
+    .pipe(
+        tap((res) => this.updateProductCache(res))
+    );
+    return response;
+  }
+
+  updateProductCache(product: Product) {
+    const productId = product.id;
+    this.productCache.set(productId, product);
+    this.productsCache.forEach(productResponse => {
+      productResponse.products = productResponse.products.map(
+        currentProduct => {
+          return currentProduct.id ===productId ? product : currentProduct;
+        }
+      )
+    })
   }
 }
