@@ -1,1 +1,25 @@
-<p>recipe works!</p>,
+<h1 class="text-3xl font-bold mb-6 mt-6">Recetas</h1>
+
+@if (loading()) {
+  <loading />
+}
+
+@if (error()) {
+  <p class="text-red-500">{{ error() }}</p>
+}
+
+<div class="flex flex-col items-center justify-center">
+  @if (!loading() && !error() && recipes()?.length) {
+    <div class="flex flex-col gap-12 mt-6 w-full">
+      @for (recipe of recipes(); track $index) {
+        <div class="flex justify-center gap-8 flex-wrap">
+          <recipe-card [recipe]="recipe" />
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (!loading() && !error() && recipes()?.length === 0) {
+  <p>No hay recetas para mostrar</p>
+}

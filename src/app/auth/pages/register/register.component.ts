@@ -40,7 +40,6 @@ export class RegisterComponent {
         }
 
         this.error.set('No se pudo crear la cuenta');
-        console.log(response);
         setTimeout(() => {
           this.error.set(null);
         }, 5000);

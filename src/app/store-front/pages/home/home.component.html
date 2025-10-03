@@ -8,9 +8,11 @@
   <p class="text-red-500">{{ error() }}</p>
 }
 
-@if (!loading() && !error() && productResponse()?.products?.length) {
-  <product-carrusel [products]="productResponse()?.products ?? []"></product-carrusel>
-}
+<div class="py-18">
+  @if (!loading() && !error() && productResponse()?.products?.length) {
+    <product-carrusel [products]="productResponse()?.products ?? []"></product-carrusel>
+  }
+</div>
 
 @if (!loading() && !error() && productResponse()?.products?.length === 0) {
   <p>No hay productos para mostrar</p>

@@ -58,7 +58,6 @@ export class AuthService {
     .pipe(
       map(resp => this.handleLoginSuccess(resp)),
       catchError((resp) => {
-        console.log(resp);
         return this.handleLoginError()})
     );
   }

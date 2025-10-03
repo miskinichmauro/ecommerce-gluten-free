@@ -4,7 +4,7 @@ import { Product, ProductResponse } from '../interfaces/product';
 import { Observable, of, tap, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-const baseUrl = environment.baseUrl;
+const baseUrlProducts = `${environment.baseUrl}/products`;
 
 interface Options {
   limit? : number;
@@ -30,7 +30,7 @@ export class ProductService {
       return of(this.productsCache.get(cacheKey)!)
     }
 
-    const response = this.http.get<ProductResponse>(`${baseUrl}/products`, {
+    const response = this.http.get<ProductResponse>(baseUrlProducts, {
       params: {
         limit,
         offset,
@@ -50,7 +50,7 @@ export class ProductService {
       return of(this.productCache.get(idSlug)!)
     }
 
-    const response = this.http.get<Product>(`${baseUrl}/products/${idSlug}`, {
+    const response = this.http.get<Product>(`${baseUrlProducts}/${idSlug}`, {
       responseType: 'json'
     })
     .pipe(
@@ -60,7 +60,7 @@ export class ProductService {
   }
 
   updateProduct(id:string, partialProduct: Partial<Product>): Observable<Product> {
-    const response = this.http.patch<Product>(`${baseUrl}/products/${id}`, partialProduct)
+    const response = this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct)
     .pipe(
         tap((res) => this.updateProductCache(res))
     );
