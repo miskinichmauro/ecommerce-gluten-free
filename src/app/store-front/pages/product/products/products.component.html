@@ -14,13 +14,13 @@
       <product-card [product]="product" />
     }
   </div>
+
+  <pagination
+    [pages]="productResponse()?.pages ?? 0"
+    [currentPage]="paginationService.currentPage()"
+  />
 }
 
 @if (!loading() && !error() && productResponse()?.products?.length === 0) {
   <p>No hay productos para mostrar</p>
 }
-
-<pagination
-  [pages]="productResponse()?.pages ?? 0"
-  [currentPage]="paginationService.currentPage()"
-/>
