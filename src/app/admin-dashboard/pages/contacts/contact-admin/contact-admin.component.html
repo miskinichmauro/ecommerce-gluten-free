@@ -1,0 +1,7 @@
+@if (loading()) {
+  <loading />
+}
+
+@if (contact()?.id) {
+  <contact-details [contact]="contact()!" />
+}

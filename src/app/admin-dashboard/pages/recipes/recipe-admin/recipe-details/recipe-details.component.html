@@ -1,0 +1,32 @@
+<h1 class="text-2xl font-bold">{{ recipe().title }}</h1>
+<div class="divider"></div>
+
+<form [formGroup]="recipeForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-2">
+    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+
+    <input
+      type="text"
+      placeholder="Título"
+      class="input input-bordered w-full"
+      formControlName="title"
+      [class.border-red-500]="recipeForm.get('title')?.errors ?? false"
+    />
+    <form-error-label [control]="recipeForm.get('title')!" />
+
+    <textarea
+      class="textarea textarea-bordered w-full"
+      placeholder="Detalles"
+      rows="4"
+      formControlName="text"
+      [class.border-red-500]="recipeForm.get('text')?.errors ?? false"
+    ></textarea>
+    <form-error-label [control]="recipeForm.get('text')!" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-end h-12">
+      <button class="btn btn-secondary" type="submit">Guardar</button>
+    </div>
+  </div>
+</form>

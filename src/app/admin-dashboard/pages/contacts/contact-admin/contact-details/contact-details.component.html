@@ -1,0 +1,39 @@
+<h1 class="text-2xl font-bold">{{ contact().title }}</h1>
+<div class="divider"></div>
+
+<form [formGroup]="contactForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-2">
+    <input
+      type="text"
+      placeholder="Nombre"
+      class="input input-bordered w-full"
+      formControlName="title"
+      [class.border-red-500]="contactForm.get('title')?.errors ?? false"
+    />
+    <form-error-label [control]="contactForm.get('title')!" />
+
+    <input
+      type="text"
+      placeholder="Teléfono"
+      class="input input-bordered w-full"
+      formControlName="phone"
+      [class.border-red-500]="contactForm.get('phone')?.errors ?? false"
+    />
+    <form-error-label [control]="contactForm.get('phone')!" />
+
+    <input
+      type="email"
+      placeholder="Email"
+      class="input input-bordered w-full"
+      formControlName="email"
+      [class.border-red-500]="contactForm.get('email')?.errors ?? false"
+    />
+    <form-error-label [control]="contactForm.get('email')!" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-end h-12">
+      <button class="btn btn-secondary" type="submit">Guardar</button>
+    </div>
+  </div>
+</form>

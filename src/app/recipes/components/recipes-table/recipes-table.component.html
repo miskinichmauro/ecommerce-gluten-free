@@ -1,0 +1,48 @@
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          <label>
+            Nro
+          </label>
+        </th>
+        <th>Título</th>
+        <th>Texto</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (recipe of recipes(); track recipe.id; let i = $index) {
+        <tr>
+          <th>
+            <label>
+              {{ i + 1 }}
+            </label>
+          </th>
+          <td>
+            <a
+              [routerLink]="['/admin/recipe', recipe.id]"
+              class="font-bold hover:text-primary transition-colors duration-300"
+            >
+              {{ recipe.title }}
+            </a>
+          </td>
+          <td>
+            <div class="text-sm opacity-70">
+              {{ recipe.text | slice:0:50 }}...
+            </div>
+          </td>
+          <th>
+            <a
+              [routerLink]="['/admin/recipe', recipe.id]"
+              class="btn btn-ghost text-primary btn-xs"
+            >
+              Detalles
+            </a>
+          </th>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

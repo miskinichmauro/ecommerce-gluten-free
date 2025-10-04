@@ -68,6 +68,5 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.productsService.updateProduct(this.product().id, productData).subscribe();
     }
-
   }
 }

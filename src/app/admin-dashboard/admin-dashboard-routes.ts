@@ -3,6 +3,10 @@ import { AdminDashboardLayoutComponent } from './layouts/admin-dashboard-layout/
 import { IsAdmin } from "../auth/guards/is-admin.guard";
 import { ProductsAdminComponent } from "./pages/products/products-admin/products-admin.component";
 import { ProductAdminComponent } from "./pages/products/product-admin/product-admin.component";
+import { RecipesAdminComponent } from "./pages/recipes/recipes-admin/recipes-admin.component";
+import { RecipeAdminComponent } from "./pages/recipes/recipe-admin/recipe-admin.component";
+import { ContactsAdminComponent } from "./pages/contacts/contacts-admin/contacts-admin.component";
+import { ContactAdminComponent } from "./pages/contacts/contact-admin/contact-admin.component";
 
 export const AdminDashboardRoutes: Routes = [
   {
@@ -10,18 +14,19 @@ export const AdminDashboardRoutes: Routes = [
     component: AdminDashboardLayoutComponent,
     canMatch: [IsAdmin],
     children: [
-      {
-        path: 'products',
-        component: ProductsAdminComponent
-      },
-      {
-        path: 'product/:id',
-        component: ProductAdminComponent
-      },
-      {
-        path: '**',
-        redirectTo: 'products'
-      }
+      // Productos
+      { path: 'products', component: ProductsAdminComponent },
+      { path: 'product/:id', component: ProductAdminComponent },
+
+      // Recetas
+      { path: 'recipes', component: RecipesAdminComponent },
+      { path: 'recipe/:id', component: RecipeAdminComponent },
+
+      // Contactos
+      { path: 'contacts', component: ContactsAdminComponent },
+      { path: 'contact/:id', component: ContactAdminComponent },
+
+      { path: '**', redirectTo: 'products' }
     ]
   }
 ];

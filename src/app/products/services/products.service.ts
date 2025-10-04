@@ -77,25 +77,24 @@ export class ProductService {
     return response;
   }
 
+  createProduct(partialProduct: Partial<Product>): Observable<Product> {
+    const response = this.http.post<Product>(`${baseUrlProducts}`, partialProduct)
+    .pipe(tap((res) => this.insertOrUpdateCache(res)));
+    return response;
+  }
+
   updateProduct(id:string, partialProduct: Partial<Product>): Observable<Product> {
     const response = this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct)
     .pipe(
-        tap((res) => this.insertOrUpdateProductCache(res))
+        tap((res) => this.insertOrUpdateCache(res))
     );
     return response;
   }
 
-  createProduct(partialProduct: Partial<Product>): Observable<Product> {
-    const response = this.http.post<Product>(`${baseUrlProducts}`, partialProduct)
-    .pipe(tap((res) => this.insertOrUpdateProductCache(res)));
-    return response;
-  }
-
-  insertOrUpdateProductCache(product: Product) {
+  insertOrUpdateCache(product: Product) {
     const existsProductCache = this.productCache.get(product.id);
 
     if (!existsProductCache) {
-      this.productCache.set(product.id, product);
       this.productCache.clear();
       this.productsCache.clear();
     } else {

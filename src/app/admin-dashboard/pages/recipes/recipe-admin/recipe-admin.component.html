@@ -1,0 +1,7 @@
+@if (loading()) {
+  <loading/>
+}
+
+@if (recipe()?.id) {
+  <recipe-details [recipe]="recipe()!"/>
+}

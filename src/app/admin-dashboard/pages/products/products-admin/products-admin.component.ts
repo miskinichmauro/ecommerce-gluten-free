@@ -7,7 +7,7 @@ import { PaginationComponent } from "src/app/shared/components/pagination/pagina
 import { ProductResponse } from 'src/app/products/interfaces/product';
 
 @Component({
-  selector: 'app-products-admin',
+  selector: 'products-admin',
   imports: [ProductsTableComponent, PaginationComponent, RouterLink],
   templateUrl: './products-admin.component.html',
   styleUrl: './products-admin.component.css',
