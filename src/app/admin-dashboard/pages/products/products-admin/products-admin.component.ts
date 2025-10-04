@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal, Signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ProductsTableComponent } from 'src/app/products/components/products-table/products-table.component';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
@@ -7,7 +8,7 @@ import { ProductResponse } from 'src/app/products/interfaces/product';
 
 @Component({
   selector: 'app-products-admin',
-  imports: [ProductsTableComponent, PaginationComponent],
+  imports: [ProductsTableComponent, PaginationComponent, RouterLink],
   templateUrl: './products-admin.component.html',
   styleUrl: './products-admin.component.css',
 })

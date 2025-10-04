@@ -41,9 +41,7 @@ export class ProductAdminComponent {
 
     effect(() => {
       const id = this.productId();
-      if (id) {
-        this.loadProducts(id);
-      }
+      this.loadProducts(id);
     });
 
     effect(() => {

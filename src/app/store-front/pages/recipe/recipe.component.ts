@@ -25,7 +25,6 @@ export class RecipeComponent implements OnInit {
       const data = await firstValueFrom(this.recipeService.getRecipes());
       this.recipes.set(data);
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cargar las recetas');
     } finally {
       this.loading.set(false);

@@ -24,7 +24,6 @@ export function useProductsLoader() {
       );
       productResponse.set(data);
     } catch (err) {
-      console.error(err);
       error.set('Error al cargar los productos');
     } finally {
       loading.set(false);

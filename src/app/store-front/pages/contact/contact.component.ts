@@ -28,7 +28,6 @@ export class ContactComponent implements OnInit {
       );
       this.contacts.set(data);
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cargar los contactos');
     } finally {
       this.loading.set(false);

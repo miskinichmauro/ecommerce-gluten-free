@@ -37,7 +37,6 @@ export class ProductComponent implements OnInit {
       const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productIdSlug));
       this.product.set(data);
     } catch (err) {
-      console.error(err);
       this.error.set('Error al cargar el producto');
     } finally {
       this.loading.set(false);

@@ -4,6 +4,7 @@ import { Product } from 'src/app/products/interfaces/product';
 import { FormUtils } from 'src/app/utils/form-utils';
 import { FormErrorLabelComponent } from "src/app/shared/components/form-error-label/form-error-label.component";
 import { ProductService } from 'src/app/products/services/products.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'product-details',
@@ -12,14 +13,16 @@ import { ProductService } from 'src/app/products/services/products.service';
   styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent implements OnInit {
-  product = input.required<Product>();
+  router = inject(Router);
   productsService = inject(ProductService);
+  product = input.required<Product>();
 
   fb = inject(FormBuilder);
   productForm = this.fb.group({
     title: ['', Validators.required],
-    description: ['', Validators.required],
     slug: ['', [Validators.required, Validators.pattern(FormUtils.slugPattern)]],
+    unitOfMeasure: ['', [Validators.required]],
+    description: ['', Validators.required],
     price: [1, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(1)]],
     tags: [['']],
@@ -58,10 +61,13 @@ export class ProductDetailsComponent implements OnInit {
       ... (formValue as any)
     };
 
-    this.productsService.updateProduct(this.product().id, productData).subscribe(
-      product => {
-        console.log('Producto actualizado')
-      }
-    );
+    if (this.product().id === 'new') {
+      this.productsService.createProduct(productData).subscribe(product => {
+        this.router.navigate(['/admin/product', product.id])
+      });
+    } else {
+      this.productsService.updateProduct(this.product().id, productData).subscribe();
+    }
+
   }
 }

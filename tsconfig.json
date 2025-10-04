@@ -9,7 +9,8 @@
       "@dashboard/*": ["./scr/app/dashboard/*"],
       "@products/*": ["./scr/app/products/*"],
       "@shared/*": ["./scr/app/shared/*"],
-      "@store-front/*": ["./scr/app/store-front/*"]
+      "@store-front/*": ["./scr/app/store-front/*"],
+      "ignoreDeprecations" : ["6.0"]
     },
     "strict": true,
     "noImplicitOverride": true,
