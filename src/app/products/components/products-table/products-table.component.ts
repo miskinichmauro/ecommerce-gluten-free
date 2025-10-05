@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { Product } from '../../interfaces/product';
 import { ProductImagePipe } from '../../pipes/product-image.pipe';
 import { RouterLink } from "@angular/router";
@@ -12,4 +12,6 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class ProductsTableComponent {
   products = input.required<Product[]>();
+  currentPage = input.required<number>();
+  countPage = input.required<number>();
 }

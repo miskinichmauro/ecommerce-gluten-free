@@ -2,12 +2,9 @@
   <table class="table">
     <thead>
       <tr>
-        <th>
-          <label>
-            Nro
-          </label>
-        </th>
+        <th></th>
         <th>Titulo</th>
+        <th>Unidad de medida</th>
         <th>Precio</th>
         <th>Stock</th>
         <th></th>
@@ -18,7 +15,7 @@
         <tr>
           <th>
             <label>
-              {{ i + 1 }}
+              {{ (currentPage() - 1) * countPage() + (i + 1) }}
             </label>
           </th>
           <td>
@@ -42,6 +39,9 @@
                 </div>
               </div>
             </div>
+          </td>
+          <td>
+            {{ product.unitOfMeasure }}
           </td>
           <td>
             {{ product.price | currency }}

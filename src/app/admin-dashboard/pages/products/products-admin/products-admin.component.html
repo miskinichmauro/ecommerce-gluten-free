@@ -31,4 +31,8 @@
 </div>
 
 
-<products-table [products]="productResponse()?.products ?? []"></products-table>
+<products-table
+  [products]="productResponse()?.products ?? []"
+  [currentPage]="paginationService.currentPage()"
+  [countPage]="this.productPerPage()"
+></products-table>
