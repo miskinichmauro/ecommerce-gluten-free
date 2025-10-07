@@ -35,7 +35,8 @@ export class ProductService {
   private readonly productCache = new Map<string, Product>();
 
   getProducts(options: Options = {}): Observable<ProductResponse> {
-    const { limit = 12, offset = 0, isFeatured = false } = options;
+    const limitEnvironment = environment.cantProducts;
+    const { limit = limitEnvironment, offset = 0, isFeatured = false } = options;
 
     const cacheKey = isFeatured
       ? 'isFeatured'
@@ -95,7 +96,7 @@ export class ProductService {
     const existsProductCache = this.productCache.get(product.id);
 
     if (!existsProductCache) {
-      this.productCache.clear();
+      this.productCache.set(product.id, product);
       this.productsCache.clear();
     } else {
       this.productCache.set(product.id, product);

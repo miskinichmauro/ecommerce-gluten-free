@@ -55,12 +55,6 @@ export class ContactService {
   }
 
   private insertOrUpdateCache(contact: Contact) {
-    const existCache = this.contactsCache.get(contact.id);
-
-    if (!existCache) {
-      this.contactsCache.clear();
-    } else {
-      this.contactsCache.set(contact.id, contact);
-    }
+    this.contactsCache.set(contact.id, contact);
   }
 }

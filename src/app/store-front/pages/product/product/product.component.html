@@ -3,11 +3,14 @@
 }
 
 @if (!loading() && product()) {
-  <div div class="grid grid-cols-1 sm:grid-cols-2 grap-3">
-    <product-carrusel
-      [products]="[]"
-    />
-    <div>
+  <div div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+    <div class="flex justify-end sm:justify-end">
+      <image-carrusel
+        [images]="product()?.imagesName ?? []"
+      />
+    </div>
+
+    <div class="flex flex-col justify-start">
       <h2 class="text-2xl font-bold">
         {{ product()?.title }}
       </h2>

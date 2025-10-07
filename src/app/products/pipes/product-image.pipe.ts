@@ -19,6 +19,7 @@ export class ProductImagePipe implements PipeTransform {
       return `${baseUrl}/files/product/${image}`;
     }
 
-    return 'https://www.foodnavigator.com/resizer/v2/3MET5T7L4JO25FVOXQDQ67EHOE.jpg?auth=d16d65b4d7f1ff6620ee4d54a2abb29750e275e5721fcd954f2aecd5a78ab6f7&smart=true';
+    console.log('Mostrando por defecto');
+    return 'assets/images/default-image.jpg';
   }
 }

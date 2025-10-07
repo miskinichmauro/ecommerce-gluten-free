@@ -1,0 +1,21 @@
+<swiper-container class="w-full max-w-xl h-96">
+  @if (images().length) {
+    @for (image of images(); track $index) {
+      <swiper-slide class="w-full h-full flex justify-end items-center">
+        <img
+          [src]="image | productImage"
+          alt="Imagen del producto"
+          class="w-full h-full object-cover rounded-xl"
+        />
+      </swiper-slide>
+    }
+  } @else {
+    <swiper-slide class="w-full h-full flex justify-end items-center">
+      <img
+        [src]="[''] | productImage"
+        alt="Imagen por defecto"
+        class="w-full h-full object-cover rounded-xl opacity-80"
+      />
+    </swiper-slide>
+  }
+</swiper-container>

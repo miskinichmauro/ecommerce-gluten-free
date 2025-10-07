@@ -54,13 +54,6 @@ export class RecipeService {
   }
 
   insertOrUpdateCache(recipe: Recipe) {
-      const existCache = this.recipesCache.get(recipe.id);
-
-      console.log(existCache);
-      if (!existCache) {
-        this.recipesCache.clear();
-      } else {
-        this.recipesCache.set(recipe.id, recipe);
-      }
-    }
+    this.recipesCache.set(recipe.id, recipe);
+  }
 }
