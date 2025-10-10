@@ -22,7 +22,7 @@ export class RecipeComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const data = await firstValueFrom(this.recipeService.getRecipes());
+      const data = await firstValueFrom(this.recipeService.getAll());
       this.recipes.set(data);
     } catch (err) {
       this.error.set('Error al cargar las recetas');

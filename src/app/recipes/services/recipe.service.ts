@@ -17,7 +17,7 @@ export class RecipeService {
   private readonly http = inject(HttpClient);
   private readonly recipesCache = new Map<string, Recipe>();
 
-  getRecipes(): Observable<Recipe[]> {
+  getAll(): Observable<Recipe[]> {
     if (this.recipesCache.size) {
       return of(Array.from(this.recipesCache.values()));
     }
@@ -27,7 +27,7 @@ export class RecipeService {
     );
   }
 
-  getRecipeById(id: string): Observable<Recipe> {
+  getById(id: string): Observable<Recipe> {
     if (id === 'new') {
       return of(emptyRecipe);
     }
@@ -41,19 +41,19 @@ export class RecipeService {
     );
   }
 
-  createRecipe(recipe: Partial<Recipe>): Observable<Recipe> {
+  create(recipe: Partial<Recipe>): Observable<Recipe> {
     return this.http.post<Recipe>(baseUrlRecipes, recipe).pipe(
       tap((res) => this.insertOrUpdateCache(res))
     );
   }
 
-  updateRecipe(id: string, partialRecipe: Partial<Recipe>): Observable<Recipe> {
+  update(id: string, partialRecipe: Partial<Recipe>): Observable<Recipe> {
     return this.http.patch<Recipe>(`${baseUrlRecipes}/${id}`, partialRecipe).pipe(
       tap((resp) => this.insertOrUpdateCache(resp))
     );
   }
 
-  deleteRecipe(id: string): Observable<Recipe> {
+  delete(id: string): Observable<Recipe> {
     return this.http.delete<Recipe>(`${baseUrlRecipes}/${id}`).pipe(
       tap(() => this.recipesCache.delete(id))
     );

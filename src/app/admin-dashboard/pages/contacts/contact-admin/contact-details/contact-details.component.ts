@@ -37,11 +37,11 @@ export class ContactDetailsComponent implements OnInit {
     };
 
     if (this.contact().id === 'new') {
-      this.contactService.createContact(contactData).subscribe((contact) => {
+      this.contactService.create(contactData).subscribe((contact) => {
         this.router.navigate(['/admin/contacts']);
       });
     } else {
-      this.contactService.updateContact(this.contact().id, contactData).subscribe();
+      this.contactService.update(this.contact().id, contactData).subscribe();
     }
   }
 }

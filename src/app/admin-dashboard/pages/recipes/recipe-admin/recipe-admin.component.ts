@@ -40,7 +40,7 @@ export class RecipeAdminComponent {
     this.error.set(null);
 
     try {
-      const recipe = await firstValueFrom(this.recipeService.getRecipeById(id));
+      const recipe = await firstValueFrom(this.recipeService.getById(id));
       this.recipe.set(recipe);
     } catch (err) {
       this.error.set('Error al cargar la receta');

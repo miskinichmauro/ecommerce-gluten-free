@@ -18,7 +18,7 @@ export class ContactService {
   private readonly http = inject(HttpClient);
   private readonly contactsCache = new Map<string, Contact>();
 
-  getContacts(): Observable<Contact[]> {
+  getAll(): Observable<Contact[]> {
     if (this.contactsCache.size) {
       return of(Array.from(this.contactsCache.values()));
     }
@@ -28,7 +28,7 @@ export class ContactService {
     );
   }
 
-  getContactById(id: string): Observable<Contact> {
+  getById(id: string): Observable<Contact> {
     if (id === 'new') {
       return of(emptyContact);
     }
@@ -42,15 +42,21 @@ export class ContactService {
     );
   }
 
-  createContact(contact: Partial<Contact>): Observable<Contact> {
+  create(contact: Partial<Contact>): Observable<Contact> {
     return this.http.post<Contact>(baseUrlContacts, contact).pipe(
       tap((res) => this.insertOrUpdateCache(res))
     );
   }
 
-  updateContact(id: string, partialContact: Partial<Contact>): Observable<Contact> {
+  update(id: string, partialContact: Partial<Contact>): Observable<Contact> {
     return this.http.patch<Contact>(`${baseUrlContacts}/${id}`, partialContact).pipe(
       tap((resp) => this.insertOrUpdateCache(resp))
+    );
+  }
+
+  delete(id: string): Observable<Contact> {
+    return this.http.delete<Contact>(`${baseUrlContacts}/${id}`).pipe(
+      tap(() => this.contactsCache.delete(id))
     );
   }
 

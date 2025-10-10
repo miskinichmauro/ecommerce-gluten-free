@@ -40,7 +40,7 @@ export class ContactAdminComponent {
     this.error.set(null);
 
     try {
-      const contact = await firstValueFrom(this.contactService.getContactById(id));
+      const contact = await firstValueFrom(this.contactService.getById(id));
       this.contact.set(contact);
     } catch (err) {
       this.error.set('Error al cargar el contacto');

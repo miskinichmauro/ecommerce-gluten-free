@@ -24,7 +24,7 @@ export class ContactComponent implements OnInit {
 
     try {
       const data = await firstValueFrom(
-        this.contactService.getContacts()
+        this.contactService.getAll()
       );
       this.contacts.set(data);
     } catch (err) {

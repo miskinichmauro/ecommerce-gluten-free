@@ -36,11 +36,11 @@ export class RecipeDetailsComponent implements OnInit {
     };
 
     if (this.recipe().id === 'new') {
-      this.recipeService.createRecipe(recipeData).subscribe(recipe => {
+      this.recipeService.create(recipeData).subscribe(recipe => {
         this.router.navigate(["/admin/recipes"])
       });
     } else {
-      this.recipeService.updateRecipe(this.recipe().id, recipeData).subscribe();
+      this.recipeService.update(this.recipe().id, recipeData).subscribe();
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ContactService } from 'src/app/contacts/services/contact.service';
 import { Contact } from 'src/app/contacts/interfaces/contact.interface';
@@ -16,15 +16,20 @@ export class ContactsAdminComponent implements OnInit {
   private contactService = inject(ContactService);
 
   contacts = signal<Contact[] | null>(null);
+  total = computed(() => this.contacts()?.length ?? 0);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.getContacts();
+  }
 
   async getContacts() {
     this.loading.set(true);
     this.error.set(null);
 
     try {
-      const data = await firstValueFrom(this.contactService.getContacts());
+      const data = await firstValueFrom(this.contactService.getAll());
       this.contacts.set(data);
     } catch (err) {
       this.error.set('Error al cargar los contactos');
@@ -33,7 +38,13 @@ export class ContactsAdminComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.getContacts();
+  async delete(id: string) {
+    try {
+      await firstValueFrom(this.contactService.delete(id));
+      this.contacts.set(this.contacts()?.filter(r => r.id !== id)!);
+    } catch (err) {
+      console.error('Error al eliminar', err);
+      this.error.set('No se pudo eliminar el contacto.');
+    }
   }
 }
