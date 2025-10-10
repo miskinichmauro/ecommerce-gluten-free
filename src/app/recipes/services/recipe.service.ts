@@ -53,6 +53,12 @@ export class RecipeService {
     );
   }
 
+  deleteRecipe(id: string): Observable<Recipe> {
+    return this.http.delete<Recipe>(`${baseUrlRecipes}/${id}`).pipe(
+      tap(() => this.recipesCache.delete(id))
+    );
+  }
+
   insertOrUpdateCache(recipe: Recipe) {
     this.recipesCache.set(recipe.id, recipe);
   }

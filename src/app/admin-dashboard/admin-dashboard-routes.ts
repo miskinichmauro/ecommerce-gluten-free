@@ -16,15 +16,15 @@ export const AdminDashboardRoutes: Routes = [
     children: [
       // Productos
       { path: 'products', component: ProductsAdminComponent },
-      { path: 'product/:id', component: ProductAdminComponent },
+      { path: 'products/:id', component: ProductAdminComponent },
 
       // Recetas
       { path: 'recipes', component: RecipesAdminComponent },
-      { path: 'recipe/:id', component: RecipeAdminComponent },
+      { path: 'recipes/:id', component: RecipeAdminComponent },
 
       // Contactos
       { path: 'contacts', component: ContactsAdminComponent },
-      { path: 'contact/:id', component: ContactAdminComponent },
+      { path: 'contacts/:id', component: ContactAdminComponent },
 
       { path: '**', redirectTo: 'products' }
     ]

@@ -63,7 +63,7 @@ export class ProductDetailsComponent implements OnInit {
 
     if (this.product().id === 'new') {
       this.productsService.createProduct(productData).subscribe(product => {
-        this.router.navigate(['/admin/product', product.id])
+        this.router.navigate(['/admin/products'])
       });
     } else {
       this.productsService.updateProduct(this.product().id, productData).subscribe();

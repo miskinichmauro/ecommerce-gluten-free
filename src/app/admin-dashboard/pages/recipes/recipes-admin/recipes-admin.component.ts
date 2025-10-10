@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
@@ -15,13 +15,18 @@ export class RecipesAdminComponent implements OnInit {
   private recipeService = inject(RecipeService);
 
   recipes = signal<Recipe[] | null>(null);
+  totalRecipes = computed(() => this.recipes()?.length ?? 0);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.getRecipes();
+  }
 
   async getRecipes() {
     this.loading.set(true);
     this.error.set(null);
-    
+
     try {
       const data = await firstValueFrom(this.recipeService.getRecipes());
       this.recipes.set(data);
@@ -32,7 +37,13 @@ export class RecipesAdminComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.getRecipes();
+  async delete(id: string) {
+    try {
+      await firstValueFrom(this.recipeService.deleteRecipe(id));
+      this.recipes.set(this.recipes()?.filter(r => r.id !== id)!);
+    } catch (err) {
+      console.error('Error al eliminar', err);
+      this.error.set('No se pudo eliminar la receta.');
+    }
   }
 }

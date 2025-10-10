@@ -38,7 +38,7 @@ export class ContactDetailsComponent implements OnInit {
 
     if (this.contact().id === 'new') {
       this.contactService.createContact(contactData).subscribe((contact) => {
-        this.router.navigate(['/admin/contact', contact.id]);
+        this.router.navigate(['/admin/contacts']);
       });
     } else {
       this.contactService.updateContact(this.contact().id, contactData).subscribe();

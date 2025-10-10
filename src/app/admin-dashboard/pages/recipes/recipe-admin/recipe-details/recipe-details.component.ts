@@ -37,7 +37,7 @@ export class RecipeDetailsComponent implements OnInit {
 
     if (this.recipe().id === 'new') {
       this.recipeService.createRecipe(recipeData).subscribe(recipe => {
-        this.router.navigate(['/admin/recipe', recipe.id])
+        this.router.navigate(["/admin/recipes"])
       });
     } else {
       this.recipeService.updateRecipe(this.recipe().id, recipeData).subscribe();

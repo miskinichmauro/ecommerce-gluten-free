@@ -13,17 +13,30 @@ import { Product } from '../../interfaces/product';
 export class ProductCarruselComponent implements AfterViewInit {
   products = input.required<Product[]>();
   spaceBetween = 20;
-  slidesPerView = 3;
+  slidesPerView = 4;
 
   ngAfterViewInit() {
     const swiperEl = document.querySelector('swiper-container') as any;
 
     if (swiperEl) {
-      swiperEl.pagination = { clickable: true };
       swiperEl.navigation = true;
       swiperEl.spaceBetween = this.spaceBetween;
       swiperEl.slidesPerView = this.slidesPerView;
-      swiperEl.loop = this.products.length > 1;
+      swiperEl.loop = true;
+      swiperEl.breakpoints = {
+        0: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 15,
+        },
+        1024: {
+          slidesPerView: 4,
+          spaceBetween: 20,
+        }
+      };
       swiperEl.initialize();
     }
   }
