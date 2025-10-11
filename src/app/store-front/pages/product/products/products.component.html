@@ -1,7 +1,9 @@
 <h1 class="text-3xl font-bold mb-6 mt-6">Todos los productos</h1>
 
 @if (loading()) {
-  <loading />
+  <div class="min-h-[50vh] gap-4">
+    <loading />
+  </div>
 }
 
 @if (error()) {

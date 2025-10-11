@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, HostListener, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from 'src/app/products/interfaces/product';
 import { FormUtils } from 'src/app/utils/form-utils';
@@ -62,11 +62,27 @@ export class ProductDetailsComponent implements OnInit {
     };
 
     if (this.product().id === 'new') {
-      this.productsService.createProduct(productData).subscribe(product => {
-        this.router.navigate(['/admin/products'])
-      });
+      this.productsService.createProduct(productData).subscribe();
     } else {
       this.productsService.updateProduct(this.product().id, productData).subscribe();
+    }
+    this.router.navigate(['/admin/products'])
+  }
+
+  controlPresionado: boolean = false;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.controlPresionado = true;
+    } else if (event.key === 'Enter' && this.controlPresionado) {
+      this.onSubmit();
+    }
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.controlPresionado = false;
     }
   }
 }

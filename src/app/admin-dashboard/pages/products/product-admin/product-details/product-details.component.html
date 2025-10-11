@@ -1,12 +1,13 @@
-<h1 class="text-2xl font-bold">{{ product().title }}</h1>
+<h1 class="text-2xl font-bold">{{ product().title || "Crear nuevo producto" }}</h1>
 <div class="divider"></div>
 
 <form
-  [formGroup]="productForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+  [formGroup]="productForm"
+  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
   (ngSubmit)="onSubmit()"
 >
   <div class="flex flex-col gap-2">
-    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+    <h2 class="text-xl font-bold h-12">Datos generales</h2>
     <input
       type="text"
       placeholder="Título"

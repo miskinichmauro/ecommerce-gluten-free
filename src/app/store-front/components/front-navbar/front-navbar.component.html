@@ -47,6 +47,16 @@
             Contacto
           </a>
         </li>
+        <li class="{{ authService.isAdmin() ? 'border-t border-gray-300' : '' }}"></li>
+        <li>
+          @if (authService.isAdmin()) {
+            <a
+              routerLink="/admin"
+            >
+              Panel Administrativo
+            </a>
+          }
+        </li>
       </ul>
     </div>
 
@@ -91,7 +101,7 @@
           Contacto
         </a>
       </li>
-      <li class="{{ authService.isAdmin() ? 'border-l-2 border-gray-500 mx-3 h-6 self-center' : '' }}"></li>
+      <li class="{{ authService.isAdmin() ? 'border-l-2 border-gray-500 h-6 self-center' : '' }}"></li>
       <li>
         @if (authService.isAdmin()) {
           <a

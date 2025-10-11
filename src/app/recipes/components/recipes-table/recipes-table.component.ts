@@ -16,7 +16,6 @@ export class RecipesTableComponent {
   @Output() delete = new EventEmitter<string>();
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
   async onDelete(id: string) {
-    console.log();
     const confirmed = await this.confirmDialog.open('¿Estás seguro que deseas eliminar esta receta?');
 
     if (confirmed) {

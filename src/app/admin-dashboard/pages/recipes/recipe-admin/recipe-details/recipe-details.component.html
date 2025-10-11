@@ -1,9 +1,22 @@
-<h1 class="text-2xl font-bold">{{ recipe().title }}</h1>
+<div class="flex justify-between items-center mb-2">
+  <h1 class="text-2xl font-bold">
+    {{ recipe().title || "Crear nueva receta" }}
+  </h1>
+
+  @if (loading()) {
+    <loading />
+  }
+</div>
+
 <div class="divider"></div>
 
-<form [formGroup]="recipeForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" (ngSubmit)="onSubmit()">
+<form
+  [formGroup]="recipeForm"
+  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+  (ngSubmit)="onSubmit()"
+>
   <div class="flex flex-col gap-2">
-    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+    <h2 class="text-xl font-bold h-12">Datos generales</h2>
 
     <input
       type="text"

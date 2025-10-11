@@ -19,7 +19,6 @@ export class ProductsTableComponent {
   @Output() delete = new EventEmitter<string>();
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
   async onDelete(id: string) {
-    console.log();
     const confirmed = await this.confirmDialog.open('¿Estás seguro que deseas eliminar este producto?');
 
     if (confirmed) {

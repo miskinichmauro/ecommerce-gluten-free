@@ -19,7 +19,6 @@ export class ProductImagePipe implements PipeTransform {
       return `${baseUrl}/files/product/${image}`;
     }
 
-    console.log('Mostrando por defecto');
     return 'assets/images/default-image.jpg';
   }
 }

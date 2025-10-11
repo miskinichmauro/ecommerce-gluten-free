@@ -15,7 +15,6 @@ export class ContactsTableComponent {
   @Output() delete = new EventEmitter<string>();
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
   async onDelete(id: string) {
-    console.log();
     const confirmed = await this.confirmDialog.open('¿Estás seguro que deseas eliminar este contacto?');
 
     if (confirmed) {

@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, HostListener, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Contact } from 'src/app/contacts/interfaces/contact.interface';
 import { FormErrorLabelComponent } from 'src/app/shared/components/form-error-label/form-error-label.component';
@@ -37,11 +37,27 @@ export class ContactDetailsComponent implements OnInit {
     };
 
     if (this.contact().id === 'new') {
-      this.contactService.create(contactData).subscribe((contact) => {
-        this.router.navigate(['/admin/contacts']);
-      });
+      this.contactService.create(contactData).subscribe();
     } else {
       this.contactService.update(this.contact().id, contactData).subscribe();
+    }
+    this.router.navigate(['/admin/contacts']);
+  }
+
+  controlPresionado: boolean = false;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.controlPresionado = true;
+    } else if (event.key === 'Enter' && this.controlPresionado) {
+      this.onSubmit();
+    }
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    if (event.key === 'Control') {
+      this.controlPresionado = false;
     }
   }
 }
