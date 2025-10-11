@@ -1,15 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { MENU_ITEMS } from '../menu-items';
 import { AuthService } from 'src/app/auth/auth.service';
+import { LogoComponent } from "src/app/shared/components/logo/logo.component";
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'front-navbar',
-  imports: [
-    RouterLink, RouterLinkActive
-  ],
+  imports: [LogoComponent, RouterLink, RouterLinkActive],
   templateUrl: './front-navbar.component.html',
   styleUrl: './front-navbar.component.css',
 })
 export class FrontNavbarComponent {
-  authService = inject(AuthService);
+  @Input() menuItems = MENU_ITEMS;
+
+  constructor(public authService: AuthService) {}
 }

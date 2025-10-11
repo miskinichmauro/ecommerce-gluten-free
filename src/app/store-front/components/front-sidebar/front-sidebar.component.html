@@ -1,0 +1,22 @@
+@if (open) {
+  <div class="fixed inset-0 z-50 bg-black bg-opacity-50" (click)="close()"></div>
+}
+<div class="fixed top-0 left-0 h-full w-64 bg-base-100 shadow-lg transform transition-transform duration-300"
+     [class.translate-x-0]="open"
+     [class.-translate-x-full]="!open">
+  <ul class="menu p-4">
+    @for (item of menuItems; track $index) {
+      <li>
+        @if (!item.adminOnly || authService.isAdmin()) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="text-secondary"
+            [routerLinkActiveOptions]="{exact: true}"
+            (click)="close()">
+            {{ item.label }}
+          </a>
+        }
+      </li>
+    }
+  </ul>
+</div>

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { RouterLink } from "@angular/router";
@@ -11,6 +11,14 @@ import { RouterLink } from "@angular/router";
 })
 export class AdminDashboardLayoutComponent {
   authService = inject(AuthService);
-
   user = computed(() => this.authService.user());
+  menuOpen = signal(false);
+
+  toggleMenu() {
+    this.menuOpen.update((value) => !value);
+  }
+
+  closeMenu() {
+    this.menuOpen.set(false);
+  }
 }
