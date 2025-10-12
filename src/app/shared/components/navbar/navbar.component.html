@@ -10,7 +10,9 @@
             <a
               [routerLink]="item.route"
               routerLinkActive="text-secondary"
-              [routerLinkActiveOptions]="{exact: true}">
+              [routerLinkActiveOptions]="{exact: true}"
+              (click)="[sidebarService.closeSidebar()]"
+            >
               {{ item.label }}
             </a>
           }
