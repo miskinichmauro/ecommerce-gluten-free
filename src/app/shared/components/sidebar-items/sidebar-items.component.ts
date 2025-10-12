@@ -1,20 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MENU_ITEMS } from 'src/app/store-front/components/menu-items';
+import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
+import { NavItemsComponent } from '../nav-items/nav-items.component';
 
 @Component({
   selector: 'sidebar-items',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [NavItemsComponent],
   templateUrl: './sidebar-items.component.html',
   styleUrl: './sidebar-items.component.css',
 })
 export class SidebarItemsComponent {
-  @Input() menuItems = MENU_ITEMS;
-  @Input() open = false;
+  menuItems = input.required<MenuItem[]>();
+  open = input.required<boolean>();
   @Output() closeSidebar = new EventEmitter<void>();
 
-  constructor(public authService: AuthService) {}
+  authService = inject(AuthService);
 
   close() {
     this.closeSidebar.emit();

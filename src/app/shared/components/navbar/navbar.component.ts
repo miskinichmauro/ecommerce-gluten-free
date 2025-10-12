@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'navbar',
@@ -15,10 +16,12 @@ export class NavbarComponent {
   @Output() openSidebarPage = new EventEmitter<string>();
 
   authService = inject(AuthService);
+  sidebarService = inject(SidebarService);
 
-  onOpenLogin() {
+  toggleUserOptions() {
+    this.sidebarService.openSidebar();
     if (this.authService.authStatus() === 'authenticated') {
-      this.openSidebarPage.emit('/user/profile');
+      this.openSidebarPage.emit('/user');
     } else {
       this.openSidebarPage.emit('/auth/login');
     }

@@ -5,36 +5,20 @@ import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { ProductComponent, ProductsComponent } from "./pages/product";
 import { RecipeComponent } from "./pages/recipe/recipe.component";
 import { ContactComponent } from "./pages/contact/contact.component";
+import { ProfileComponent } from "../auth/pages/profile/profile.component";
 
 export const storeFrontRoutes: Routes = [
   {
     path: '',
     component: StoreFrontLayoutComponent,
     children: [
-      {
-        path: '',
-        component: HomeComponent
-      },
-      {
-        path: 'products',
-        component: ProductsComponent
-      },
-      {
-        path: 'product/:idSlug',
-        component: ProductComponent
-      },
-      {
-        path: 'recipe',
-        component: RecipeComponent
-      },
-      {
-        path: 'contact',
-        component: ContactComponent
-      },
-      {
-        path: '**',
-        component: NotFoundComponent
-      }
+      { path: '', component: HomeComponent },
+      { path: 'products', component: ProductsComponent },
+      { path: 'product/:idSlug', component: ProductComponent },
+      { path: 'recipe', component: RecipeComponent},
+      { path: 'contact', component: ContactComponent },
+      { path: 'user', component: ProfileComponent },
+      { path: '**', component: NotFoundComponent}
     ]
   }
 ]

@@ -14,15 +14,10 @@ export const AdminDashboardRoutes: Routes = [
     component: AdminDashboardLayoutComponent,
     canMatch: [IsAdmin],
     children: [
-      // Productos
       { path: 'products', component: ProductsAdminComponent },
       { path: 'products/:id', component: ProductAdminComponent },
-
-      // Recetas
       { path: 'recipes', component: RecipesAdminComponent },
       { path: 'recipes/:id', component: RecipeAdminComponent },
-
-      // Contactos
       { path: 'contacts', component: ContactsAdminComponent },
       { path: 'contacts/:id', component: ContactAdminComponent },
 

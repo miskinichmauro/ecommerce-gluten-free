@@ -1,0 +1,14 @@
+<nav class="flex flex-col gap-2 px-4">
+    @for (item of menuItems(); track $index) {
+      @if (!item.adminOnly || authService.isAdmin()) {
+        <a
+          class="p-2 rounded-md hover:bg-gray-800 transition"
+          [routerLink]="item.route"
+          routerLinkActive="text-secondary"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="[sidebarService.closeSidebar()]">
+          {{ item.label }}
+        </a>
+      }
+    }
+  </nav>

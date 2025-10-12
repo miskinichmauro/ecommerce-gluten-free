@@ -1,7 +1,7 @@
 <div
   class="fixed inset-0 bg-base-100 z-50 transform transition-transform duration-400 flex flex-col"
-  [class.translate-x-0]="open"
-  [class.-translate-x-full]="!open"
+  [class.translate-x-0]="open()"
+  [class.-translate-x-full]="!open()"
 >
   <div class="flex justify-end">
     <button (click)="close()" class="btn btn-ghost">
@@ -11,18 +11,7 @@
     </button>
   </div>
 
-  <nav class="flex flex-col gap-2 px-4">
-    @for (item of menuItems; track $index) {
-      @if (!item.adminOnly || authService.isAdmin()) {
-        <a
-          class="p-2 rounded-md hover:bg-gray-800 transition"
-          [routerLink]="item.route"
-          routerLinkActive="text-secondary"
-          [routerLinkActiveOptions]="{exact: true}"
-          (click)="close()">
-          {{ item.label }}
-        </a>
-      }
-    }
-  </nav>
+  <nav-items
+    [menuItems]="menuItems()"
+  />
 </div>
