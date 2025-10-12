@@ -1,6 +1,7 @@
 import { Component, Input, inject, signal } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'sidebar-page',
@@ -10,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarPageComponent {
   private router = inject(Router);
+  authService = inject(AuthService);
 
   open = signal(false);
   currentRoute = signal<string | null>(null);

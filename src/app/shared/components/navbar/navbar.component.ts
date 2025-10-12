@@ -17,6 +17,10 @@ export class NavbarComponent {
   authService = inject(AuthService);
 
   onOpenLogin() {
-    this.openSidebarPage.emit('/auth/login');
+    if (this.authService.authStatus() === 'authenticated') {
+      this.openSidebarPage.emit('/user/profile');
+    } else {
+      this.openSidebarPage.emit('/auth/login');
+    }
   }
 }

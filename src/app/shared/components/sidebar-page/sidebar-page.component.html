@@ -5,7 +5,7 @@
 >
   <div class="flex justify-between items-center p-4 border-b border-base-300">
     <h2 class="text-lg font-bold">
-      {{ currentRoute() === '/auth/login' ? 'Iniciar sesión' : '' }}
+      {{ currentRoute() === '/auth/login' ? 'Iniciar sesión' : authService.user()?.fullName }}
     </h2>
     <button (click)="close()" class="cursor-pointer hover:bg-gray-600 p-2 rounded-full">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
