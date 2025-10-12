@@ -28,13 +28,17 @@ export class ProductCarruselComponent implements AfterViewInit {
           slidesPerView: 1,
           spaceBetween: 10,
         },
-        640: {
+        780: {
           slidesPerView: 2,
           spaceBetween: 15,
         },
-        1024: {
-          slidesPerView: 4,
+        1280: {
+          slidesPerView: 3,
           spaceBetween: 20,
+        },
+        1900: {
+          slidesPerView: 4,
+          spaceBetween: 25,
         }
       };
       swiperEl.initialize();

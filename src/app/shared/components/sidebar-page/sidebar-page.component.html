@@ -1,0 +1,20 @@
+<div
+  class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-base-100 shadow-lg transform transition-transform duration-400 z-50"
+  [class.translate-x-0]="open()"
+  [class.translate-x-full]="!open()"
+>
+  <div class="flex justify-between items-center p-4 border-b border-base-300">
+    <h2 class="text-lg font-bold">
+      {{ currentRoute() === '/auth/login' ? 'Iniciar sesión' : '' }}
+    </h2>
+    <button (click)="close()" class="cursor-pointer hover:bg-gray-600 p-2 rounded-full">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="p-4 overflow-y-auto h-[calc(100%-4rem)]">
+    <router-outlet></router-outlet>
+  </div>
+</div>

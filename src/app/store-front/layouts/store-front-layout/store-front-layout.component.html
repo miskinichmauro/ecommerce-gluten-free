@@ -1,5 +1,9 @@
-<front-menu />
+<front-menu (openSidebarPage)="sidebarPage.openPage($event)" />
 
 <section class="container mx-auto">
-  <router-outlet></router-outlet>
+  <div class="flex-1 px-5">
+    <router-outlet />
+  </div>
 </section>
+
+<sidebar-page #sidebarPage />
