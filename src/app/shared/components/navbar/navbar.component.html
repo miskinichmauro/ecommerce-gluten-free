@@ -13,6 +13,10 @@
               [routerLink]="item.route"
               routerLinkActive="text-secondary"
               [routerLinkActiveOptions]="{exact: true}"
+              (click)="[
+                configurationService.toggleSidebarItemsStatus('closed'),
+                configurationService.toggleSidebarPageStatus('closed')
+              ]"
             >
               {{ item.label }}
             </a>
