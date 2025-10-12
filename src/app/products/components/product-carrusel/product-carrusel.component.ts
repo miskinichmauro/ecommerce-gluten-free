@@ -12,6 +12,7 @@ import { Product } from '../../interfaces/product';
 })
 export class ProductCarruselComponent implements AfterViewInit {
   products = input.required<Product[]>();
+  
   spaceBetween = 20;
   slidesPerView = 4;
 

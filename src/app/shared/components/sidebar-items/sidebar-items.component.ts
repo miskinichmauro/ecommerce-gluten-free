@@ -1,7 +1,8 @@
-import { Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { NavItemsComponent } from '../nav-items/nav-items.component';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'sidebar-items',
@@ -11,12 +12,11 @@ import { NavItemsComponent } from '../nav-items/nav-items.component';
 })
 export class SidebarItemsComponent {
   menuItems = input.required<MenuItem[]>();
-  open = input.required<boolean>();
-  @Output() closeSidebar = new EventEmitter<void>();
-
+  
   authService = inject(AuthService);
+  configurationService = inject(ConfigurationService);
 
-  close() {
-    this.closeSidebar.emit();
+  open() : boolean {
+    return this.configurationService.sidebarItemsStatus() === 'open';
   }
 }

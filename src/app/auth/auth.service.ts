@@ -5,7 +5,6 @@ import { environment } from 'src/environments/environment';
 import { AuthResponse } from './interfaces/auth-response.interfase';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { IsAdmin } from './guards/is-admin.guard';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
 const baseUrlAuth = `${environment.baseUrl}/auth`;

@@ -13,9 +13,10 @@ import { LoadingComponent } from "src/app/shared/components/loading/loading.comp
   styleUrls: ['./recipe-details.component.css'],
 })
 export class RecipeDetailsComponent implements OnInit {
+  recipe = input.required<Recipe>();
+  
   router = inject(Router);
   recipeService = inject(RecipeService);
-  recipe = input.required<Recipe>();
   loading = signal(false);
 
   fb = inject(FormBuilder);

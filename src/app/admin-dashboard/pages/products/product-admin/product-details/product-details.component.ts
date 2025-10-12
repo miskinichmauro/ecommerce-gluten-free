@@ -13,9 +13,10 @@ import { Router } from '@angular/router';
   styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent implements OnInit {
+  product = input.required<Product>();
+
   router = inject(Router);
   productsService = inject(ProductService);
-  product = input.required<Product>();
 
   fb = inject(FormBuilder);
   productForm = this.fb.group({

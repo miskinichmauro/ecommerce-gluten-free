@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
-import { SidebarService } from '../../services/sidebar.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'nav-items',
@@ -12,6 +12,7 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class NavItemsComponent {
   menuItems = input.required<MenuItem[]>();
+  
   authService = inject(AuthService);
-  sidebarService = inject(SidebarService);
+  configurationService = inject(ConfigurationService);
 }

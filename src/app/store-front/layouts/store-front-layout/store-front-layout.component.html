@@ -1,4 +1,4 @@
-<front-menu (openSidebarPage)="sidebarPage.openPage($event)" />
+<front-menu />
 
 <section class="container mx-auto">
   <div class="flex-1 px-5">
@@ -6,4 +6,6 @@
   </div>
 </section>
 
-<sidebar-page #sidebarPage />
+@if (configurationService.sidebarPageStatus() === 'open') {
+  <sidebar-page />
+}

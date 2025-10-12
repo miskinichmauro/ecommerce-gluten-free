@@ -10,6 +10,7 @@ import { ProductImagePipe } from "../../../products/pipes/product-image.pipe";
 })
 export class ImageCarruselComponent implements AfterViewInit{
   images = input.required<string[]>();
+  
   spaceBetween = 10;
   slidesPerView = 1;
 

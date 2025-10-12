@@ -6,7 +6,7 @@
   <div class="divider my-2">
   <button
     class="cursor-pointer hover:bg-gray-600 btn btn-ghost text-secondary w-full"
-    (click)="[authService.logout(), sidebarService.closeSidebar()]"
+    (click)="[authService.logout(), configurationService.toggleSidebarPageStatus('closed')]"
   >
     Cerrar sesión
   </button>

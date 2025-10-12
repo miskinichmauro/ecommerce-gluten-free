@@ -6,7 +6,8 @@
           [routerLink]="item.route"
           routerLinkActive="text-secondary"
           [routerLinkActiveOptions]="{exact: true}"
-          (click)="[sidebarService.closeSidebar()]">
+          (click)="[configurationService.toggleSidebarItemsStatus('closed')]"
+        >
           {{ item.label }}
         </a>
       }

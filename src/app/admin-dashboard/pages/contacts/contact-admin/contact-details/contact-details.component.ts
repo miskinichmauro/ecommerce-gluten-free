@@ -12,9 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./contact-details.component.css'],
 })
 export class ContactDetailsComponent implements OnInit {
+  contact = input.required<Contact>();
+  
   router = inject(Router);
   contactService = inject(ContactService);
-  contact = input.required<Contact>();
 
   fb = inject(FormBuilder);
 

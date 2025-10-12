@@ -17,7 +17,6 @@ export const storeFrontRoutes: Routes = [
       { path: 'product/:idSlug', component: ProductComponent },
       { path: 'recipe', component: RecipeComponent},
       { path: 'contact', component: ContactComponent },
-      { path: 'user', component: ProfileComponent },
       { path: '**', component: NotFoundComponent}
     ]
   }

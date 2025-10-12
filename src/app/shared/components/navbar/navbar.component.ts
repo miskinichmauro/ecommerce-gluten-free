@@ -1,9 +1,10 @@
 import { Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
-import { SidebarService } from '../../services/sidebar.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'navbar',
@@ -13,17 +14,27 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class NavbarComponent {
   menuItems = input.required<MenuItem[]>();
-  @Output() openSidebarPage = new EventEmitter<string>();
 
   authService = inject(AuthService);
-  sidebarService = inject(SidebarService);
+  configurationService = inject(ConfigurationService);
+  router = inject(Router);
 
-  toggleUserOptions() {
-    this.sidebarService.openSidebar();
-    if (this.authService.authStatus() === 'authenticated') {
-      this.openSidebarPage.emit('/user');
-    } else {
-      this.openSidebarPage.emit('/auth/login');
-    }
+  openUserOptions() {
+    this.configurationService.toggleSidebarPageStatus('open');
+
+    const sidebarRoute = this.authService.authStatus() === 'authenticated'
+    ? ['user']
+    : ['auth', 'login'];
+
+    this.configurationService.toggleSidebarPageRoute(sidebarRoute);
+    this.router.navigate(
+      [{ outlets: { sidebar: sidebarRoute } }],
+      { skipLocationChange: true }
+    );
+  }
+
+  closeSidebar() {
+    this.router.navigate([{ outlets: { sidebar: null } }]);
+    this.configurationService.toggleSidebarPageStatus('closed');
   }
 }

@@ -1,9 +1,10 @@
-import { Component, EventEmitter, HostListener, inject, Output } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
 import { SidebarItemsComponent } from 'src/app/shared/components/sidebar-items/sidebar-items.component';
 import { MENU_ITEMS } from '../menu-items';
 import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { AuthService } from 'src/app/auth/auth.service';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'front-menu',
@@ -12,11 +13,10 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrl: './front-menu.component.css',
 })
 export class FrontMenuComponent {
-  @Output() openSidebarPage = new EventEmitter<string>();
   authService = inject(AuthService);
+  configurationService = inject(ConfigurationService);
   menuItems = MENU_ITEMS;
   isMobile = false;
-  sidebarOpen = false;
 
   @HostListener('window:resize')
   onResize() {
@@ -25,9 +25,5 @@ export class FrontMenuComponent {
 
   ngOnInit() {
     this.onResize();
-  }
-
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 }

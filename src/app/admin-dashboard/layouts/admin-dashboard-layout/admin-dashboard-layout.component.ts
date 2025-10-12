@@ -5,6 +5,7 @@ import { RouterLink } from "@angular/router";
 import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { SidebarItemsComponent } from "src/app/shared/components/sidebar-items/sidebar-items.component";
 import { MENU_ADMIN_ITEMS } from 'src/app/store-front/components/menu-admin-items';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'app-admin-dashboard-layout',
@@ -14,10 +15,10 @@ import { MENU_ADMIN_ITEMS } from 'src/app/store-front/components/menu-admin-item
 })
 export class AdminDashboardLayoutComponent {
   authService = inject(AuthService);
+  configurationService = inject(ConfigurationService);
   user = computed(() => this.authService.user());
   menuItems = MENU_ADMIN_ITEMS;
   isMobile = false;
-  sidebarOpen = false;
 
   @HostListener('window:resize')
   onResize() {
@@ -26,9 +27,5 @@ export class AdminDashboardLayoutComponent {
 
   ngOnInit() {
     this.onResize();
-  }
-
-  toggleSidebar() {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 }
