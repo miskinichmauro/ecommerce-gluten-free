@@ -24,7 +24,7 @@ export class NavbarComponent {
 
     const sidebarRoute = this.authService.authStatus() === 'authenticated'
     ? ['user']
-    : ['auth-sidebar', 'login'];
+    : ['auth-sidebar'];
 
     this.configurationService.toggleSidebarPageRoute(sidebarRoute);
     this.router.navigate(
