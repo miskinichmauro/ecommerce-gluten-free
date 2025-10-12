@@ -15,6 +15,13 @@
   </div>
 
   <div class="p-4 overflow-y-auto h-[calc(100%-4rem)]">
-    <router-outlet name="sidebar" />
+    <p>{{ configurationService.sidebarPageRoute() }}</p>
+    <router-outlet name="sidebar" (activate)="onActivate($event)">
+      <ng-template #empty>
+        <div class="loading">
+          <p>Loading...</p>
+        </div>
+      </ng-template>
+    </router-outlet>
   </div>
 </div>

@@ -11,10 +11,6 @@ import { ConfigurationService } from 'src/app/shared/services/configuration.serv
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent {
-  constructor() {
-    console.log('ProfileComponent');
-  }
-
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
 

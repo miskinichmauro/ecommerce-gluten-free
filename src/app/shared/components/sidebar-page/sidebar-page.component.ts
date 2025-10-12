@@ -14,6 +14,10 @@ export class SidebarPageComponent {
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
 
+  onActivate(component: any) {
+    console.log('onActivate', component);
+  }
+
   open() : boolean {
     return this.configurationService.sidebarPageStatus() === 'open';
   }
