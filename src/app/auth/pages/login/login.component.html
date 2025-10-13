@@ -21,7 +21,15 @@
         </p>
       </div>
 
-      <button class="btn btn-neutral w-full">Login</button>
+      <button class="btn btn-neutral w-full"
+        (click)="[
+          configurationService.toggleSidebarPageStatus('closed'),
+          configurationService.toggleSidebarItemsStatus('closed')
+
+        ]"
+      >
+        Login
+      </button>
     </div>
   </fieldset>
 </form>

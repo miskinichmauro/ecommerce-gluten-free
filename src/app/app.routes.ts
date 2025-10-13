@@ -14,17 +14,5 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./store-front/store-front.routes')
-  },
-  {
-    path: 'auth-sidebar',
-    outlet: 'sidebar',
-    loadComponent: () =>
-      import('./auth/pages/login/login.component').then(m => m.LoginComponent)
-  },
-  {
-    path: 'user',
-    outlet: 'sidebar',
-    loadComponent: () =>
-      import('./auth/pages/profile/profile.component').then(m => m.ProfileComponent)
   }
 ];

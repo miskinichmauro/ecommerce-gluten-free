@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from '../../auth.service';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +11,13 @@ import { AuthService } from '../../auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  authService = inject(AuthService);
+  configurationService = inject(ConfigurationService);
   fb = inject(FormBuilder);
+  router = inject(Router);
   hasError = signal(false);
   isPosting = signal(false);
-  router = inject(Router);
 
-  authService = inject(AuthService);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
