@@ -5,6 +5,7 @@ import { MENU_ITEMS } from '../menu-items';
 import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'front-menu',
@@ -14,6 +15,7 @@ import { ConfigurationService } from 'src/app/shared/services/configuration.serv
 })
 export class FrontMenuComponent {
   authService = inject(AuthService);
+  router = inject(Router);
   configurationService = inject(ConfigurationService);
   menuItems = MENU_ITEMS;
   isMobile = false;
@@ -25,5 +27,24 @@ export class FrontMenuComponent {
 
   ngOnInit() {
     this.onResize();
+  }
+
+  openUserOptions() {
+    this.configurationService.toggleSidebarPageStatus('open');
+
+    let sidebarRoute = this.authService.authStatus() === 'authenticated'
+    ? ['user']
+    : ['auth', 'login'];
+
+    this.configurationService.toggleSidebarPageRoute(sidebarRoute);
+    this.router.navigate(
+      [{ outlets: { sidebar: sidebarRoute } }],
+      { skipLocationChange: true }
+    );
+  }
+
+  closeSidebar() {
+    this.router.navigate([{ outlets: { sidebar: null } }]);
+    this.configurationService.toggleSidebarPageStatus('closed');
   }
 }
