@@ -58,7 +58,7 @@ export class LoginComponent {
     this.loading.set(false);
     this.success.set(true);
 
-    await new Promise(res => setTimeout(res, 600));
+    await new Promise(res => setTimeout(res, 800));
 
     this.configurationService.toggleSidebarPageStatus('closed');
     this.configurationService.toggleSidebarItemsStatus('closed');

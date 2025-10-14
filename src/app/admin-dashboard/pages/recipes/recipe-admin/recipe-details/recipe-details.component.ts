@@ -4,20 +4,20 @@ import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { FormErrorLabelComponent } from "src/app/shared/components/form-error-label/form-error-label.component";
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Router } from '@angular/router';
-import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'recipe-details',
-  imports: [ReactiveFormsModule, FormErrorLabelComponent, LoadingComponent],
+  imports: [ReactiveFormsModule, FormErrorLabelComponent],
   templateUrl: './recipe-details.component.html',
   styleUrls: ['./recipe-details.component.css'],
 })
 export class RecipeDetailsComponent implements OnInit {
   recipe = input.required<Recipe>();
-  
+
   router = inject(Router);
   recipeService = inject(RecipeService);
-  loading = signal(false);
+  configurationService = inject(ConfigurationService);
 
   fb = inject(FormBuilder);
   recipeForm = this.fb.group({
@@ -30,7 +30,7 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loading.set(true);
+    this.configurationService.loading.set(true);
 
     this.recipeForm.markAllAsTouched();
     const formValue = this.recipeForm.value;
@@ -47,12 +47,12 @@ export class RecipeDetailsComponent implements OnInit {
     }
 
     request$.subscribe({
-      next: () => {
-        this.loading.set(false);
+      next: async () => {
+        await this.configurationService.toggleToast();
         this.router.navigate(["/admin/recipes"]);
       },
       error: () => {
-        this.loading.set(false);
+        this.configurationService.loading.set(false);
       }
     });
   }

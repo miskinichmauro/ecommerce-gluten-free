@@ -5,6 +5,7 @@ import { FormUtils } from 'src/app/utils/form-utils';
 import { FormErrorLabelComponent } from "src/app/shared/components/form-error-label/form-error-label.component";
 import { ProductService } from 'src/app/products/services/products.service';
 import { Router } from '@angular/router';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'product-details',
@@ -17,6 +18,7 @@ export class ProductDetailsComponent implements OnInit {
 
   router = inject(Router);
   productsService = inject(ProductService);
+  configurationService = inject(ConfigurationService);
 
   fb = inject(FormBuilder);
   productForm = this.fb.group({
@@ -55,6 +57,8 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   onSubmit() {
+    this.configurationService.loading.set(true);
+
     this.productForm.markAllAsTouched();
     const formValue = this.productForm.value;
 
@@ -63,9 +67,13 @@ export class ProductDetailsComponent implements OnInit {
     };
 
     if (this.product().id === 'new') {
-      this.productsService.createProduct(productData).subscribe();
+      this.productsService.createProduct(productData).subscribe(async () => {
+        await this.configurationService.toggleToast();
+      });
     } else {
-      this.productsService.updateProduct(this.product().id, productData).subscribe();
+      this.productsService.updateProduct(this.product().id, productData).subscribe(async () => {
+        await this.configurationService.toggleToast();
+      });
     }
     this.router.navigate(['/admin/products'])
   }

@@ -4,6 +4,7 @@ import { Contact } from 'src/app/contacts/interfaces/contact.interface';
 import { FormErrorLabelComponent } from 'src/app/shared/components/form-error-label/form-error-label.component';
 import { ContactService } from 'src/app/contacts/services/contact.service';
 import { Router } from '@angular/router';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'contact-details',
@@ -13,9 +14,10 @@ import { Router } from '@angular/router';
 })
 export class ContactDetailsComponent implements OnInit {
   contact = input.required<Contact>();
-  
+
   router = inject(Router);
   contactService = inject(ContactService);
+  configurationService = inject(ConfigurationService);
 
   fb = inject(FormBuilder);
 
@@ -30,6 +32,8 @@ export class ContactDetailsComponent implements OnInit {
   }
 
   onSubmit() {
+    this.configurationService.loading.set(true);
+
     this.contactForm.markAllAsTouched();
     const formValue = this.contactForm.value;
 
@@ -38,9 +42,13 @@ export class ContactDetailsComponent implements OnInit {
     };
 
     if (this.contact().id === 'new') {
-      this.contactService.create(contactData).subscribe();
+      this.contactService.create(contactData).subscribe(async () => {
+        await this.configurationService.toggleToast();
+      });
     } else {
-      this.contactService.update(this.contact().id, contactData).subscribe();
+      this.contactService.update(this.contact().id, contactData).subscribe(async () => {
+        await this.configurationService.toggleToast();
+      });
     }
     this.router.navigate(['/admin/contacts']);
   }
