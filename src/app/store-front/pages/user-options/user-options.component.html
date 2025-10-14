@@ -1,0 +1,10 @@
+<nav-items
+  [menuItems]="menuItems"
+/>
+
+<button
+  class="cursor-pointer hover:bg-gray-500 btn btn-ghost text-secondary w-full"
+  (click)="[authService.logout(), configurationService.toggleSidebarPageStatus('closed')]"
+>
+  Cerrar sesión
+</button>

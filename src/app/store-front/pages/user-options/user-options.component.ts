@@ -5,24 +5,29 @@ import { NavItemsComponent } from "src/app/shared/components/nav-items/nav-items
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
-  selector: 'user',
+  selector: 'user-options',
   imports: [NavItemsComponent],
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.css',
+  templateUrl: './user-options.component.html',
+  styleUrl: './user-options.component.css',
 })
-export class UserComponent {
+export class UserOptionsComponent {
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
 
   menuItems: MenuItem[] = [
     {
-      label: 'Mis datos',
+      label: 'Mi perfil',
       route: '/user/profile',
       adminOnly: false
     },
     {
+      label: 'Mis direcciones',
+      route: '/user/directions',
+      adminOnly: false
+    },
+    {
       label: 'Mis pedidos',
-      route: '/recipes/history',
+      route: '/user/recipes',
       adminOnly: false
     }
   ]

@@ -1,9 +1,12 @@
-import { Injectable, signal } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
+import { Router } from "@angular/router";
 
 type sidebarStatus = 'closed' | 'open';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
+  router = inject(Router);
+
   sidebarItemsStatus = signal<sidebarStatus>('closed');
   sidebarPageStatus = signal<sidebarStatus>('closed');
   sidebarPageRoute = signal<string>('');
@@ -13,6 +16,7 @@ export class ConfigurationService {
   }
 
   toggleSidebarPageStatus(value: sidebarStatus) {
+    this.router.navigate([{ outlets: { sidebar: null } }]);
     this.sidebarPageStatus.set(value);
   }
 

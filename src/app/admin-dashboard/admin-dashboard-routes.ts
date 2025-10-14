@@ -14,14 +14,42 @@ export const AdminDashboardRoutes: Routes = [
     component: AdminDashboardLayoutComponent,
     canMatch: [IsAdmin],
     children: [
-      { path: 'products', component: ProductsAdminComponent },
-      { path: 'products/:id', component: ProductAdminComponent },
-      { path: 'recipes', component: RecipesAdminComponent },
-      { path: 'recipes/:id', component: RecipeAdminComponent },
-      { path: 'contacts', component: ContactsAdminComponent },
-      { path: 'contacts/:id', component: ContactAdminComponent },
+      {
+        path: 'products',
+        title: 'Productos',
+        component: ProductsAdminComponent
+      },
+      {
+        path: 'products/:id',
+        title: 'Producto',
+        component:
+        ProductAdminComponent
+      },
+      {
+        path: 'recipes',
+        title: 'Recetas',
+        component: RecipesAdminComponent
+      },
+      {
+        path: 'recipes/:id',
+        title: 'Receta',
+        component: RecipeAdminComponent
+      },
+      {
+        path: 'contacts',
+        title: 'Contactos',
+        component: ContactsAdminComponent
+      },
+      {
+        path: 'contacts/:id',
+        title: 'Contacto',
+        component: ContactAdminComponent
+      },
 
-      { path: '**', redirectTo: 'products' }
+      {
+        path: '**',
+        redirectTo: 'products'
+      }
     ]
   }
 ];

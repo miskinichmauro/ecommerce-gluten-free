@@ -6,10 +6,11 @@ import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 import { Router } from '@angular/router';
+import { NavOptionsComponent } from "src/app/shared/components/nav-options/nav-options.component";
 
 @Component({
   selector: 'front-menu',
-  imports: [NavbarComponent, SidebarItemsComponent, LogoComponent],
+  imports: [NavbarComponent, SidebarItemsComponent, LogoComponent, NavOptionsComponent],
   templateUrl: './front-menu.component.html',
   styleUrl: './front-menu.component.css',
 })
@@ -27,24 +28,5 @@ export class FrontMenuComponent {
 
   ngOnInit() {
     this.onResize();
-  }
-
-  openUserOptions() {
-    this.configurationService.toggleSidebarPageStatus('open');
-
-    let sidebarRoute = this.authService.authStatus() === 'authenticated'
-    ? ['user']
-    : ['auth', 'login'];
-
-    this.configurationService.toggleSidebarPageRoute(sidebarRoute);
-    this.router.navigate(
-      [{ outlets: { sidebar: sidebarRoute } }],
-      { skipLocationChange: true }
-    );
-  }
-
-  closeSidebar() {
-    this.router.navigate([{ outlets: { sidebar: null } }]);
-    this.configurationService.toggleSidebarPageStatus('closed');
   }
 }

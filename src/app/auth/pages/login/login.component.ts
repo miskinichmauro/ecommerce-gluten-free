@@ -3,10 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from '../../auth.service';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
+import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
+import { SuccessComponent } from "src/app/shared/components/success/success.component";
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, LoadingComponent, SuccessComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -15,9 +17,9 @@ export class LoginComponent {
   configurationService = inject(ConfigurationService);
   fb = inject(FormBuilder);
   router = inject(Router);
+  loading = signal(false);
   hasError = signal(false);
-  isPosting = signal(false);
-
+  success = signal(false);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -33,8 +35,13 @@ export class LoginComponent {
     }
 
     const { email = '', password = ''} = this.loginForm.value;
+
+    this.loading.set(true);
     this.authService.login(email!, password!)
-      .subscribe(isAuthenticated => {
+      .subscribe(async isAuthenticated => {
+
+        await this.isSuccess();
+
         if (isAuthenticated) {
           this.router.navigateByUrl('/');
           return;
@@ -45,5 +52,15 @@ export class LoginComponent {
           this.hasError.set(false);
         }, 2000);
     });
+  }
+
+  async isSuccess() {
+    this.loading.set(false);
+    this.success.set(true);
+
+    await new Promise(res => setTimeout(res, 600));
+
+    this.configurationService.toggleSidebarPageStatus('closed');
+    this.configurationService.toggleSidebarItemsStatus('closed');
   }
 }
