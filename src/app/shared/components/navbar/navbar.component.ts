@@ -1,10 +1,11 @@
 import { Component, inject, input  } from '@angular/core';
-import { AuthService } from 'src/app/auth/auth.service';
-import { LogoComponent } from "src/app/shared/components/logo/logo.component";
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
 import { NavOptionsComponent } from "../nav-options/nav-options.component";
+import { AuthService } from '@auth/auth.service';
+import { MenuItem } from '@store-front/components/interfaces/menu-item.interface';
+import { LogoComponent } from '../logo/logo.component';
+
 
 @Component({
   selector: 'navbar',
@@ -17,4 +18,15 @@ export class NavbarComponent {
 
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
+
+  menuItemsDefault(): MenuItem[]{
+    return this.menuItems().filter(item => !item.adminOnly);
+  }
+
+  menuItemsAdmin(): MenuItem[] | null {
+    if (this.authService.isAdmin()) {
+      return this.menuItems().filter(item => item.adminOnly);
+    }
+    return null;
+  }
 }

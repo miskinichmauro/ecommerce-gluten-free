@@ -1,12 +1,18 @@
 import { Routes } from "@angular/router";
-import { AdminDashboardLayoutComponent } from './layouts/admin-dashboard-layout/admin-dashboard-layout.component';
-import { IsAdmin } from "../auth/guards/is-admin.guard";
-import { ProductsAdminComponent } from "./pages/products/products-admin/products-admin.component";
-import { ProductAdminComponent } from "./pages/products/product-admin/product-admin.component";
-import { RecipesAdminComponent } from "./pages/recipes/recipes-admin/recipes-admin.component";
-import { RecipeAdminComponent } from "./pages/recipes/recipe-admin/recipe-admin.component";
-import { ContactsAdminComponent } from "./pages/contacts/contacts-admin/contacts-admin.component";
-import { ContactAdminComponent } from "./pages/contacts/contact-admin/contact-admin.component";
+import { IsAdmin } from "@auth/guards/is-admin.guard";
+import { AdminDashboardLayoutComponent } from "@admin-dashboard/layouts/admin-dashboard-layout/admin-dashboard-layout.component";
+import { ContactAdminComponent } from "@admin-dashboard/pages/contacts/contact-admin/contact-admin.component";
+import { ContactsAdminComponent } from "@admin-dashboard/pages/contacts/contacts-admin/contacts-admin.component";
+import { ProductAdminComponent } from "@admin-dashboard/pages/products/product-admin/product-admin.component";
+import { ProductsAdminComponent } from "@admin-dashboard/pages/products/products-admin/products-admin.component";
+import { RecipeAdminComponent } from "@admin-dashboard/pages/recipes/recipe-admin/recipe-admin.component";
+import { RecipesAdminComponent } from "@admin-dashboard/pages/recipes/recipes-admin/recipes-admin.component";
+import { UserAdminComponent } from "@admin-dashboard/pages/users/users/user-admin/user-admin.component";
+import { UsersAdminComponent } from "@admin-dashboard/pages/users/users/users-admin/users-admin.component";
+import { RolesAdminComponent } from "@admin-dashboard/pages/users/roles/roles-admin/roles-admin.component";
+import { RoleAdminComponent } from "@admin-dashboard/pages/users/roles/role-admin/role-admin.component";
+
+
 
 export const AdminDashboardRoutes: Routes = [
   {
@@ -45,7 +51,26 @@ export const AdminDashboardRoutes: Routes = [
         title: 'Contacto',
         component: ContactAdminComponent
       },
-
+      {
+        path: 'users',
+        title: 'Usuarios',
+        component: UsersAdminComponent
+      },
+      {
+        path: 'users/:id',
+        title: 'Usuario',
+        component: UserAdminComponent
+      },
+      {
+        path: 'roles',
+        title: 'Roles',
+        component: RolesAdminComponent
+      },
+      {
+        path: 'roles/:id',
+        title: 'Rol',
+        component: RoleAdminComponent
+      },
       {
         path: '**',
         redirectTo: 'products'

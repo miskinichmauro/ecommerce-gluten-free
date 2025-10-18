@@ -1,4 +1,4 @@
-import { User } from "src/app/auth/interfaces/user.interfase";
+import { User } from "src/app/users/users/interfaces/user.interfase";
 
 export interface ProductResponse {
   count:    number;

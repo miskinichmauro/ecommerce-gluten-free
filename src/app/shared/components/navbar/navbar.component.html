@@ -6,21 +6,39 @@
 
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
-      @for (item of menuItems(); track $index) {
+      @for (item of menuItemsDefault(); track $index) {
         <li>
-          @if (!item.adminOnly || authService.isAdmin()) {
-            <a
-              [routerLink]="item.route"
-              routerLinkActive="text-secondary"
-              [routerLinkActiveOptions]="{exact: true}"
-              (click)="[
-                configurationService.toggleSidebarItemsStatus('closed'),
-                configurationService.toggleSidebarPageStatus('closed')
-              ]"
-            >
-              {{ item.label }}
-            </a>
-          }
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="text-secondary"
+            [routerLinkActiveOptions]="{exact: true}"
+            (click)="[
+              configurationService.toggleSidebarItemsStatus('closed'),
+              configurationService.toggleSidebarPageStatus('closed')
+            ]"
+          >
+            {{ item.label }}
+          </a>
+        </li>
+      }
+
+      @if (authService.isAdmin()) {
+        <li class="border-l border-gray-400 h-6 mx-2 drop-shadow-sm"></li>
+      }
+
+      @for (item of menuItemsAdmin(); track $index) {
+        <li>
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="text-secondary"
+            [routerLinkActiveOptions]="{exact: true}"
+            (click)="[
+              configurationService.toggleSidebarItemsStatus('closed'),
+              configurationService.toggleSidebarPageStatus('closed')
+            ]"
+          >
+            {{ item.label }}
+          </a>
         </li>
       }
     </ul>

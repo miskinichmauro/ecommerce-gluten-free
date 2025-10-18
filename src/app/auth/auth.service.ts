@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { User } from './interfaces/user.interfase';
+import { User } from '../users/users/interfaces/user.interfase';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from './interfaces/auth-response.interfase';

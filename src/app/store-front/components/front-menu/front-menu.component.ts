@@ -1,12 +1,12 @@
 import { Component, HostListener, inject } from '@angular/core';
-import { NavbarComponent } from 'src/app/shared/components/navbar/navbar.component';
-import { SidebarItemsComponent } from 'src/app/shared/components/sidebar-items/sidebar-items.component';
 import { MENU_ITEMS } from '../menu-items';
-import { LogoComponent } from "src/app/shared/components/logo/logo.component";
-import { AuthService } from 'src/app/auth/auth.service';
-import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 import { Router } from '@angular/router';
-import { NavOptionsComponent } from "src/app/shared/components/nav-options/nav-options.component";
+import { NavbarComponent } from '@shared/components/navbar/navbar.component';
+import { AuthService } from '@auth/auth.service';
+import { LogoComponent } from '@shared/components/logo/logo.component';
+import { NavOptionsComponent } from '@shared/components/nav-options/nav-options.component';
+import { SidebarItemsComponent } from '@shared/components/sidebar-items/sidebar-items.component';
+import { ConfigurationService } from '@shared/services/configuration.service';
 
 @Component({
   selector: 'front-menu',

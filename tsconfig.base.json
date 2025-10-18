@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "paths": {
       "@admin-dashboard/*": ["./src/app/admin-dashboard/*"],
       "@auth/*": ["./src/app/auth/*"],

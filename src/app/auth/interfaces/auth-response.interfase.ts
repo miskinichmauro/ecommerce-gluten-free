@@ -1,4 +1,4 @@
-import { User } from "./user.interfase";
+import { User } from "../../users/users/interfaces/user.interfase";
 
 export interface AuthResponse {
   user:         User;

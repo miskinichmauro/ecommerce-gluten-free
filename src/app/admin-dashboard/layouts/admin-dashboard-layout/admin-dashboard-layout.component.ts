@@ -20,13 +20,19 @@ export class AdminDashboardLayoutComponent {
   user = computed(() => this.authService.user());
   menuItems = MENU_ADMIN_ITEMS;
   isMobile = false;
+  userMenuOpen = false;
+
+  ngOnInit() {
+    this.onResize();
+  }
 
   @HostListener('window:resize')
   onResize() {
     this.isMobile = window.innerWidth < 1024;
   }
 
-  ngOnInit() {
-    this.onResize();
+
+  toggleUserMenu() {
+    this.userMenuOpen = !this.userMenuOpen;
   }
 }
