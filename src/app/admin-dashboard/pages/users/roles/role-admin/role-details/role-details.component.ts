@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
 import { ConfigurationService } from '@shared/services/configuration.service';
+import { firstValueFrom } from 'rxjs';
 import { Role } from 'src/app/users/roles/interfaces/role.interface';
 import { RoleService } from 'src/app/users/roles/services/role.services';
 
@@ -30,9 +31,7 @@ export class RoleDetailsComponent {
     this.roleForm.reset(this.role());
   }
 
-  onSubmit() {
-    this.configurationService.loading.set(true);
-
+  async onSubmit() {
     this.roleForm.markAllAsTouched();
     const formValue = this.roleForm.value;
 
@@ -41,13 +40,9 @@ export class RoleDetailsComponent {
     };
 
     if (this.role().id === 'new') {
-      this.roleService.create(roleData).subscribe(async () => {
-        await this.configurationService.toggleToast();
-      });
+      await firstValueFrom(this.roleService.create(roleData));
     } else {
-      this.roleService.update(this.role().id, roleData).subscribe(async () => {
-        await this.configurationService.toggleToast();
-      });
+      await firstValueFrom(this.roleService.update(this.role().id, roleData));
     }
     this.router.navigate(['/admin/roles']);
   }

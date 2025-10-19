@@ -43,7 +43,7 @@ export class AuthService {
       password
     })
     .pipe(
-      map(resp => this.handleLoginSuccess(resp)),
+      map(res => this.handleLoginSuccess(res)),
       catchError(() => this.handleLoginError())
     );
   }
@@ -55,8 +55,8 @@ export class AuthService {
       fullName
     })
     .pipe(
-      map(resp => this.handleLoginSuccess(resp)),
-      catchError((resp) => {
+      map(res => this.handleLoginSuccess(res)),
+      catchError((res) => {
         return this.handleLoginError()})
     );
   }
@@ -69,7 +69,7 @@ export class AuthService {
     }
     return this.http.get<AuthResponse>(`${baseUrlAuth}/check-status`, {})
     .pipe(
-      map(resp => this.handleLoginSuccess(resp)),
+      map(res => this.handleLoginSuccess(res)),
       catchError(() => this.handleLoginError())
     );
   }
@@ -82,12 +82,12 @@ export class AuthService {
     localStorage.removeItem('access_token');
   }
 
-  private handleLoginSuccess(resp: AuthResponse) {
-    this._user.set(resp.user);
-    this._token.set(resp.access_token);
+  private handleLoginSuccess(res: AuthResponse) {
+    this._user.set(res.user);
+    this._token.set(res.access_token);
     this._authStatus.set('authenticated');
 
-    localStorage.setItem('access_token', resp.access_token);
+    localStorage.setItem('access_token', res.access_token);
     return true;
   }
 

@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { finalize, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Contact } from '../interfaces/contact.interface';
+import { ToastService } from '@shared/services/toast.service';
 
 const baseUrlContacts = `${environment.baseUrl}/contacts`;
 
@@ -17,6 +18,7 @@ const emptyContact: Contact = {
 export class ContactService {
   private readonly http = inject(HttpClient);
   private readonly contactsCache = new Map<string, Contact>();
+  private readonly toastService = inject(ToastService);
 
   getAll(): Observable<Contact[]> {
     if (this.contactsCache.size) {
@@ -24,7 +26,7 @@ export class ContactService {
     }
 
     return this.http.get<Contact[]>(baseUrlContacts).pipe(
-      tap((resp) => resp.forEach((contact) => this.contactsCache.set(contact.id, contact)))
+      tap((res) => res.forEach((contact) => this.contactsCache.set(contact.id, contact)))
     );
   }
 
@@ -38,25 +40,40 @@ export class ContactService {
     }
 
     return this.http.get<Contact>(`${baseUrlContacts}/${id}`).pipe(
-      tap((resp) => this.contactsCache.set(id, resp))
+      tap((res) => this.contactsCache.set(id, res))
     );
   }
 
   create(contact: Partial<Contact>): Observable<Contact> {
+    this.toastService.activateLoading();
     return this.http.post<Contact>(baseUrlContacts, contact).pipe(
-      tap((res) => this.insertOrUpdateCache(res))
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   update(id: string, partialContact: Partial<Contact>): Observable<Contact> {
+    this.toastService.activateLoading();
     return this.http.patch<Contact>(`${baseUrlContacts}/${id}`, partialContact).pipe(
-      tap((resp) => this.insertOrUpdateCache(resp))
+      tap(async(res) => {
+        this.insertOrUpdateCache(res);;
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   delete(id: string): Observable<Contact> {
+    this.toastService.activateLoading();
     return this.http.delete<Contact>(`${baseUrlContacts}/${id}`).pipe(
-      tap(() => this.contactsCache.delete(id))
+      tap(async () => {
+        this.contactsCache.delete(id);;
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 

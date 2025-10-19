@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SuccessComponent } from "../success/success.component";
 import { LoadingComponent } from "../loading/loading.component";
-import { ConfigurationService } from '../../services/configuration.service';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'toast',
@@ -10,8 +10,8 @@ import { ConfigurationService } from '../../services/configuration.service';
   styleUrl: './toast.component.css',
 })
 export class ToastComponent {
-  configurationService = inject(ConfigurationService);
+  private readonly toastService = inject(ToastService);
 
-  loading = this.configurationService.loading;
-  success = this.configurationService.success;
+  loading = this.toastService.loading;
+  success = this.toastService.success;
 }

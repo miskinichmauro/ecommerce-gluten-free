@@ -1,10 +1,11 @@
-import { Component, HostListener, inject, input, OnInit, signal } from '@angular/core';
+import { Component, HostListener, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { FormErrorLabelComponent } from "src/app/shared/components/form-error-label/form-error-label.component";
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Router } from '@angular/router';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'recipe-details',
@@ -29,9 +30,7 @@ export class RecipeDetailsComponent implements OnInit {
     this.recipeForm.reset(this.recipe());
   }
 
-  onSubmit() {
-    this.configurationService.loading.set(true);
-
+  async onSubmit() {
     this.recipeForm.markAllAsTouched();
     const formValue = this.recipeForm.value;
 
@@ -39,22 +38,13 @@ export class RecipeDetailsComponent implements OnInit {
       ...(formValue as any)
     };
 
-    let request$;
     if (this.recipe().id === 'new') {
-      request$ = this.recipeService.create(recipeData);
+      await firstValueFrom(this.recipeService.create(recipeData));
     } else {
-      request$ = this.recipeService.update(this.recipe().id, recipeData);
+      await firstValueFrom(this.recipeService.update(this.recipe().id, recipeData));
     }
 
-    request$.subscribe({
-      next: async () => {
-        await this.configurationService.toggleToast();
-        this.router.navigate(["/admin/recipes"]);
-      },
-      error: () => {
-        this.configurationService.loading.set(false);
-      }
-    });
+    this.router.navigate(["/admin/recipes"]);
   }
 
   controlPresionado: boolean = false;

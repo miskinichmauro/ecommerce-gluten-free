@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { ToastService } from '@shared/services/toast.service';
+import { finalize, Observable, of, tap } from 'rxjs';
 import { User } from 'src/app/users/users/interfaces/user.interfase';
 import { environment } from 'src/environments/environment';
 
@@ -18,6 +19,7 @@ const emptyUser: User = {
 export class UserService {
   private readonly http = inject(HttpClient);
   private readonly usersCache = new Map<string, User>();
+  private readonly toastService = inject(ToastService);
 
   getAll(): Observable<User[]> {
     if (this.usersCache.size) {
@@ -25,7 +27,7 @@ export class UserService {
     }
 
     return this.http.get<User[]>(baseUrlUsers).pipe(
-      tap((resp) => resp.forEach((user) => this.usersCache.set(user.id, user)))
+      tap((res) => res.forEach((user) => this.usersCache.set(user.id, user)))
     );
   }
 
@@ -39,25 +41,40 @@ export class UserService {
     }
 
     return this.http.get<User>(`${baseUrlUsers}/${id}`).pipe(
-      tap((resp) => this.usersCache.set(id, resp))
+      tap((res) => this.usersCache.set(id, res))
     );
   }
 
   create(user: Partial<User>): Observable<User> {
+    this.toastService.activateLoading();
     return this.http.post<User>(baseUrlUsers, user).pipe(
-      tap((res) => this.insertOrUpdateCache(res))
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   update(id: string, partialUser: Partial<User>): Observable<User> {
+    this.toastService.activateLoading();
     return this.http.patch<User>(`${baseUrlUsers}/${id}`, partialUser).pipe(
-      tap((resp) => this.insertOrUpdateCache(resp))
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   delete(id: string): Observable<User> {
+    this.toastService.activateLoading();
     return this.http.delete<User>(`${baseUrlUsers}/${id}`).pipe(
-      tap(() => this.usersCache.delete(id))
+      tap(async () => {
+        this.usersCache.delete(id);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 

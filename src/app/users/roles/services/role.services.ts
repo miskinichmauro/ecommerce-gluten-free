@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { finalize, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Role } from '../interfaces/role.interface';
+import { ToastService } from '@shared/services/toast.service';
 
 const baseUrlRoles = `${environment.baseUrl}/roles`;
 
@@ -15,6 +16,7 @@ const emptyRole: Role = {
 @Injectable({ providedIn: 'root' })
 export class RoleService {
   private readonly http = inject(HttpClient);
+  private readonly toastService = inject(ToastService);
   private readonly rolesCache = new Map<string, Role>();
 
   getAll(): Observable<Role[]> {
@@ -23,7 +25,7 @@ export class RoleService {
     }
 
     return this.http.get<Role[]>(baseUrlRoles).pipe(
-      tap((resp) => resp.forEach((role) => this.rolesCache.set(role.id, role)))
+      tap((res) => res.forEach((role) => this.rolesCache.set(role.id, role)))
     );
   }
 
@@ -37,25 +39,40 @@ export class RoleService {
     }
 
     return this.http.get<Role>(`${baseUrlRoles}/${id}`).pipe(
-      tap((resp) => this.rolesCache.set(id, resp))
+      tap((res) => this.rolesCache.set(id, res))
     );
   }
 
   create(role: Partial<Role>): Observable<Role> {
+    this.toastService.activateLoading();
     return this.http.post<Role>(baseUrlRoles, role).pipe(
-      tap((res) => this.insertOrUpdateCache(res))
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   update(id: string, partialRole: Partial<Role>): Observable<Role> {
+    this.toastService.activateLoading();
     return this.http.patch<Role>(`${baseUrlRoles}/${id}`, partialRole).pipe(
-      tap((resp) => this.insertOrUpdateCache(resp))
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 
   delete(id: string): Observable<Role> {
+    this.toastService.activateLoading();
     return this.http.delete<Role>(`${baseUrlRoles}/${id}`).pipe(
-      tap(() => this.rolesCache.delete(id))
+      tap(async () => {
+        this.rolesCache.delete(id);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
   }
 

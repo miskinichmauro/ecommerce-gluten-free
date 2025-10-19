@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Product, ProductResponse } from '../interfaces/product';
-import { Observable, of, tap, map } from 'rxjs';
+import { Observable, of, tap, map, finalize } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/users/users/interfaces/user.interfase';
+import { ToastService } from '@shared/services/toast.service';
 
 const baseUrlProducts = `${environment.baseUrl}/products`;
 
@@ -33,6 +34,7 @@ export class ProductService {
   private readonly http = inject(HttpClient);
   private readonly productsCache = new Map<string, ProductResponse>();
   private readonly productCache = new Map<string, Product>();
+  private readonly toastService = inject(ToastService);
 
   getProducts(options: Options = {}): Observable<ProductResponse> {
     const limitEnvironment = environment.cantProducts;
@@ -79,17 +81,25 @@ export class ProductService {
   }
 
   createProduct(partialProduct: Partial<Product>): Observable<Product> {
-    const response = this.http.post<Product>(`${baseUrlProducts}`, partialProduct)
-    .pipe(tap((res) => this.insertOrUpdateCache(res)));
-    return response;
+    this.toastService.activateLoading();
+    return this.http.post<Product>(`${baseUrlProducts}`, partialProduct).pipe(
+      tap((res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
+    );
   }
 
   updateProduct(id:string, partialProduct: Partial<Product>): Observable<Product> {
-    const response = this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct)
-    .pipe(
-        tap((res) => this.insertOrUpdateCache(res))
+    this.toastService.activateLoading();
+    return this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct).pipe(
+      tap(async(res) => {
+        this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
     );
-    return response;
   }
 
   insertOrUpdateCache(product: Product) {

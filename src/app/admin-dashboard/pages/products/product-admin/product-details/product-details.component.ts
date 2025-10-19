@@ -6,6 +6,7 @@ import { FormErrorLabelComponent } from "src/app/shared/components/form-error-la
 import { ProductService } from 'src/app/products/services/products.service';
 import { Router } from '@angular/router';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'product-details',
@@ -56,9 +57,7 @@ export class ProductDetailsComponent implements OnInit {
     this.productForm.patchValue({ tags: currentTags });
   }
 
-  onSubmit() {
-    this.configurationService.loading.set(true);
-
+  async onSubmit() {
     this.productForm.markAllAsTouched();
     const formValue = this.productForm.value;
 
@@ -67,13 +66,9 @@ export class ProductDetailsComponent implements OnInit {
     };
 
     if (this.product().id === 'new') {
-      this.productsService.createProduct(productData).subscribe(async () => {
-        await this.configurationService.toggleToast();
-      });
+      await firstValueFrom(this.productsService.createProduct(productData));
     } else {
-      this.productsService.updateProduct(this.product().id, productData).subscribe(async () => {
-        await this.configurationService.toggleToast();
-      });
+      await firstValueFrom(this.productsService.updateProduct(this.product().id, productData));
     }
     this.router.navigate(['/admin/products'])
   }
