@@ -1,1 +1,35 @@
-<p>role-details works!</p>,
+<h1 class="text-2xl font-bold">{{ role().name || "Crear nuevo rol" }}</h1>
+<div class="divider"></div>
+
+<form
+  [formGroup]="roleForm"
+  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="flex flex-col gap-2">
+    <h2 class="text-xl font-bold h-12">Datos generales</h2>
+    <input
+      type="text"
+      placeholder="Nombre"
+      class="input input-bordered w-full"
+      formControlName="name"
+      [class.border-red-500]="roleForm.get('name')?.errors ?? false"
+    />
+    <form-error-label [control]="roleForm.get('name')!" />
+
+    <input
+      type="text"
+      placeholder="Descripción"
+      class="input input-bordered w-full"
+      formControlName="description"
+      [class.border-red-500]="roleForm.get('description')?.errors ?? false"
+    />
+    <form-error-label [control]="roleForm.get('description')!" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-end h-12">
+      <button class="btn btn-secondary" type="submit">Guardar</button>
+    </div>
+  </div>
+</form>

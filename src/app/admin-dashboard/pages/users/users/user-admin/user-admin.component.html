@@ -1,1 +1,10 @@
-<p>user-admin works!</p>,
+@if (loading()) {
+  <div class="min-h-[50vh] gap-4">
+    <loading />
+  </div>
+}
+
+
+@if (user()?.id) {
+  <user-details [user]="user()!" />
+}
