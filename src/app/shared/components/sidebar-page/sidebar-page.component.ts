@@ -21,4 +21,15 @@ export class SidebarPageComponent {
   close() {
     this.configurationService.toggleSidebarPageStatus('closed');
   }
+
+  getTitle() {
+    const pageName = this.configurationService.sidebarPageRouteName();
+    if (pageName === 'auth') {
+      return 'Iniciar sesión';
+    } else if (pageName === 'userOptions') {
+      return 'Hola, ' + this.authService.user()?.fullName
+    } else {
+      return 'Tu carrito';
+    }
+  }
 }

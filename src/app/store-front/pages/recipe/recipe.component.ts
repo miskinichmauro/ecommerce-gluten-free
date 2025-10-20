@@ -18,6 +18,10 @@ export class RecipeComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
+  ngOnInit(): void {
+    this.getRecipes();
+  }
+
   async getRecipes() {
     this.loading.set(true);
     this.error.set(null);
@@ -29,9 +33,5 @@ export class RecipeComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
-  }
-
-  ngOnInit(): void {
-    this.getRecipes();
   }
 }

@@ -18,12 +18,27 @@ export class NavOptionsComponent {
     this.configurationService.toggleSidebarPageStatus('open');
 
     let sidebarRoute = this.authService.authStatus() === 'authenticated'
-    ? ['userOptions']
-    : ['auth', 'login'];
+      ? ['userOptions']
+      : ['auth', 'login'];
 
-    this.configurationService.toggleSidebarPageRoute(sidebarRoute);
+    if (this.authService.authStatus() === 'authenticated') {
+      this.configurationService.toggleSidebarPageRoute('userOptions');
+    } else {
+      this.configurationService.toggleSidebarPageRoute('auth');
+    }
+
     this.router.navigate(
       [{ outlets: { sidebar: sidebarRoute } }],
+      { skipLocationChange: true }
+    );
+  }
+
+  openCart() {
+    this.configurationService.toggleSidebarPageStatus('open');
+
+    this.configurationService.toggleSidebarPageRoute('cart');
+    this.router.navigate(
+      [{ outlets: { sidebar: ['cart'] } }],
       { skipLocationChange: true }
     );
   }

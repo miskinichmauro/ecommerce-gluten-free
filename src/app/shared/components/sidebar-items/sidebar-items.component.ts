@@ -1,19 +1,17 @@
 import { Component, inject, input } from '@angular/core';
-import { AuthService } from 'src/app/auth/auth.service';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
-import { NavItemsComponent } from '../nav-items/nav-items.component';
 import { ConfigurationService } from '../../services/configuration.service';
+import { MenuItemsComponent } from '@shared/components/menu-items/menu-items.component';
 
 @Component({
   selector: 'sidebar-items',
-  imports: [NavItemsComponent],
+  imports: [MenuItemsComponent],
   templateUrl: './sidebar-items.component.html',
   styleUrl: './sidebar-items.component.css',
 })
 export class SidebarItemsComponent {
   menuItems = input.required<MenuItem[]>();
-  
-  authService = inject(AuthService);
+
   configurationService = inject(ConfigurationService);
 
   open() : boolean {

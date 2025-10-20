@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
 
 type sidebarStatus = 'closed' | 'open';
+type sidebarPageRoute = 'auth' | 'userOptions' | 'cart';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
@@ -9,7 +10,7 @@ export class ConfigurationService {
 
   sidebarItemsStatus = signal<sidebarStatus>('closed');
   sidebarPageStatus = signal<sidebarStatus>('closed');
-  sidebarPageRoute = signal<string>('');
+  sidebarPageRouteName = signal<string>('');
 
   toggleSidebarItemsStatus(value: sidebarStatus) {
     this.sidebarItemsStatus.set(value);
@@ -19,8 +20,7 @@ export class ConfigurationService {
     this.sidebarPageStatus.set(value);
   }
 
-  toggleSidebarPageRoute(value: string[]) {
-    const path = value.join('/');
-    this.sidebarPageRoute.set(path);
+  toggleSidebarPageRoute(value: sidebarPageRoute) {
+    this.sidebarPageRouteName.set(value);
   }
 }
