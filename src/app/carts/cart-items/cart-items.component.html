@@ -1,1 +1,20 @@
-<p>cart-items works!</p>,
+@for (item of cartItems(); track $index) {
+  <div class="card bg-base-100 w-64 shadow-sm opacity-90 mb-3">
+    <figure class="h-32 flex items-center justify-center bg-gray-100 overflow-hidden">
+      <img [src]="item.product?.imagesName! | productImage" alt="" class="h-full object-cover">
+    </figure>
+    <div class="card-body p-3">
+      <h2
+        class="card-title text-sm hover:underline cursor-pointer"
+        [routerLink]="['/product', item.product?.slug]"
+      >
+        {{ item.product?.title }}
+      </h2>
+      <p class="text-xs text-gray-500">{{ item.product?.description | slice: 0:50 }}</p>
+      <div class="card-actions justify-between mt-2">
+        <span class="text-sm font-bold">${{ item.product?.price }} x {{ item.quantity }}</span>
+        <button class="btn btn-xs btn-primary" [routerLink]="['/product', item.product?.slug]">Ver</button>
+      </div>
+    </div>
+  </div>
+}

@@ -8,8 +8,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('ecommerce-gluten-free');
-
   setTheme(event: Event) {
     const select = event.target as HTMLSelectElement;
     const tema = select.value;

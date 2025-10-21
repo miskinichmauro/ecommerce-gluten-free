@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { Product } from '../../interfaces/product';
 import { SlicePipe } from '@angular/common';
 import { ProductImagePipe } from '../../pipes/product-image.pipe';
+import { CartService } from '../../../carts/services/cart.service';
 
 @Component({
   selector: 'product-card',
@@ -12,4 +13,10 @@ import { ProductImagePipe } from '../../pipes/product-image.pipe';
 })
 export class ProductCardComponent {
   product = input.required<Product>();
+
+  private readonly CartService = inject(CartService);
+
+  addToCart() {
+    this.CartService.addItem(this.product().id).subscribe();
+  }
 }

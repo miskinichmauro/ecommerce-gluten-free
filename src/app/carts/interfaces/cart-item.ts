@@ -1,7 +1,8 @@
-interface CartItem {
+import { Product } from "@products/interfaces/product";
+
+export interface CartItem {
+  id: string;
   productId: string;
-  name: string;
-  price: number;
   quantity: number;
-  image?: string;
+  product?: Product;
 }

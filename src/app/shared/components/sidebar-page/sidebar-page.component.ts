@@ -29,7 +29,7 @@ export class SidebarPageComponent {
     } else if (pageName === 'userOptions') {
       return 'Hola, ' + this.authService.user()?.fullName
     } else {
-      return 'Tu carrito';
+      return 'Mi carrito';
     }
   }
 }

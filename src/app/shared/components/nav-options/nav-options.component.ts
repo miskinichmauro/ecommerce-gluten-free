@@ -36,9 +36,9 @@ export class NavOptionsComponent {
   openCart() {
     this.configurationService.toggleSidebarPageStatus('open');
 
-    this.configurationService.toggleSidebarPageRoute('cart');
+    this.configurationService.toggleSidebarPageRoute('cartSidebar');
     this.router.navigate(
-      [{ outlets: { sidebar: ['cart'] } }],
+      [{ outlets: { sidebar: ['cartSidebar'] } }],
       { skipLocationChange: true }
     );
   }

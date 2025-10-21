@@ -7,6 +7,7 @@ import { RecipeComponent } from "./pages/recipe/recipe.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { UserOptionsComponent } from "./pages/user-options/user-options.component";
 import { LoginComponent } from "../auth/pages/login/login.component";
+import { CartSidebarComponent } from "@store-front/pages/cart/cart-sidebar/cart-sidebar.component";
 
 export const storeFrontRoutes: Routes = [
   {
@@ -54,6 +55,12 @@ export const storeFrontRoutes: Routes = [
         title: 'Iniciar sesión',
         outlet: 'sidebar',
         component: LoginComponent
+      },
+      {
+        path: 'cartSidebar',
+        title: 'Mi carrito',
+        outlet: 'sidebar',
+        component: CartSidebarComponent
       },
     ]
   }
