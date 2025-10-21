@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Router } from '@angular/router';
+import { ThemeController } from "../theme-controller/theme-controller";
 
 @Component({
   selector: 'user-options',
-  imports: [],
+  imports: [ThemeController],
   templateUrl: './nav-options.component.html',
   styleUrl: './nav-options.component.css',
 })
