@@ -14,9 +14,9 @@ import { CartService } from '../../../carts/services/cart.service';
 export class ProductCardComponent {
   product = input.required<Product>();
 
-  private readonly CartService = inject(CartService);
+  private readonly cartService = inject(CartService);
 
   addToCart() {
-    this.CartService.addItem(this.product().id).subscribe();
+    this.cartService.addItem(this.product()).subscribe();
   }
 }

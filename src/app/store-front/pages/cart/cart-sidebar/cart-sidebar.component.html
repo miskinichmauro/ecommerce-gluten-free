@@ -1,7 +1,7 @@
 <div class="flex flex-col h-full">
-  @if (cartItems.length > 0) {
+  @if ((cartItems$ | async)?.length! > 0) {
     <div class="flex-1 overflow-y-auto px-4 py-6">
-      <cart-items [cartItems]="cartItems"></cart-items>
+      <cart-items [cartItems]="(cartItems$ | async)!"></cart-items>
     </div>
   } @else {
     <div class="flex-1 flex items-center justify-center text-gray-500 min-h-[75vh]">

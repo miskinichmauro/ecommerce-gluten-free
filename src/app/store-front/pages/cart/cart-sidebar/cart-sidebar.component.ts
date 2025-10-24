@@ -1,21 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CartItem } from 'src/app/carts/interfaces/cart-item';
+import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { CartItemsComponent } from 'src/app/carts/cart-items/cart-items.component';
 import { CartService } from 'src/app/carts/services/cart.service';
-import { CartItemsComponent } from "src/app/carts/cart-items/cart-items.component";
 
 @Component({
-  selector: 'app-cart-sidebar',
-  imports: [CartItemsComponent],
+  selector: 'cart-sidebar',
+  standalone: true,
+  imports: [CommonModule, CartItemsComponent, AsyncPipe],
   templateUrl: './cart-sidebar.component.html',
-  styleUrl: './cart-sidebar.component.css',
+  styleUrls: ['./cart-sidebar.component.css'],
 })
 export class CartSidebarComponent implements OnInit {
   private readonly cartService = inject(CartService);
+  cartItems$ = this.cartService.cart$;
 
-  cartItems: CartItem[] = [];
-
-  ngOnInit() {
-    this.cartService.cart$.subscribe(items => this.cartItems = items);
-    this.cartService.loadCart();
+  ngOnInit(): void {
+    this.cartService.loadCart().subscribe();
   }
 }
