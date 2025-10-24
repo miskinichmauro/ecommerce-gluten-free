@@ -3,11 +3,12 @@ import { RouterLink } from "@angular/router";
 import { Product } from '../../interfaces/product';
 import { SlicePipe } from '@angular/common';
 import { ProductImagePipe } from '../../pipes/product-image.pipe';
-import { CartService } from '../../../carts/services/cart.service';
+import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
+import { CartService } from 'src/app/carts/services/cart.service';
 
 @Component({
   selector: 'product-card',
-  imports: [RouterLink, SlicePipe, ProductImagePipe],
+  imports: [RouterLink, SlicePipe, ProductImagePipe, GuaraniesPipe],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css',
 })

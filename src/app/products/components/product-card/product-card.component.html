@@ -10,10 +10,17 @@
       {{ product().title }}
     </h2>
     <p class="min-h-[70px]"> {{ product().description | slice: 0 : 70}}</p>
-    <div class="card-actions justify-end">
-      <button (click)="addToCart()" type="button" class="btn btn-primary">
-        Agregar al carrito
-      </button>
+    <div class="flex justify-between items-center">
+      <div class="flex justify-start">
+        <p class="font-bold text-lg">
+          {{ product().price | guaranies }}
+        </p>
+      </div>
+      <div class="card-actions flex justify-end ">
+        <button (click)="addToCart()" type="button" class="btn btn-primary">
+          Agregar al carrito
+        </button>
+      </div>
     </div>
   </div>
 </div>

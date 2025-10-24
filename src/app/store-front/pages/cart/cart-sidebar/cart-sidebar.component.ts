@@ -9,10 +9,10 @@ import { CartService } from 'src/app/carts/services/cart.service';
   standalone: true,
   imports: [CommonModule, CartItemsComponent, AsyncPipe],
   templateUrl: './cart-sidebar.component.html',
-  styleUrls: ['./cart-sidebar.component.css'],
+  styleUrl: './cart-sidebar.component.css',
 })
 export class CartSidebarComponent implements OnInit {
-  private readonly cartService = inject(CartService);
+  cartService = inject(CartService);
   cartItems$ = this.cartService.cart$;
 
   ngOnInit(): void {

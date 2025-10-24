@@ -17,10 +17,12 @@
     }
   </div>
 
-  <pagination
-    [pages]="productResponse()?.pages ?? 0"
-    [currentPage]="paginationService.currentPage()"
-  />
+  <div class="flex justify-center mt-2 mb-8">
+    <pagination
+      [pages]="productResponse()?.pages ?? 0"
+      [currentPage]="paginationService.currentPage()"
+    ></pagination>
+  </div>
 }
 
 @if (!loading() && !error() && productResponse()?.products?.length === 0) {

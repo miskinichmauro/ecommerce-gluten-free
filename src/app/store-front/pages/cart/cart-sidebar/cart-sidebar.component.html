@@ -9,3 +9,9 @@
     </div>
   }
 </div>
+
+@if ((cartItems$ | async)?.length! > 0) {
+  <button (click)="cartService.clearCart().subscribe()" class="btn btn-sm btn-warning fixed bottom-6 right-6">
+    Vaciar carrito
+  </button>
+}
