@@ -40,21 +40,6 @@ export const storeFrontRoutes: Routes = [
         title: 'Contacto',
         component: ContactComponent
       },
-      {
-        path: 'contact',
-        title: 'Contacto',
-        component: ContactComponent
-      },
-      {
-        path: 'contact',
-        title: 'Contacto',
-        component: ContactComponent
-      },
-      {
-        path: 'contact',
-        title: 'Contacto',
-        component: ContactComponent
-      },
 
       /** User **/
       {
