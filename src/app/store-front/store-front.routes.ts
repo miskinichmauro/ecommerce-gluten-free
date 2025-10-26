@@ -55,10 +55,6 @@ export const storeFrontRoutes: Routes = [
         title: 'Contacto',
         component: ContactComponent
       },
-      {
-        path: '**',
-        component: NotFoundComponent
-      },
 
       /** User **/
       {
@@ -85,6 +81,12 @@ export const storeFrontRoutes: Routes = [
         title: 'Mi carrito',
         outlet: 'sidebar',
         component: CartSidebarComponent
+      },
+
+      /** Not found **/
+      {
+        path: '**',
+        component: NotFoundComponent
       },
     ]
   }

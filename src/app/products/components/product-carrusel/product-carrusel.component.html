@@ -1,4 +1,4 @@
-<swiper-container #swiper class="w-full">
+<swiper-container #swiper class="w-full overflow-visible">
   @for (product of products(); track $index) {
     <swiper-slide class="flex items-center justify-center">
       <product-card [product]="product"></product-card>

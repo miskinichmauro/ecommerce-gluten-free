@@ -7,3 +7,8 @@
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
+
+swiper-container::part(container),
+swiper-container::part(wrapper) {
+  overflow: visible !important;
+}

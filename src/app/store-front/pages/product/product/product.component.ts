@@ -17,7 +17,7 @@ export class ProductComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
 
-  productIdSlug = this.activatedRoute.snapshot.params['idSlug'];
+  productslug = this.activatedRoute.snapshot.params['slug'];
 
   product = signal<Product | null>(null);
   loading = signal<boolean>(true);
@@ -34,7 +34,7 @@ export class ProductComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productIdSlug));
+      const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productslug));
       this.product.set(data);
     } catch (err) {
       this.error.set('Error al cargar el producto');
