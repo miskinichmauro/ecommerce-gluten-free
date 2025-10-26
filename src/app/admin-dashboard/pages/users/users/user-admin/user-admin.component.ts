@@ -2,10 +2,10 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, firstValueFrom } from 'rxjs';
-import { User } from 'src/app/users/users/interfaces/user.interfase';
-import { UserService } from 'src/app/users/users/services/user.service';
 import { LoadingComponent } from "@shared/components/loading/loading.component";
 import { UserDetailsComponent } from "./user-details/user-details.component";
+import { UserService } from '@store-front/users/services/user.service';
+import { User } from '@store-front/users/interfaces/user.interfase';
 
 @Component({
   selector: 'user-admin',

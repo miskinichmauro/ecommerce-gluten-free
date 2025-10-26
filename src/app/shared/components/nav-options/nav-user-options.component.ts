@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 import { ThemeController } from "../theme-controller/theme-controller";
 
 @Component({
-  selector: 'user-options',
+  selector: 'nav-user-options',
   imports: [ThemeController],
-  templateUrl: './nav-options.component.html',
-  styleUrl: './nav-options.component.css',
+  templateUrl: './nav-user-options.component.html',
+  styleUrl: './nav-user-options.component.css',
 })
-export class NavOptionsComponent {
+export class NavUserOptionsComponent {
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
   router = inject(Router);

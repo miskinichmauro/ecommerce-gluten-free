@@ -1,4 +1,4 @@
 export const environment = {
   baseUrl: 'http://localhost:3000/api',
-  cantProducts: 8
+  cantProducts: 10
 };

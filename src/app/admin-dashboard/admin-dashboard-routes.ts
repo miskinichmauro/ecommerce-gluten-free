@@ -12,8 +12,6 @@ import { UsersAdminComponent } from "@admin-dashboard/pages/users/users/users-ad
 import { RolesAdminComponent } from "@admin-dashboard/pages/users/roles/roles-admin/roles-admin.component";
 import { RoleAdminComponent } from "@admin-dashboard/pages/users/roles/role-admin/role-admin.component";
 
-
-
 export const AdminDashboardRoutes: Routes = [
   {
     path: '',

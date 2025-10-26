@@ -1,10 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { User } from 'src/app/users/users/interfaces/user.interfase';
-import { UserService } from 'src/app/users/users/services/user.service';
 import { LoadingComponent } from "@shared/components/loading/loading.component";
-import { UsersTableComponent } from "src/app/users/users/components/users-table/users-table.component";
+import { UsersTableComponent } from '@store-front/users/components/users-table/users-table.component';
+import { UserService } from '@store-front/users/services/user.service';
+import { User } from '@store-front/users/interfaces/user.interfase';
 
 @Component({
   selector: 'app-users-admin',

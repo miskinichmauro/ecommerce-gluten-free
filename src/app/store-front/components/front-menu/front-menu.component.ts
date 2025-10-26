@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { NavbarComponent } from '@shared/components/navbar/navbar.component';
 import { AuthService } from '@auth/auth.service';
 import { LogoComponent } from '@shared/components/logo/logo.component';
-import { NavOptionsComponent } from '@shared/components/nav-options/nav-options.component';
+import { NavUserOptionsComponent } from '@shared/components/nav-options/nav-user-options.component';
 import { SidebarItemsComponent } from '@shared/components/sidebar-items/sidebar-items.component';
 import { ConfigurationService } from '@shared/services/configuration.service';
 
 @Component({
   selector: 'front-menu',
-  imports: [NavbarComponent, SidebarItemsComponent, LogoComponent, NavOptionsComponent],
+  imports: [NavbarComponent, SidebarItemsComponent, LogoComponent, NavUserOptionsComponent],
   templateUrl: './front-menu.component.html',
   styleUrl: './front-menu.component.css',
 })

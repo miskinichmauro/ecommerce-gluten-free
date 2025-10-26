@@ -3,9 +3,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
 import { ConfigurationService } from '@shared/services/configuration.service';
+import { User } from '@store-front/users/interfaces/user.interfase';
+import { UserService } from '@store-front/users/services/user.service';
 import { firstValueFrom } from 'rxjs';
-import { User } from 'src/app/users/users/interfaces/user.interfase';
-import { UserService } from 'src/app/users/users/services/user.service';
 
 @Component({
   selector: 'user-details',

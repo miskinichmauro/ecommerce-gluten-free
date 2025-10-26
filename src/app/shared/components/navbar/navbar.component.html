@@ -9,7 +9,7 @@
       @for (item of menuItemsDefault(); track $index) {
         <li>
           <a
-            [routerLink]="item.route"
+            [routerLink]="item.routerLink"
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
             (click)="[
@@ -29,7 +29,7 @@
       @for (item of menuItemsAdmin(); track $index) {
         <li>
           <a
-            [routerLink]="item.route"
+            [routerLink]="item.routerLink"
             routerLinkActive="text-secondary"
             [routerLinkActiveOptions]="{exact: true}"
             (click)="[
@@ -45,7 +45,7 @@
   </div>
 
   <div class="navbar-end gap-2 mx-3">
-    <user-options />
+    <nav-user-options />
   </div>
 
 </div>

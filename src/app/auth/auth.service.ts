@@ -1,10 +1,10 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { User } from '../users/users/interfaces/user.interfase';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from './interfaces/auth-response.interfase';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { User } from '@store-front/users/interfaces/user.interfase';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated';
 const baseUrlAuth = `${environment.baseUrl}/auth`;

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, input, Output, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
-import { User } from 'src/app/users/users/interfaces/user.interfase';
+import { User } from '@store-front/users/interfaces/user.interfase';
 
 @Component({
   selector: 'users-table',

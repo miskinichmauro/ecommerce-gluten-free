@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { FormErrorLabelComponent } from '@shared/components/form-error-label/form-error-label.component';
 import { ConfigurationService } from '@shared/services/configuration.service';
 import { firstValueFrom } from 'rxjs';
-import { Role } from 'src/app/users/roles/interfaces/role.interface';
-import { RoleService } from 'src/app/users/roles/services/role.services';
+import { Role } from 'src/app/roles/interfaces/role.interface';
+import { RoleService } from 'src/app/roles/services/role.services';
 
 @Component({
   selector: 'role-details',

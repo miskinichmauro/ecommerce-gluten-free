@@ -10,10 +10,8 @@
   <p class="text-red-500">{{ error() }}</p>
 }
 
-<div class="py-18">
-  @if (!loading() && !error() && productResponse()?.products?.length) {
-    <product-carrusel [products]="productResponse()?.products ?? []"></product-carrusel>
-  }
+<div class="py-18 px-4 sm:px-8 md:px-18">
+  <product-carrusel [products]="productResponse()?.products ?? []"></product-carrusel>
 </div>
 
 @if (!loading() && !error() && productResponse()?.products?.length === 0) {

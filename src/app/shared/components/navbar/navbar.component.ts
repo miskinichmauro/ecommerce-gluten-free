@@ -1,7 +1,7 @@
 import { Component, inject, input  } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ConfigurationService } from '../../services/configuration.service';
-import { NavOptionsComponent } from "../nav-options/nav-options.component";
+import { NavUserOptionsComponent } from "../nav-options/nav-user-options.component";
 import { AuthService } from '@auth/auth.service';
 import { MenuItem } from '@store-front/components/interfaces/menu-item.interface';
 import { LogoComponent } from '../logo/logo.component';
@@ -9,7 +9,7 @@ import { LogoComponent } from '../logo/logo.component';
 
 @Component({
   selector: 'navbar',
-  imports: [LogoComponent, RouterLink, RouterLinkActive, NavOptionsComponent],
+  imports: [LogoComponent, RouterLink, RouterLinkActive, NavUserOptionsComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })

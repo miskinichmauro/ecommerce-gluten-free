@@ -2,8 +2,8 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, firstValueFrom } from 'rxjs';
-import { Role } from 'src/app/users/roles/interfaces/role.interface';
-import { RoleService } from 'src/app/users/roles/services/role.services';
+import { Role } from 'src/app/roles/interfaces/role.interface';
+import { RoleService } from 'src/app/roles/services/role.services';
 import { LoadingComponent } from "@shared/components/loading/loading.component";
 import { RoleDetailsComponent } from "./role-details/role-details.component";
 

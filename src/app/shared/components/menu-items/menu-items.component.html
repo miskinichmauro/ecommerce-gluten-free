@@ -2,11 +2,8 @@
     @for (item of menuItems(); track $index) {
       @if (!item.adminOnly || authService.isAdmin()) {
         <a
-          class="p-2 rounded-md hover:bg-gray-800 transition"
-          [routerLink]="item.route"
-          routerLinkActive="text-secondary"
-          [routerLinkActiveOptions]="{exact: true}"
-          (click)="[configurationService.toggleSidebarItemsStatus('closed'), configurationService.toggleSidebarPageStatus('closed')]"
+          class="p-2 cursor-pointer rounded-md hover:bg-gray-800 transition"
+          (click)="handleOnClick(item.routerLink)"
         >
           {{ item.label }}
         </a>

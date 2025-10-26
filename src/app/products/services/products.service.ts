@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { Product, ProductResponse } from '../interfaces/product';
 import { Observable, of, tap, map, finalize } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/users/users/interfaces/user.interfase';
 import { ToastService } from '@shared/services/toast.service';
+import { User } from '@store-front/users/interfaces/user.interfase';
 
 const baseUrlProducts = `${environment.baseUrl}/products`;
 

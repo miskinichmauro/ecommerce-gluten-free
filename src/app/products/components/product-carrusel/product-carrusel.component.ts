@@ -12,17 +12,12 @@ import { Product } from '../../interfaces/product';
 })
 export class ProductCarruselComponent implements AfterViewInit {
   products = input.required<Product[]>();
-  
-  spaceBetween = 20;
-  slidesPerView = 4;
 
   ngAfterViewInit() {
     const swiperEl = document.querySelector('swiper-container') as any;
 
     if (swiperEl) {
       swiperEl.navigation = true;
-      swiperEl.spaceBetween = this.spaceBetween;
-      swiperEl.slidesPerView = this.slidesPerView;
       swiperEl.loop = true;
       swiperEl.breakpoints = {
         0: {
@@ -38,7 +33,7 @@ export class ProductCarruselComponent implements AfterViewInit {
           spaceBetween: 20,
         },
         1900: {
-          slidesPerView: 4,
+          slidesPerView: 5,
           spaceBetween: 25,
         }
       };

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, input, Output, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
-import { Role } from 'src/app/users/roles/interfaces/role.interface';
+import { Role } from 'src/app/roles/interfaces/role.interface';
 
 @Component({
   selector: 'roles-table',

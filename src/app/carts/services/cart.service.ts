@@ -7,7 +7,7 @@ import { CartItem } from 'src/app/carts/interfaces/cart-item';
 import { Product } from 'src/app/products/interfaces/product';
 import { AuthService } from '@auth/auth.service';
 
-const baseUrlCart = `${environment.baseUrl}/api/cart`;
+const baseUrlCart = `${environment.baseUrl}/cart`;
 
 @Injectable({ providedIn: 'root' })
 export class CartService {

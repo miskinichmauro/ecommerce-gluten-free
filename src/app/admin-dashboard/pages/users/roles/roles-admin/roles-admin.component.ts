@@ -1,9 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Role } from 'src/app/users/roles/interfaces/role.interface';
-import { RoleService } from 'src/app/users/roles/services/role.services';
+import { Role } from 'src/app/roles/interfaces/role.interface';
+import { RoleService } from 'src/app/roles/services/role.services';
 import { LoadingComponent } from "@shared/components/loading/loading.component";
-import { RolesTableComponent } from "src/app/users/roles/components/roles-table/roles-table.component";
+import { RolesTableComponent } from "src/app/roles/components/roles-table/roles-table.component";
 import { RouterLink } from '@angular/router';
 
 @Component({
