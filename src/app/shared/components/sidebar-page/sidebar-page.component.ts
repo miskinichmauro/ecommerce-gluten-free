@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -35,5 +35,12 @@ export class SidebarPageComponent {
 
   close() {
     this.configurationService.closeSidebar();
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleEscape(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.open() === 'open') {
+      this.close();
+    }
   }
 }
