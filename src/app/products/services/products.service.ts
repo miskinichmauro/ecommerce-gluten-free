@@ -9,9 +9,10 @@ import { User } from '@store-front/users/interfaces/user.interfase';
 const baseUrlProducts = `${environment.baseUrl}/products`;
 
 interface Options {
-  limit? : number;
-  offset? : number;
+  limit?: number;
+  offset?: number;
   isFeatured?: boolean;
+  q?: string;
 }
 
 const emptyProduct: Product = {
@@ -28,9 +29,9 @@ const emptyProduct: Product = {
   user: {} as User
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  constructor() { }
+  constructor() {}
   private readonly http = inject(HttpClient);
   private readonly productsCache = new Map<string, ProductResponse>();
   private readonly productCache = new Map<string, Product>();
@@ -45,21 +46,27 @@ export class ProductService {
       : `${limit}-${offset}`;
 
     if (this.productsCache.has(cacheKey)) {
-      return of(this.productsCache.get(cacheKey)!)
+      return of(this.productsCache.get(cacheKey)!);
     }
 
-    const response = this.http.get<ProductResponse>(baseUrlProducts, {
-      params: {
-        limit,
-        offset,
-        isFeatured
-      },
-      responseType: 'json'
-    })
-    .pipe(
-        tap((res) => this.productsCache.set(cacheKey, res))
-    );
+    const response = this.http
+      .get<ProductResponse>(baseUrlProducts, {
+        params: { limit, offset, isFeatured },
+        responseType: 'json',
+      })
+      .pipe(tap((res) => this.productsCache.set(cacheKey, res)));
+
     return response;
+  }
+
+  // 🆕 NUEVO MÉTODO: búsqueda de productos
+  searchProducts(options: Options = {}): Observable<ProductResponse> {
+    const { q = '', limit = environment.cantProducts, offset = 0 } = options;
+
+    return this.http.get<ProductResponse>(`${baseUrlProducts}/search`, {
+      params: { q, limit, offset },
+      responseType: 'json',
+    });
   }
 
   getProductByIdSlug(idSlug: string): Observable<Product> {
@@ -68,15 +75,14 @@ export class ProductService {
     }
 
     if (this.productCache.has(idSlug)) {
-      return of(this.productCache.get(idSlug)!)
+      return of(this.productCache.get(idSlug)!);
     }
 
-    const response = this.http.get<Product>(`${baseUrlProducts}/${idSlug}`, {
-      responseType: 'json'
-    })
-    .pipe(
-        tap((res) => this.productCache.set(idSlug, res))
-    );
+    const response = this.http
+      .get<Product>(`${baseUrlProducts}/${idSlug}`, {
+        responseType: 'json',
+      })
+      .pipe(tap((res) => this.productCache.set(idSlug, res)));
     return response;
   }
 
@@ -91,10 +97,10 @@ export class ProductService {
     );
   }
 
-  updateProduct(id:string, partialProduct: Partial<Product>): Observable<Product> {
+  updateProduct(id: string, partialProduct: Partial<Product>): Observable<Product> {
     this.toastService.activateLoading();
     return this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct).pipe(
-      tap(async(res) => {
+      tap((res) => {
         this.insertOrUpdateCache(res);
         this.toastService.activateSuccess();
       }),
@@ -110,12 +116,10 @@ export class ProductService {
       this.productsCache.clear();
     } else {
       this.productCache.set(product.id, product);
-      this.productsCache.forEach(productResponse => {
-        productResponse.products = productResponse.products.map(
-          currentProduct => {
-            return currentProduct.id === product.id ? product : currentProduct;
-          }
-        )
+      this.productsCache.forEach((productResponse) => {
+        productResponse.products = productResponse.products.map((currentProduct) => {
+          return currentProduct.id === product.id ? product : currentProduct;
+        });
       });
     }
   }

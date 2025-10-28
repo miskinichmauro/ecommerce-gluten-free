@@ -11,7 +11,15 @@
 </div>
 
 @if ((cartItems$ | async)?.length! > 0) {
-  <button (click)="cartService.clearCart().subscribe()" class="btn btn-sm btn-warning fixed bottom-6 right-6">
-    Vaciar carrito
-  </button>
+  <div class="navbar bg-base-100 shadow-sm border-t fixed bottom-0 left-0 right-0 px-6">
+    <div class="text-lg font-semibold">
+      Total: {{ (total$ | async)! | guaranies }}
+    </div>
+    <button
+      (click)="clearCart()"
+      class="btn btn-warning btn-sm"
+    >
+      Vaciar carrito
+    </button>
+  </div>
 }

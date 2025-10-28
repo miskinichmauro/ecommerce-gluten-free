@@ -13,15 +13,17 @@ export function useProductsLoader() {
   async function loadProducts(params: {
     offset?: number;
     limit?: number;
-    isFeatured?: boolean
+    isFeatured?: boolean;
+    q?: string;
   }) {
     loading.set(true);
     error.set(null);
 
     try {
-      const data = await firstValueFrom(
-        productService.getProducts(params)
-      );
+      const data = params.q
+        ? await firstValueFrom(productService.searchProducts(params))
+        : await firstValueFrom(productService.getProducts(params));
+
       productResponse.set(data);
     } catch (err) {
       error.set('Error al cargar los productos');

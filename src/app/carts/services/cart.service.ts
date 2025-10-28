@@ -108,6 +108,11 @@ export class CartService {
     }
   }
 
+  getTotal(): number {
+    const items = this.cartSubject.getValue();
+    return items.reduce((acc, item) => acc + (item.product?.price ?? 0) * item.quantity, 0);
+  }
+
   clearCart(): Observable<void> {
     const isAuthenticated = this.auth.authStatus() === 'authenticated';
     if (isAuthenticated) {
