@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ThemeService } from '@shared/services/theme.service';
 
 @Component({
   selector: 'app-logo',
@@ -8,6 +7,4 @@ import { ThemeService } from '@shared/services/theme.service';
   templateUrl: './logo.component.html',
   styleUrl: './logo.component.css',
 })
-export class LogoComponent {
-  themeService = inject(ThemeService);
-}
+export class LogoComponent {}

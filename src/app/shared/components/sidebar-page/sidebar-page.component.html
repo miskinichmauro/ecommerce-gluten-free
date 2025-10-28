@@ -1,14 +1,15 @@
-@if (open()) {
-  <div
-    class="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-    (click)="close()"
-  ></div>
-}
+<div
+  class="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+  [class.opacity-0]="open() === 'closed'"
+  [class.opacity-100]="open() === 'open'"
+  [class.pointer-events-none]="open() === 'closed'"
+  (click)="close()"
+></div>
 
 <div
-  class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-base-100 shadow-lg z-50 transform transition-transform duration-400 flex flex-col"
-  [class.translate-x-0]="open()"
-  [class.translate-x-full]="!open()"
+  class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-base-100 shadow-lg z-50 transform transition-transform duration-300"
+  [class.translate-x-0]="open() === 'open'"
+  [class.translate-x-full]="open() === 'closed'"
 >
   <div class="flex justify-between items-center p-4 border-b border-base-300">
     <h2 class="text-lg font-bold">
@@ -22,6 +23,19 @@
   </div>
 
   <div class="p-4 overflow-y-auto h-[calc(100%-4rem)]">
-    <router-outlet name="sidebar" />
+    @switch(routeName()) {
+      @case('userOptions') {
+        <user-sidebar-options />
+      }
+      @case('auth') {
+        <login />
+      }
+      @case('cartSidebar') {
+        <cart-sidebar />
+      }
+      @default {
+        <p class="text-center text-gray-500">Selecciona una opción</p>
+      }
+    }
   </div>
 </div>

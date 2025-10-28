@@ -5,9 +5,6 @@ import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { ProductComponent, ProductsComponent } from "./pages/product";
 import { RecipeComponent } from "./pages/recipe/recipe.component";
 import { ContactComponent } from "./pages/contact/contact.component";
-import { UserOptionsComponent } from "./pages/user/user-sidebar-options/user-sidebar-options.component";
-import { LoginComponent } from "../auth/pages/login/login.component";
-import { CartSidebarComponent } from "@store-front/pages/cart/cart-sidebar/cart-sidebar.component";
 import { TermsConditions } from "@store-front/pages/terms-conditions/terms-conditions";
 import { PrivacyPolicies } from "@store-front/pages/privacy-policies/privacy-policies";
 
@@ -57,27 +54,6 @@ export const storeFrontRoutes: Routes = [
       {
         path: 'user',
         loadChildren: () => import('./pages/user/user-routes')
-      },
-
-      /** Sidebar **/
-      {
-        path: 'userOptions',
-        title: 'Opciones de usuario',
-        outlet: 'sidebar',
-        component: UserOptionsComponent
-
-      },
-      {
-        path: 'auth/login',
-        title: 'Iniciar sesión',
-        outlet: 'sidebar',
-        component: LoginComponent
-      },
-      {
-        path: 'cartSidebar',
-        title: 'Mi carrito',
-        outlet: 'sidebar',
-        component: CartSidebarComponent
       },
 
       /** Not found **/

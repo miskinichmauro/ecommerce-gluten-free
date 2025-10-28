@@ -7,7 +7,7 @@ import { LoadingComponent } from "src/app/shared/components/loading/loading.comp
 import { SuccessComponent } from "src/app/shared/components/success/success.component";
 
 @Component({
-  selector: 'app-login',
+  selector: 'login',
   imports: [RouterLink, ReactiveFormsModule, LoadingComponent, SuccessComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',

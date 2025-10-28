@@ -1,26 +1,36 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
 
-type sidebarStatus = 'closed' | 'open';
-type sidebarPageRoute = 'auth' | 'userOptions' | 'cartSidebar';
+export type SidebarStatus = 'closed' | 'open';
+export type SidebarPageRoute = 'auth' | 'userOptions' | 'cartSidebar' | '';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
   router = inject(Router);
 
-  sidebarItemsStatus = signal<sidebarStatus>('closed');
-  sidebarPageStatus = signal<sidebarStatus>('closed');
-  sidebarPageRouteName = signal<string>('');
+  sidebarItemsStatus = signal<SidebarStatus>('closed');
+  sidebarPageStatus = signal<SidebarStatus>('closed');
+  sidebarPageRouteName = signal<SidebarPageRoute>('');
 
-  toggleSidebarItemsStatus(value: sidebarStatus) {
+  toggleSidebarItemsStatus(value: SidebarStatus) {
     this.sidebarItemsStatus.set(value);
   }
 
-  toggleSidebarPageStatus(value: sidebarStatus) {
+  toggleSidebarPageStatus(value: SidebarStatus) {
     this.sidebarPageStatus.set(value);
   }
 
-  toggleSidebarPageRoute(value: sidebarPageRoute) {
+  toggleSidebarPageRoute(value: SidebarPageRoute) {
     this.sidebarPageRouteName.set(value);
+  }
+
+  openSidebar(page: SidebarPageRoute) {
+    this.sidebarPageRouteName.set(page);
+    this.sidebarPageStatus.set('open');
+  }
+
+  closeSidebar() {
+    this.sidebarPageStatus.set('closed');
+    setTimeout(() => this.sidebarPageRouteName.set(''), 300);
   }
 }
