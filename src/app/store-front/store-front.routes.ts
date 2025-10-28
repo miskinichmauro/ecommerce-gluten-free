@@ -8,6 +8,8 @@ import { ContactComponent } from "./pages/contact/contact.component";
 import { UserOptionsComponent } from "./pages/user/user-sidebar-options/user-sidebar-options.component";
 import { LoginComponent } from "../auth/pages/login/login.component";
 import { CartSidebarComponent } from "@store-front/pages/cart/cart-sidebar/cart-sidebar.component";
+import { TermsConditions } from "@store-front/pages/terms-conditions/terms-conditions";
+import { PrivacyPolicies } from "@store-front/pages/privacy-policies/privacy-policies";
 
 export const storeFrontRoutes: Routes = [
   {
@@ -39,6 +41,16 @@ export const storeFrontRoutes: Routes = [
         path: 'contact',
         title: 'Contacto',
         component: ContactComponent
+      },
+      {
+        path: 'terms-conditions',
+        title: 'Términos y condiciones',
+        component: TermsConditions
+      },
+      {
+        path: 'privacy-policies',
+        title: 'Política de privacidad',
+        component: PrivacyPolicies
       },
 
       /** User **/

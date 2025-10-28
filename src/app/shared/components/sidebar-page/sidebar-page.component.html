@@ -1,3 +1,10 @@
+@if (open()) {
+  <div
+    class="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+    (click)="close()"
+  ></div>
+}
+
 <div
   class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-base-100 shadow-lg z-50 transform transition-transform duration-400 flex flex-col"
   [class.translate-x-0]="open()"

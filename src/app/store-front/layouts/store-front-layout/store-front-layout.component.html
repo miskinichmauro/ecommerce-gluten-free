@@ -1,9 +1,13 @@
-<front-menu />
+<div class="min-h-screen flex flex-col">
+  <front-menu />
 
-<section class="container mx-auto">
-  <div class="flex-1 px-5">
-    <router-outlet />
-  </div>
-</section>
+  <main class="grow container mx-auto px-5 mb-10 flex flex-col">
+    <div class="flex-1">
+      <router-outlet />
+    </div>
 
-<sidebar-page />
+    <sidebar-page />
+  </main>
+
+  <app-footer />
+</div>

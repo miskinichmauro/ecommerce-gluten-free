@@ -10,19 +10,17 @@ export class ThemeController implements OnInit {
   themeService = inject(ThemeService);
 
   ngOnInit() {
-    const isDark = true;
-    const theme = isDark ? 'business' : 'winter';
-    this.themeService.isDarkTheme.set(isDark);
-
-    document.documentElement.setAttribute('data-theme', theme);
-
+    this.themeService.isDarkTheme.set(false);
+    document.documentElement.setAttribute('data-theme', 'emerald');
     const checkbox = document.querySelector<HTMLInputElement>('.theme-controller');
-    if (checkbox) checkbox.checked = isDark;
+    if (checkbox) {
+      checkbox.checked = true;
+    }
   }
 
   toggleTheme(event: Event) {
     const checkbox = event.target as HTMLInputElement;
-    const theme = checkbox.checked ? 'winter' : 'business' ;
+    const theme = checkbox.checked ? 'coffee' : 'emerald';
     this.themeService.isDarkTheme.set(!checkbox.checked);
 
     document.documentElement.setAttribute('data-theme', theme);
