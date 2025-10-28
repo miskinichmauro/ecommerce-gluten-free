@@ -62,7 +62,7 @@ export class CartService {
       }
       this.saveCartToLocalStorage(localCart);
       this.updateCacheAndEmit(localCart);
-      return of();
+      return of(cartItem);
     }
   }
 

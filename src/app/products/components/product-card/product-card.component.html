@@ -29,9 +29,15 @@
       <button
         (click)="addToCart()"
         type="button"
-        class="card-actions flex justify-end items-center btn btn-primary btn-xs sm:btn-sm md:btn-md mt-2"
+        class="card-actions flex justify-center items-center btn btn-primary btn-xs sm:btn-sm md:btn-md mt-2 relative min-w-[150px]"
       >
-        Agregar al carrito
+        @if (loading()) {
+          Agregando...
+        } @else if (success()) {
+          Agregado
+        } @else {
+          Agregar al carrito
+        }
       </button>
     </div>
   </div>
