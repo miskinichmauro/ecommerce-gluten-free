@@ -1,30 +1,49 @@
-import { Component, effect, Signal } from '@angular/core';
-import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
-import { ProductCarruselComponent } from "src/app/products/components/product-carrusel/product-carrusel.component";
-import { ProductResponse } from 'src/app/products/interfaces/product';
-import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
+import { AfterViewInit, Component } from '@angular/core';
+import { animate } from "@motionone/dom";
+import { HomeContacts } from '@store-front/pages/home/components/home-contacts/home-contacts';
+import { HomeFeaturedProducts } from '@store-front/pages/home/components/home-featured-products/home-featured-products';
+import { HomeHero } from '@store-front/pages/home/components/home-hero/home-hero';
+import { HomePromos } from '@store-front/pages/home/components/home-promos/home-promos';
+import { HomeRecipes } from '@store-front/pages/home/components/home-recipes/home-recipes';
+
 @Component({
   selector: 'app-home',
-  imports: [ProductCarruselComponent, LoadingComponent],
+  imports: [
+    HomeHero,
+    HomePromos,
+    HomeFeaturedProducts,
+    HomeRecipes,
+    HomeContacts
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent {
-  productResponse: Signal<ProductResponse | null>;
-  loading: Signal<boolean>;
-  error: Signal<any>;
-  loadProducts: (params?: any) => Promise<void>;
+export class HomeComponent implements AfterViewInit {
 
-  constructor() {
-    const { productResponse, loading, error, loadProducts } = useProductsLoader();
+  ngAfterViewInit() {
+    const revealElements = document.querySelectorAll(".reveal");
 
-    this.productResponse = productResponse;
-    this.loading = loading;
-    this.error = error;
-    this.loadProducts = loadProducts;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
 
-    effect(() => {
-      this.loadProducts({ isFeatured: true });
-    });
+          animate(
+            entry.target as HTMLElement,
+            {
+              opacity: [0, 1],
+              transform: ["translateY(40px)", "translateY(0px)"]
+            },
+            {
+              duration: 0.7,
+              easing: "ease-out"
+            }
+          );
+
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => observer.observe(el));
   }
 }

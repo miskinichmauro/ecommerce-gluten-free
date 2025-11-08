@@ -1,51 +1,52 @@
-<div class="navbar bg-base-100 shadow-sm">
-
+<div class="navbar bg-base-100 shadow-sm sticky top-0 z-40">
   <div class="navbar-start mx-3">
     <app-logo />
   </div>
 
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      @for (item of menuItemsDefault(); track $index) {
-        <li>
-          <a
-            [routerLink]="item.routerLink"
-            routerLinkActive="text-secondary"
-            [routerLinkActiveOptions]="{exact: true}"
-            (click)="[
-              configurationService.toggleSidebarItemsStatus('closed'),
-              configurationService.toggleSidebarPageStatus('closed')
-            ]"
-          >
-            {{ item.label }}
-          </a>
-        </li>
-      }
+  <div class="navbar-center w-full max-w-2xl px-3">
+    <div class="relative w-full" #suggestContainer>
+      <form class="w-full" (submit)="onSubmit($event)">
+        <label class="input w-full">
+          <input
+            type="text"
+            [formControl]="searchControl"
+            placeholder="Buscar productos..."
+            class="grow"
+            aria-label="Buscar productos"
+            (keydown.escape)="closeSuggestions()"
+            (keydown)="onKeyDown($event)"
+          />
+        </label>
+      </form>
 
-      @if (authService.isAdmin()) {
-        <li class="border-l border-gray-400 h-6 mx-2 drop-shadow-sm"></li>
-      }
+      @if (suggestions.length > 0) {
+        <ul
+          class="absolute top-[105%] w-full bg-base-100 shadow-lg rounded-lg border border-base-300 z-9999 p-2 flex flex-col gap-1"
+        >
+          @for (item of suggestions; track $index; let i = $index) {
+            <li
+              (click)="selectSuggestion(item)"
+              class="cursor-pointer p-2 rounded-md flex justify-between"
+              [class.bg-primary/20]="i === activeIndex"
+              [class.text-primary]="i === activeIndex"
+            >
+              <span>{{ item.title }}</span>
+              <span class="opacity-70">{{ item.price | guaranies }}</span>
+            </li>
+          }
 
-      @for (item of menuItemsAdmin(); track $index) {
-        <li>
-          <a
-            [routerLink]="item.routerLink"
-            routerLinkActive="text-secondary"
-            [routerLinkActiveOptions]="{exact: true}"
-            (click)="[
-              configurationService.toggleSidebarItemsStatus('closed'),
-              configurationService.toggleSidebarPageStatus('closed')
-            ]"
+          <li
+            class="text-center text-sm text-primary cursor-pointer hover:bg-base-200 p-2 rounded-md"
+            (click)="performSearch(searchControl.value!)"
           >
-            {{ item.label }}
-          </a>
-        </li>
+            Ver todos los resultados →
+          </li>
+        </ul>
       }
-    </ul>
+    </div>
   </div>
 
   <div class="navbar-end gap-2 mx-3">
     <nav-user-options />
   </div>
-
 </div>

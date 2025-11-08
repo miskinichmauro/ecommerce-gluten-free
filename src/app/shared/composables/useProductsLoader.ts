@@ -10,17 +10,12 @@ export function useProductsLoader() {
   const loading = signal<boolean>(true);
   const error = signal<string | null>(null);
 
-  async function loadProducts(params: {
-    offset?: number;
-    limit?: number;
-    isFeatured?: boolean;
-    q?: string;
-  }) {
+  async function loadProducts(params: ProductOptions) {
     loading.set(true);
     error.set(null);
 
     try {
-      const data = params.q
+      const data = params.query
         ? await firstValueFrom(productService.searchProducts(params))
         : await firstValueFrom(productService.getProducts(params));
 

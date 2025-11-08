@@ -1,0 +1,12 @@
+<section class="mt-12">
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-3xl font-bold">Productos destacados</h2>
+    <button routerLink="/products" class="btn btn-link">Ver todo</button>
+  </div>
+
+  @if (loading()) {
+    <loading />
+  }
+
+  <product-carrusel [products]="productResponse()?.products ?? []" />
+</section>

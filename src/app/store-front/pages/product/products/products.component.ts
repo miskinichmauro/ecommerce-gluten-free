@@ -7,6 +7,7 @@ import { ProductResponse } from 'src/app/products/interfaces/product';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -15,12 +16,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrl: './products.component.css',
 })
 export class ProductsComponent {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   readonly paginationService = inject(PaginationService);
 
   productResponse: Signal<ProductResponse | null>;
   loading: Signal<boolean>;
   error: Signal<any>;
-  loadProducts: (params?: any) => Promise<void>;
+  loadProducts: (params: ProductOptions) => Promise<void>;
 
   searchControl = new FormControl('');
   private lastQuery = '';
@@ -32,17 +35,38 @@ export class ProductsComponent {
     this.error = error;
     this.loadProducts = loadProducts;
 
-    effect(() => {
+    this.route.queryParamMap.subscribe((params) => {
+      const q = params.get('q') ?? '';
+      this.lastQuery = q;
+
+      if (this.searchControl.value !== q) {
+        this.searchControl.setValue(q, { emitEvent: false });
+      }
+
       this.loadProducts({
+        query: q,
         offset: (this.paginationService.currentPage() - 1) * 9,
       });
     });
 
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((value) => {
-        this.lastQuery = value ?? '';
-        this.loadProducts({ q: this.lastQuery, offset: 0 });
+      .subscribe(q => {
+        const qValue = q?.trim() ?? '';
+
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { q: qValue || null },
+          queryParamsHandling: 'merge',
+        });
+
+        this.paginationService.resetPage();
+        this.loadProducts({ query: qValue, offset: 0 });
       });
+
+    effect(() => {
+      const offset = (this.paginationService.currentPage() - 1) * 9;
+      this.loadProducts({ query: this.lastQuery, offset });
+    });
   }
 }

@@ -8,13 +8,6 @@ import { User } from '@store-front/users/interfaces/user.interfase';
 
 const baseUrlProducts = `${environment.baseUrl}/products`;
 
-interface Options {
-  limit?: number;
-  offset?: number;
-  isFeatured?: boolean;
-  q?: string;
-}
-
 const emptyProduct: Product = {
   id: 'new',
   title: '',
@@ -37,7 +30,7 @@ export class ProductService {
   private readonly productCache = new Map<string, Product>();
   private readonly toastService = inject(ToastService);
 
-  getProducts(options: Options = {}): Observable<ProductResponse> {
+  getProducts(options: ProductOptions = {}): Observable<ProductResponse> {
     const limitEnvironment = environment.cantProducts;
     const { limit = limitEnvironment, offset = 0, isFeatured = false } = options;
 
@@ -59,12 +52,11 @@ export class ProductService {
     return response;
   }
 
-  // 🆕 NUEVO MÉTODO: búsqueda de productos
-  searchProducts(options: Options = {}): Observable<ProductResponse> {
-    const { q = '', limit = environment.cantProducts, offset = 0 } = options;
+  searchProducts(options: ProductOptions = {}): Observable<ProductResponse> {
+    const { query = '', limit = environment.cantProducts, offset = 0 } = options;
 
     return this.http.get<ProductResponse>(`${baseUrlProducts}/search`, {
-      params: { q, limit, offset },
+      params: { query, limit, offset },
       responseType: 'json',
     });
   }

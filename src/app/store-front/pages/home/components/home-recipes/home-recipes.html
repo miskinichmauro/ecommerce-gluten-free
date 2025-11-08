@@ -1,0 +1,16 @@
+<section class="mt-12">
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-3xl font-bold">Recetas para hoy</h2>
+    <button routerLink="/recipe" class="btn btn-link">Ver más</button>
+  </div>
+
+  @if (loading()) {
+    <loading />
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      @for (rec of recipes(); track $index) {
+        <recipe-card [recipe]="rec" />
+      }
+    </div>
+  }
+</section>

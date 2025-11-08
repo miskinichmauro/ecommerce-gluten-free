@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core';
-import { ProductImagePipe } from "../../../products/pipes/product-image.pipe";
+import { ProductImagePipe } from '@products/pipes/product-image.pipe';
 
 @Component({
   selector: 'image-carrusel',
@@ -10,7 +10,7 @@ import { ProductImagePipe } from "../../../products/pipes/product-image.pipe";
 })
 export class ImageCarruselComponent implements AfterViewInit{
   images = input.required<string[]>();
-  
+
   spaceBetween = 10;
   slidesPerView = 1;
 

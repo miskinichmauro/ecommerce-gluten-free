@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.hero-bg {
+  background-image: 'assets/hero-bg.jpg';
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+.hero {}

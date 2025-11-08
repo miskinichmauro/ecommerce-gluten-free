@@ -1,19 +1,5 @@
-<h1 class="text-3xl font-bold mb-6 mt-6">Productos destacados</h1>
-
-@if (loading()) {
-  <div class="min-h-[50vh] gap-4">
-    <loading />
-  </div>
-}
-
-@if (error()) {
-  <p class="text-red-500">{{ error() }}</p>
-}
-
-<div class="py-18 px-4 sm:px-8 md:px-18">
-  <product-carrusel [products]="productResponse()?.products ?? []"></product-carrusel>
-</div>
-
-@if (!loading() && !error() && productResponse()?.products?.length === 0) {
-  <p>No hay productos para mostrar</p>
-}
+<home-hero class="reveal"></home-hero>
+<home-promos class="reveal"></home-promos>
+<home-featured-products class="reveal"></home-featured-products>
+<home-recipes class="reveal"></home-recipes>
+<home-contacts class="reveal"></home-contacts>

@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PaginationService {
   private readonly activateRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -16,9 +16,16 @@ export class PaginationService {
     { initialValue: 1 }
   );
 
-  setPage(page: number) {
+  setCurrentPage(page: number) {
     this.router.navigate([], {
       queryParams: { page },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  resetPage() {
+    this.router.navigate([], {
+      queryParams: { page: null },
       queryParamsHandling: 'merge',
     });
   }

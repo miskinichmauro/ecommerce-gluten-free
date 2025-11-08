@@ -42,6 +42,6 @@ export class ProductsAdminComponent {
 
   updateProductsPerPage(value: number) {
     this.productPerPage.set(value);
-    this.paginationService.setPage(1);
+    this.paginationService.setCurrentPage(1);
   }
 }

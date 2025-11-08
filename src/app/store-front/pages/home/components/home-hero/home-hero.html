@@ -1,0 +1,25 @@
+<section
+  class="hero h-[44vh] w-screen mx-[calc(50%-50vw)] flex items-center justify-center relative overflow-hidden"
+>
+
+  <!-- Imagen + Parallax -->
+  <div #heroBg class="hero-bg absolute inset-0"></div>
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-linear-to-br from-emerald-700/90 via-emerald-500/70 to-emerald-300/60"></div>
+
+  <!-- Contenido del banner -->
+  <div class="relative text-center text-white px-4 max-w-4xl mx-auto">
+    <h1 class="hero-title text-4xl md:text-6xl font-extrabold leading-tight">
+      Comida <span class="text-yellow-300">sin gluten</span> para todos
+    </h1>
+
+    <p class="hero-sub opacity-80 mt-4 text-lg md:text-xl">
+      Pan, facturas, cerveza, pizzas y más. Todo SIN gluten — sin renunciar al sabor.
+    </p>
+
+    <button routerLink="/products" class="btn btn-secondary mt-8">
+      Ver catálogo
+    </button>
+  </div>
+</section>
