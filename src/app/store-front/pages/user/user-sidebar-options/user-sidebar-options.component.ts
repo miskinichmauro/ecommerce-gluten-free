@@ -19,5 +19,6 @@ export class UserOptionsComponent {
     { label: 'Mis direcciones', routerLink: '/user/directions' },
     { label: 'Mis métodos de facturación', routerLink: '/user/billing' },
     { label: 'Mis pedidos', routerLink: '/user/recipes' },
+    { label: 'Panel administrativo', routerLink: '/admin', adminOnly: true },
   ];
 }
