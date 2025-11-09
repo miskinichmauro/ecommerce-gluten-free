@@ -10,12 +10,12 @@
 
   <!-- Contenido del banner -->
   <div class="relative text-center text-white px-4 max-w-4xl mx-auto">
-    <h1 class="hero-title text-4xl md:text-6xl font-extrabold leading-tight whitespace-nowrap">
+    <h1 class="hero-title text-4xl md:text-6xl font-extrabold leading-tight sm:whitespace-nowrap">
       Sabores auténticos, <span class="text-yellow-300">sin gluten</span>
     </h1>
 
     <!-- Categorías destacadas -->
-    <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 justify-items-center">
+    <div class="mt-5 md:mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 justify-items-center">
       <a routerLink="/products" [queryParams]="{ q: 'Pan' }" class="w-full max-w-[180px]">
         <div class="rounded-xl border border-white/10 bg-white/10 hover:bg-white/20 backdrop-blur p-3 transition-colors">
           <span class="block text-base md:text-lg font-semibold">Panes</span>
@@ -43,7 +43,7 @@
     </div>
 
     <!-- Lema -->
-    <p class="hero-sub opacity-80 mt-1 text-sm md:text-base">
+    <p class="hero-sub opacity-80 mt-3 text-sm md:text-base">
       Elegí tu favorito, sin renunciar al sabor.
     </p>
 
