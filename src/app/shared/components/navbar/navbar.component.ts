@@ -19,6 +19,7 @@ import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 })
 export class NavbarComponent {
   @ViewChild('suggestContainer') suggestContainer!: ElementRef;
+  @ViewChild('mobileSearchInput') mobileSearchInput!: ElementRef<HTMLInputElement>;
 
   searchControl = new FormControl('');
   suggestions: Product[] = [];
@@ -113,5 +114,12 @@ export class NavbarComponent {
   selectSuggestion(product: Product) {
     this.closeSuggestions();
     this.router.navigate(['/product', product.slug]);
+  }
+
+  onMobileToggleEnd(event: Event) {
+    const el = event.target as HTMLInputElement;
+    if (el && el.checked) {
+      setTimeout(() => this.mobileSearchInput?.nativeElement?.focus(), 0);
+    }
   }
 }
