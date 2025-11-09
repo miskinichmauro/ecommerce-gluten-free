@@ -1,3 +1,70 @@
 :host {
   display: block;
 }
+
+swiper-container {
+  height: 100%; /* Fill host height */
+  /* Mejor visibilidad de controles */
+  --swiper-theme-color: #ffffff; /* color general (nav + pag) */
+  --swiper-navigation-color: #ffffff;
+  --swiper-pagination-color: #ffffff;
+  --swiper-pagination-bullet-inactive-color: #e5e7eb; /* slate-200 */
+  --swiper-pagination-bullet-inactive-opacity: 0.6;
+  --swiper-pagination-bullet-size: 10px;
+  --swiper-pagination-bullet-horizontal-gap: 6px;
+  --swiper-navigation-size: 28px;
+  --swiper-navigation-sides-offset: 40px; /* más hacia el centro */
+}
+
+swiper-slide {
+  height: 100%;
+}
+
+/* Garantizar centrado y cobertura del banner */
+swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Asegurar que flechas y paginación siempre queden por encima del contenido */
+swiper-container::part(button-prev),
+swiper-container::part(button-next),
+swiper-container::part(pagination) {
+  z-index: 50;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+/* Mantener flechas centradas verticalmente sin importar el alto de la imagen */
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+  top: 46%;
+  transform: translateY(-50%);
+}
+
+/* Ajustar posición de la paginación para que no quede demasiado al borde */
+/* Ajuste de paginación en Shadow DOM (si el componente la crea internamente) */
+swiper-container::part(pagination) {
+  bottom: 24px;
+}
+
+/* Ajuste de paginación cuando se usa slot externo */
+swiper-container [slot="pagination"] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  z-index: 50;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+/* En mobile, acercar un poco a los bordes para no tapar contenido */
+@media (max-width: 640px) {
+  swiper-container {
+    --swiper-navigation-sides-offset: 28px;
+  }
+  swiper-container::part(pagination) { bottom: 18px; }
+  swiper-container [slot="pagination"] { bottom: 18px; }
+}

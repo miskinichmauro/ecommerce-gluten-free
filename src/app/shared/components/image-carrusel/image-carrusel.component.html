@@ -1,21 +1,22 @@
-<swiper-container class="w-full max-w-xl h-96">
+<swiper-container #swiper class="w-full h-full" navigation="true" pagination="true" pagination-clickable="true" autoplay="true" autoplay-delay="5000" autoplay-disable-on-interaction="false" autoplay-pause-on-mouse-enter="true" speed="1200" effect="fade" fade-effect-cross-fade="true" dir="ltr">
   @if (images().length) {
     @for (image of images(); track $index) {
-      <swiper-slide class="w-full h-full flex justify-end items-center">
+      <swiper-slide class="w-full h-full flex justify-center items-center">
         <img
-          [src]="image | productImage"
-          alt="Imagen del producto"
-          class="w-full h-full object-cover rounded-xl"
+          [src]="image"
+          alt="Imagen"
+          class="w-full h-full object-cover object-center"
         />
       </swiper-slide>
     }
   } @else {
-    <swiper-slide class="w-full h-full flex justify-end items-center">
+    <swiper-slide class="w-full h-full flex justify-center items-center">
       <img
-        [src]="[''] | productImage"
+        [src]="['']"
         alt="Imagen por defecto"
-        class="w-full h-full object-cover rounded-xl opacity-80"
+        class="w-full h-full object-cover object-center opacity-80"
       />
     </swiper-slide>
   }
+  <div class="swiper-pagination" slot="pagination"></div>
 </swiper-container>

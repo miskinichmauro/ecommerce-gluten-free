@@ -1,22 +1,16 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ImageCarruselComponent } from "@shared/components/image-carrusel/image-carrusel.component";
 
 @Component({
   selector: 'home-promos',
-  imports: [],
+  imports: [ImageCarruselComponent],
   templateUrl: './home-promos.html',
   styleUrl: './home-promos.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class HomePromos implements AfterViewInit {
-  @ViewChild('promosSwiper', { static: true }) promosSwiper?: ElementRef<any>;
-
-  ngAfterViewInit() {
-    const swiperEl = this.promosSwiper?.nativeElement;
-    if (swiperEl) {
-      swiperEl.loop = true;
-      swiperEl.autoplay = { delay: 3000, disableOnInteraction: false };
-      swiperEl.effect = 'fade';
-      swiperEl.initialize();
-    }
-  }
+export class HomePromos  {
+  images: string[] = [
+    'assets/images/gluten-free.jpg',
+    'assets/images/gluten-free-450.jpg'
+  ];
 }

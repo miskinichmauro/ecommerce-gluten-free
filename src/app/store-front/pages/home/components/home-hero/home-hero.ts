@@ -1,8 +1,10 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { animate, scroll } from "@motionone/dom";
 
 @Component({
   selector: 'home-hero',
+  imports: [RouterLink],
   templateUrl: './home-hero.html',
   styleUrl: './home-hero.css',
 })

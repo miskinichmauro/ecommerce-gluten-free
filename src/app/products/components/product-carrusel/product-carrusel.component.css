@@ -1,3 +1,16 @@
 :host {
   display: block;
 }
+
+swiper-container {
+  /* Navegación más sobria/oscura y visible */
+  --swiper-navigation-color: #9ca3af; /* gray-400 */
+  --swiper-navigation-size: 24px;
+  --swiper-navigation-sides-offset: 14px;
+}
+
+/* Forzar a que cada slide tome el ancho de su contenido
+   cuando usamos slides-per-view="auto" */
+swiper-slide {
+  width: auto !important;
+}
