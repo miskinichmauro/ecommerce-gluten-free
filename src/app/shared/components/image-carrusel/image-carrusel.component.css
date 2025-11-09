@@ -40,7 +40,7 @@ swiper-container::part(pagination) {
 /* Mantener flechas centradas verticalmente sin importar el alto de la imagen */
 swiper-container::part(button-prev),
 swiper-container::part(button-next) {
-  top: 46%;
+  top: 52%;
   transform: translateY(-50%);
 }
 
@@ -48,6 +48,11 @@ swiper-container::part(button-next) {
 /* Ajuste de paginación en Shadow DOM (si el componente la crea internamente) */
 swiper-container::part(pagination) {
   bottom: 24px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* Ajuste de paginación cuando se usa slot externo */
@@ -58,12 +63,17 @@ swiper-container [slot="pagination"] {
   bottom: 24px;
   z-index: 50;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  display: flex;
+  justify-content: center;
 }
 
 /* En mobile, acercar un poco a los bordes para no tapar contenido */
 @media (max-width: 640px) {
   swiper-container {
     --swiper-navigation-sides-offset: 28px;
+    --swiper-navigation-size: 22px; /* flechas un poco más pequeñas */
+    --swiper-pagination-bullet-size: 5px; /* bullets ~mitad de tamaño */
+    --swiper-pagination-bullet-horizontal-gap: 4px;
   }
   swiper-container::part(pagination) { bottom: 18px; }
   swiper-container [slot="pagination"] { bottom: 18px; }

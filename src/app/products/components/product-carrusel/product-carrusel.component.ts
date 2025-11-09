@@ -18,7 +18,7 @@ export class ProductCarruselComponent implements AfterViewInit {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (!swiperEl) return;
 
-    // Más separación y centrado de slides + transición suave
+    // Más separación y centrado de slides
     swiperEl.centeredSlides = true;
     swiperEl.centeredSlidesBounds = true;
     swiperEl.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
