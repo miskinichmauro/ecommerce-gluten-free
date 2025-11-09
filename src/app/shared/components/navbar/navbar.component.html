@@ -46,19 +46,13 @@
     </div>
   </div>
 
-  <div class="navbar-end gap-2 mx-3">
+  <div class="navbar-end gap-1 sm:gap-2 mx-3">
     <!-- Mobile search icon anchored to right -->
-    <div class="block sm:hidden relative order-last text-base-content">
+    <div class="block sm:hidden relative text-base-content">
       <input id="mobile-search-toggle-end" type="checkbox" class="peer hidden" (change)="onMobileToggleEnd($event)" />
-      <label for="mobile-search-toggle-end" class="btn btn-ghost btn-sm" aria-label="Abrir buscador">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-          <path d="M8.25 10.875a2.625 2.625 0 1 1 5.25 0 2.625 2.625 0 0 1-5.25 0Z" />
-          <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.125 4.5a4.125 4.125 0 1 0 2.338 7.524l2.007 2.006a.75.75 0 1 0 1.06-1.06l-2.006-2.007a4.125 4.125 0 0 0-3.399-6.463Z" clip-rule="evenodd" />
-        </svg>
-      </label>
-      <!-- Backdrop closes on click -->
-      <label for="mobile-search-toggle-end" class="fixed inset-0 bg-black/40 z-50 opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto"></label>
-      <!-- Sliding bar with input -->
+              <label for="mobile-search-toggle-end" class="fixed inset-0 bg-black/40 z-50 opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto"></label>
+<!-- Backdrop closes on click -->
+            <!-- Sliding bar with input -->
       <div class="fixed top-0 inset-x-0 z-50 bg-base-100 shadow-md -translate-y-full transition-transform duration-200 peer-checked:translate-y-0">
         <div class="p-2">
           <form (submit)="onSubmit($event)">
@@ -72,3 +66,7 @@
     <nav-user-options />
   </div>
 </div>
+
+
+
+

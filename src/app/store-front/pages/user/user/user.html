@@ -6,6 +6,9 @@
       <a [routerLink]="['/user', 'directions']" routerLinkActive="active">Mis Direcciones</a>
       <a [routerLink]="['/user', 'billing']" routerLinkActive="active">Métodos de Pago</a>
       <a [routerLink]="['/user', 'recipes']" routerLinkActive="active">Mis Pedidos</a>
+      @if (authService.isAdmin()) {
+        <a [routerLink]="['/admin', '']" routerLinkActive="active">Panel Administrativo</a>
+      }
     </nav>
 
     <main class="user-main">
