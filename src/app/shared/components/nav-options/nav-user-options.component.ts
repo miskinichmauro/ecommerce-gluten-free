@@ -24,13 +24,5 @@ export class NavUserOptionsComponent {
   openCart() {
     this.configurationService.openSidebar('cartSidebar');
   }
-  openMobileSearch() {
-    const cb = document.getElementById('mobile-search-toggle-end') as HTMLInputElement | null;
-    console.log(cb);
-    if (cb) {
-      cb.checked = true;
-      cb.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  }
 }
 
