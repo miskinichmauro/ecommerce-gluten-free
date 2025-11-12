@@ -23,6 +23,8 @@ export class FormSearch {
 
   @Output() searched = new EventEmitter<void>();
 
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
   constructor() {
 
     this.searchControl.valueChanges
@@ -114,5 +116,9 @@ export class FormSearch {
     // Also clear and notify to close mobile overlay
     this.searchControl.setValue('', { emitEvent: false });
     this.searched.emit();
+  }
+
+  focusInput() {
+    setTimeout(() => this.searchInput?.nativeElement?.focus(), 0);
   }
 }

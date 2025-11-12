@@ -1,7 +1,8 @@
-<div class="relative w-full">
+<div class="relative w-full" #suggestContainer>
   <form class="w-full" (submit)="onSubmit($event)">
     <label class="input w-full focus-within:outline-none">
       <input
+        #searchInput
         id="searchControl"
         type="text"
         [formControl]="searchControl"

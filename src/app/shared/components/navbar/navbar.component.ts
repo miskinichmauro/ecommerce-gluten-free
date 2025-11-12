@@ -18,12 +18,12 @@ export class NavbarComponent {
 
   menuItems = MENU_ITEMS;
 
-  @ViewChild('mobileSearchInput') mobileSearchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('mobileSearch') mobileSearch!: FormSearch;
   @ViewChild('mobileSearchToggle') mobileSearchToggle!: ElementRef<HTMLInputElement>;
   onMobileToggleEnd(event: Event) {
     const el = event.target as HTMLInputElement;
     if (el && el.checked) {
-      setTimeout(() => this.mobileSearchInput?.nativeElement?.focus(), 0);
+      setTimeout(() => this.mobileSearch?.focusInput(), 0);
     }
   }
 
