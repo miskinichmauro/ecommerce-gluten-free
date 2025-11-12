@@ -19,10 +19,19 @@ export class NavbarComponent {
   menuItems = MENU_ITEMS;
 
   @ViewChild('mobileSearchInput') mobileSearchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('mobileSearchToggle') mobileSearchToggle!: ElementRef<HTMLInputElement>;
   onMobileToggleEnd(event: Event) {
     const el = event.target as HTMLInputElement;
     if (el && el.checked) {
       setTimeout(() => this.mobileSearchInput?.nativeElement?.focus(), 0);
+    }
+  }
+
+  onSearchSubmitted() {
+    const cb = this.mobileSearchToggle?.nativeElement as HTMLInputElement | undefined;
+    if (cb && cb.checked) {
+      cb.checked = false;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
     }
   }
 }
