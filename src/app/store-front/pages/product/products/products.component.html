@@ -1,4 +1,28 @@
-<h1 class="text-3xl font-bold mb-6 mt-6">Todos los productos</h1>
+<h1 class="text-3xl font-bold mb-2 mt-6">Productos</h1>
+
+<div class="flex justify-end">
+  <span class="inline-flex items-center gap-2">
+    Total de productos
+    <span class="text-bold">
+      {{ productResponse()?.count }}
+    </span>
+  </span>
+</div>
+<div class="flex items-center justify-end gap-2">
+  <label class="opacity-70">Mostrar</label>
+  <span class="inline-flex items-center gap-2">
+    <select
+      class="select select-bordered select-sm w-16"
+      (change)="updateProductsPerPage(+selectPerPage.value)"
+      #selectPerPage
+    >
+      <option [selected]="productPerPage() === 10" value="10">10</option>
+      <option [selected]="productPerPage() === 20" value="20">20</option>
+      <option [selected]="productPerPage() === 50" value="50">50</option>
+      <option [selected]="productPerPage() === 100" value="100">100</option>
+    </select>
+  </span>
+</div>
 
 @if (loading()) {
   <div class="min-h-[50vh] gap-4">

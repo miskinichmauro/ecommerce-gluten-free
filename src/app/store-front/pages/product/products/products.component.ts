@@ -1,4 +1,4 @@
-import { Component, effect, inject, Signal } from '@angular/core';
+import { Component, effect, inject, signal, Signal } from '@angular/core';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { ProductCardComponent } from "src/app/products/components/product-card/product-card.component";
@@ -27,6 +27,7 @@ export class ProductsComponent {
 
   searchControl = new FormControl('');
   private lastQuery = '';
+  productPerPage = signal(10);
 
   constructor() {
     const { productResponse, loading, error, loadProducts } = useProductsLoader();
@@ -43,10 +44,9 @@ export class ProductsComponent {
         this.searchControl.setValue(q, { emitEvent: false });
       }
 
-      this.loadProducts({
-        query: q,
-        offset: (this.paginationService.currentPage() - 1) * 9,
-      });
+      const perPage = this.productPerPage();
+      const offset = (this.paginationService.currentPage() - 1) * perPage;
+      this.loadProducts({ query: q, offset, limit: perPage });
     });
 
     this.searchControl.valueChanges
@@ -61,12 +61,18 @@ export class ProductsComponent {
         });
 
         this.paginationService.resetPage();
-        this.loadProducts({ query: qValue, offset: 0 });
+        this.loadProducts({ query: qValue, offset: 0, limit: this.productPerPage() });
       });
 
     effect(() => {
-      const offset = (this.paginationService.currentPage() - 1) * 9;
-      this.loadProducts({ query: this.lastQuery, offset });
+      const perPage = this.productPerPage();
+      const offset = (this.paginationService.currentPage() - 1) * perPage;
+      this.loadProducts({ query: this.lastQuery, offset, limit: perPage });
     });
+  }
+
+  updateProductsPerPage(value: number) {
+    this.productPerPage.set(value);
+    this.paginationService.setCurrentPage(1);
   }
 }
