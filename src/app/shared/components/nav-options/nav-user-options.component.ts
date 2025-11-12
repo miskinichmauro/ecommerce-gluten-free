@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { ThemeController } from "../theme-controller/theme-controller";
@@ -10,6 +10,7 @@ import { ThemeController } from "../theme-controller/theme-controller";
   styleUrl: './nav-user-options.component.css',
 })
 export class NavUserOptionsComponent {
+  @ViewChild('mobileSearchToggle') mobileSearchToggle!: ElementRef<HTMLInputElement>;
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
 
@@ -23,6 +24,13 @@ export class NavUserOptionsComponent {
 
   openCart() {
     this.configurationService.openSidebar('cartSidebar');
+  }
+
+  openMobileSearch() {
+    const cb = this.mobileSearchToggle?.nativeElement as HTMLInputElement | undefined;
+    if (!cb) return;
+    cb.checked = true;
+    cb.dispatchEvent(new Event('change', { bubbles: true }));
   }
 }
 

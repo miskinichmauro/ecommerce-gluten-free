@@ -10,17 +10,20 @@ import { NavUserOptionsComponent } from "../nav-options/nav-user-options.compone
 import { AuthService } from '@auth/auth.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
+import { SidebarItemsComponent } from "../sidebar-items/sidebar-items.component";
+import { MENU_ITEMS } from '@store-front/components/menu-items';
 
 @Component({
   selector: 'navbar',
-  imports: [LogoComponent, NavUserOptionsComponent, ReactiveFormsModule, GuaraniesPipe],
+  imports: [LogoComponent, NavUserOptionsComponent, ReactiveFormsModule, GuaraniesPipe, SidebarItemsComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   @ViewChild('suggestContainer') suggestContainer!: ElementRef;
   @ViewChild('mobileSearchInput') mobileSearchInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('mobileSearchToggle') mobileSearchToggle!: ElementRef<HTMLInputElement>;
+
+  menuItems = MENU_ITEMS;
 
   searchControl = new FormControl('');
   suggestions: Product[] = [];
@@ -122,11 +125,5 @@ export class NavbarComponent {
     if (el && el.checked) {
       setTimeout(() => this.mobileSearchInput?.nativeElement?.focus(), 0);
     }
-  }
-  openMobileSearch() {
-    const cb = this.mobileSearchToggle?.nativeElement as HTMLInputElement | undefined;
-    if (!cb) return;
-    cb.checked = true;
-    cb.dispatchEvent(new Event('change', { bubbles: true }));
   }
 }

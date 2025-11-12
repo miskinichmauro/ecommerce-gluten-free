@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, HostListener, inject, input } from '@angular/core';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
 import { MenuItemsComponent } from '@shared/components/menu-items/menu-items.component';
@@ -14,7 +14,18 @@ export class SidebarItemsComponent {
 
   configurationService = inject(ConfigurationService);
 
-  open() : boolean {
+  isOpen() : boolean {
     return this.configurationService.sidebarItemsStatus() === 'open';
+  }
+
+  close() {
+    this.configurationService.closeSidebar();
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleEscape(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.isOpen()) {
+      this.close();
+    }
   }
 }

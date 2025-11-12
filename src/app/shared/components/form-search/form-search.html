@@ -1,0 +1,14 @@
+<form class="w-full" (submit)="onSubmit($event)">
+  <label class="input w-full">
+    <input
+      id="searchControl"
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Buscar productos..."
+      class="grow"
+      aria-label="Buscar productos"
+      (keydown.escape)="closeSuggestions()"
+      (keydown)="onKeyDown($event)"
+    />
+  </label>
+</form>
