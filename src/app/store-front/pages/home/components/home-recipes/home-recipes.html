@@ -7,7 +7,7 @@
   @if (loading()) {
     <loading />
   } @else {
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center justify-items-center">
       @for (rec of recipes(); track $index) {
         <recipe-card [recipe]="rec" />
       }
