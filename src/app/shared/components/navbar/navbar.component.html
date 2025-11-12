@@ -5,17 +5,15 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
       </svg>
     </button>
-    <app-logo />
+    <app-logo class="lg:mx-3"/>
     <sidebar-items [menuItems]="menuItems" />
   </div>
 
-  <div class="navbar-center hidden sm:flex w-full">
-    <div class="relative w-full" #suggestContainer>
-      <form-search />
-    </div>
+  <div class="navbar-center hidden sm:flex">
+    <form-search />
   </div>
 
-  <div class="navbar-end gap-2">
+  <div class="navbar-end">
     <nav-user-options />
   </div>
 </div>
@@ -23,10 +21,10 @@
 <div class="sm:hidden">
   <input id="mobile-search-toggle-end" #mobileSearchToggle type="checkbox" class="peer hidden" (change)="onMobileToggleEnd($event)" />
   <label for="mobile-search-toggle-end" class="fixed inset-0 bg-black/40 z-40 opacity-0 pointer-events-none peer-checked:opacity-100 peer-checked:pointer-events-auto">
-
   </label>
+
   <div class="fixed top-0 inset-x-0 z-50 bg-base-100 shadow-md -translate-y-full transition-transform duration-200 peer-checked:translate-y-0">
-    <div class="p-2">
+    <div class="p-4">
       <form-search />
     </div>
   </div>

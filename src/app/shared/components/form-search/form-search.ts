@@ -3,11 +3,12 @@ import { FormControl } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Product } from '@products/interfaces/product';
 import { ProductService } from '@products/services/products.service';
+import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 import { debounceTime, distinctUntilChanged, switchMap, of, filter } from 'rxjs';
 
 @Component({
   selector: 'form-search',
-  imports: [],
+  imports: [GuaraniesPipe],
   templateUrl: './form-search.html',
   styleUrl: './form-search.css',
 })
@@ -19,7 +20,6 @@ export class FormSearch {
   suggestions: Product[] = [];
 
   activeIndex = -1;
-
 
   constructor() {
 
