@@ -1,38 +1,41 @@
-<form class="w-full" (submit)="onSubmit($event)">
-  <label class="input w-full focus-within:outline-none">
-    <input
-      id="searchControl"
-      type="text"
-      placeholder="Buscar productos..."
-      class="grow focus:outline-none focus:ring-0"
-      aria-label="Buscar productos"
-      (keydown.escape)="closeSuggestions()"
-      (keydown)="onKeyDown($event)"
-    />
-  </label>
-</form>
+<div class="relative w-full">
+  <form class="w-full" (submit)="onSubmit($event)">
+    <label class="input w-full focus-within:outline-none">
+      <input
+        id="searchControl"
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Buscar productos..."
+        class="grow focus:outline-none focus:ring-0"
+        aria-label="Buscar productos"
+        (keydown.escape)="closeSuggestions()"
+        (keydown)="onKeyDown($event)"
+      />
+    </label>
+  </form>
 
- @if (suggestions.length > 0) {
-  <ul
-    class="absolute top-[105%] w-full bg-base-100 shadow-lg rounded-lg border border-base-300 z-9999 p-2 flex flex-col gap-1"
-  >
-    @for (item of suggestions; track $index; let i = $index) {
-      <li
-        (click)="selectSuggestion(item)"
-        class="cursor-pointer p-2 rounded-md flex justify-between"
-        [class.bg-primary/20]="i === activeIndex"
-        [class.text-primary]="i === activeIndex"
-      >
-        <span>{{ item.title }}</span>
-        <span class="opacity-70">{{ item.price | guaranies }}</span>
-      </li>
-    }
-
-    <li
-      class="text-center text-sm text-primary cursor-pointer hover:bg-base-200 p-2 rounded-md"
-      (click)="performSearch(searchControl.value!)"
+  @if (suggestions.length > 0) {
+    <ul
+      class="absolute top-full left-0 right-0 bg-base-100 shadow-lg rounded-lg border border-base-300 z-9999 p-2 flex flex-col gap-1"
     >
-      Ver todos los resultados →
-    </li>
-  </ul>
-}
+      @for (item of suggestions; track $index; let i = $index) {
+        <li
+          (click)="selectSuggestion(item)"
+          class="cursor-pointer p-2 rounded-md flex justify-between"
+          [class.bg-primary/20]="i === activeIndex"
+          [class.text-primary]="i === activeIndex"
+        >
+          <span>{{ item.title }}</span>
+          <span class="opacity-70">{{ item.price | guaranies }}</span>
+        </li>
+      }
+
+      <li
+        class="text-center text-sm text-primary cursor-pointer hover:bg-base-200 p-2 rounded-md"
+        (click)="performSearch(searchControl.value!)"
+      >
+        Ver todos los resultados →
+      </li>
+    </ul>
+  }
+</div>

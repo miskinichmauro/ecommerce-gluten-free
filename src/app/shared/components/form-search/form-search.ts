@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Product } from '@products/interfaces/product';
 import { ProductService } from '@products/services/products.service';
@@ -8,7 +8,7 @@ import { debounceTime, distinctUntilChanged, switchMap, of, filter } from 'rxjs'
 
 @Component({
   selector: 'form-search',
-  imports: [GuaraniesPipe],
+  imports: [GuaraniesPipe, ReactiveFormsModule],
   templateUrl: './form-search.html',
   styleUrl: './form-search.css',
 })
@@ -25,11 +25,11 @@ export class FormSearch {
 
     this.searchControl.valueChanges
       .pipe(
-        debounceTime(300),
+        debounceTime(150),
         distinctUntilChanged(),
         switchMap((text) => {
           const term = (text ?? '').trim();
-          if (term.length < 2) {
+          if (term.length < 1) {
             this.closeSuggestions();
             return of({ products: [] });
           }
