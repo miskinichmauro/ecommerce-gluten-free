@@ -1,4 +1,18 @@
-<swiper-container #swiper class="w-full overflow-visible cursor-grab" slides-per-view="auto" space-between="12" navigation="true" loop="true" centered-slides="true" centered-slides-bounds="true" dir="ltr" autoplay="true" autoplay-delay="5000" autoplay-disable-on-interaction="false" autoplay-pause-on-mouse-enter="true" speed="800">
+<swiper-container
+  #swiper class="w-full overflow-hidden sm:overflow-visible cursor-grab"
+  slides-per-view="auto"
+  space-between="12"
+  navigation="true"
+  loop="true"
+  centered-slides="true"
+  centered-slides-bounds="true"
+  dir="ltr"
+  autoplay="true"
+  autoplay-delay="5000"
+  autoplay-disable-on-interaction="false"
+  autoplay-pause-on-mouse-enter="true"
+  speed="800"
+>
   @for (product of products(); track $index) {
     <swiper-slide>
       <div class="w-[260px] sm:w-[280px] md:w-[300px]">
@@ -6,5 +20,5 @@
       </div>
     </swiper-slide>
   }
-  
+
 </swiper-container>
