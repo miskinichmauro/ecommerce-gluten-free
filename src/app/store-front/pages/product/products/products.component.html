@@ -5,7 +5,7 @@
     <span class="inline-flex items-center gap-2">
       Total de productos
       <span class="font-bold">
-        {{ productResponse()?.count }}
+        {{ productResponse()?.count === null ? 0 : productResponse()?.count }}
       </span>
     </span>
   </div>
