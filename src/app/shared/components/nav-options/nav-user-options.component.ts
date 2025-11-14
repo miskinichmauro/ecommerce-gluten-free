@@ -14,7 +14,12 @@ export class NavUserOptionsComponent {
   authService = inject(AuthService);
   configurationService = inject(ConfigurationService);
 
-  openUserOptions() {
+  private blurTarget(event?: Event) {
+    (event?.currentTarget as HTMLElement | null)?.blur();
+  }
+
+  openUserOptions(event?: Event) {
+    this.blurTarget(event);
     if (this.authService.authStatus() === 'authenticated') {
       this.configurationService.openSidebar('userOptions');
     } else {
@@ -22,11 +27,13 @@ export class NavUserOptionsComponent {
     }
   }
 
-  openCart() {
+  openCart(event?: Event) {
+    this.blurTarget(event);
     this.configurationService.openSidebar('cartSidebar');
   }
 
-  openMobileSearch() {
+  openMobileSearch(event?: Event) {
+    this.blurTarget(event);
     const cb = this.mobileSearchToggle?.nativeElement as HTMLInputElement | undefined;
     if (!cb) return;
     cb.checked = true;

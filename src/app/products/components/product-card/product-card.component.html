@@ -1,5 +1,5 @@
 <div
-  class="card bg-base-100 shadow-none hover:shadow-2xl transition-shadow duration-300 opacity-90 hover:opacity-300 w-[260px] sm:w-[280px] md:w-[300px] mx-auto"
+  class="card bg-base-100 shadow-none hover:shadow-2xl transition-shadow duration-300 opacity-90 hover:opacity-300 w-full max-w-[260px] sm:max-w-[280px] md:max-w-[300px] mx-auto"
 >
   <figure>
     <img
@@ -29,7 +29,7 @@
       <button
         (click)="addToCart()"
         type="button"
-        class="card-actions flex justify-center items-center btn btn-primary btn-xs sm:btn-sm md:btn-md mt-2 relative min-w-[150px]"
+        class="card-actions flex justify-center items-center btn btn-primary sm:btn-md mt-2 relative min-w-[150px]"
       >
         @if (loading()) {
           Agregando...

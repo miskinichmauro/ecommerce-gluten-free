@@ -19,10 +19,13 @@ export class FormSearch {
 
   searchControl = new FormControl('');
   suggestions: Product[] = [];
+  private static nextInputId = 0;
+  inputId = `searchControl-${FormSearch.nextInputId++}`;
 
   activeIndex = -1;
 
   @Output() searched = new EventEmitter<void>();
+  @Output() dismissed = new EventEmitter<void>();
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
@@ -70,6 +73,19 @@ export class FormSearch {
   closeSuggestions() {
     this.suggestions = [];
     this.activeIndex = -1;
+  }
+
+  onEscapePressed() {
+    this.closeSuggestions();
+    this.dismissed.emit();
+    this.searchInput?.nativeElement?.blur();
+  }
+
+  clearSearch() {
+    if ((this.searchControl.value ?? '').length === 0) return;
+    this.searchControl.setValue('', { emitEvent: false });
+    this.closeSuggestions();
+    this.searchInput?.nativeElement?.focus();
   }
 
   onKeyDown(event: KeyboardEvent) {

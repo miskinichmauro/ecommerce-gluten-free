@@ -3,17 +3,17 @@
     <label class="input w-full focus-within:outline-none">
       <input
         #searchInput
-        id="searchControl"
+        [attr.id]="inputId"
         type="text"
         [formControl]="searchControl"
         placeholder="Buscar productos..."
         class="grow focus:outline-none focus:ring-0"
         aria-label="Buscar productos"
-        (keydown.escape)="closeSuggestions()"
+        (keydown.escape)="onEscapePressed()"
         (keydown)="onKeyDown($event)"
       />
 
-      <x-circle (click)=""/>
+      <x-circle (click)="clearSearch()"/>
     </label>
   </form>
 

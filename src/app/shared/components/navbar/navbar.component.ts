@@ -20,6 +20,12 @@ export class NavbarComponent {
 
   @ViewChild('mobileSearch') mobileSearch!: FormSearch;
   @ViewChild('mobileSearchToggle') mobileSearchToggle!: ElementRef<HTMLInputElement>;
+
+  openSidebarItems(event: Event) {
+    this.configurationService.toggleSidebarItemsStatus('open');
+    (event.currentTarget as HTMLButtonElement | null)?.blur();
+  }
+
   onMobileToggleEnd(event: Event) {
     const el = event.target as HTMLInputElement;
     if (el && el.checked) {
@@ -27,11 +33,19 @@ export class NavbarComponent {
     }
   }
 
-  onSearchSubmitted() {
+  private closeMobileSearchOverlay() {
     const cb = this.mobileSearchToggle?.nativeElement as HTMLInputElement | undefined;
     if (cb && cb.checked) {
       cb.checked = false;
       cb.dispatchEvent(new Event('change', { bubbles: true }));
     }
+  }
+
+  onSearchSubmitted() {
+    this.closeMobileSearchOverlay();
+  }
+
+  onSearchDismissed() {
+    this.closeMobileSearchOverlay();
   }
 }

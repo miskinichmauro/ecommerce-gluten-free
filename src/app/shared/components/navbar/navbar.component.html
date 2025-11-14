@@ -1,6 +1,6 @@
 <div class="navbar bg-base-100">
   <div class="navbar-start">
-    <button class="btn btn-ghost lg:hidden" (click)="configurationService.toggleSidebarItemsStatus('open')" aria-label="Abrir menú">
+    <button class="btn btn-ghost lg:hidden" (click)="openSidebarItems($event)" aria-label="Abrir menú">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
       </svg>
@@ -10,7 +10,7 @@
   </div>
 
   <div class="navbar-center hidden sm:flex">
-    <form-search (searched)="onSearchSubmitted()" />
+    <form-search (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
   </div>
 
   <div class="navbar-end">
@@ -25,7 +25,7 @@
 
   <div class="fixed top-0 inset-x-0 z-50 bg-base-100 shadow-md -translate-y-full transition-transform duration-200 peer-checked:translate-y-0">
     <div class="p-4">
-      <form-search #mobileSearch (searched)="onSearchSubmitted()" />
+      <form-search #mobileSearch (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
     </div>
   </div>
 </div>

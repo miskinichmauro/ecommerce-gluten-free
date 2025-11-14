@@ -20,7 +20,7 @@ export class SidebarItemsComponent {
   }
 
   close() {
-    this.configurationService.closeSidebar();
+    this.configurationService.toggleSidebarItemsStatus('closed');
   }
 
   @HostListener('window:keydown', ['$event'])

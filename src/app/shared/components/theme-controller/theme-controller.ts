@@ -19,5 +19,6 @@ export class ThemeController implements OnInit {
     const theme = checkbox.checked ? 'coffee' : 'emerald';
 
     document.documentElement.setAttribute('data-theme', theme);
+    checkbox.blur();
   }
 }
