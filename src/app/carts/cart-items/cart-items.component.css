@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+.cart-item-card {
+  transition: opacity 250ms ease, transform 250ms ease, filter 250ms ease;
+}
+
+.cart-item-removing {
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(2px);
+}

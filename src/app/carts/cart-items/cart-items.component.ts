@@ -15,9 +15,24 @@ import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 export class CartItemsComponent {
   cartItems = input.required<CartItem[]>();
   private readonly cartService = inject(CartService);
+  private readonly removingIds = new Set<string>();
+  private readonly animationDelay = 250;
 
-  remove(id: string) {
-    this.cartService.removeItem(id).subscribe();
+  isRemoving(id: string) {
+    return this.removingIds.has(id);
+  }
+
+  startRemove(item: CartItem) {
+    if (this.removingIds.has(item.id)) return;
+    this.removingIds.add(item.id);
+
+    setTimeout(() => {
+      this.cartService.removeItem(item.id).subscribe({
+        next: () => this.removingIds.delete(item.id),
+        error: () => this.removingIds.delete(item.id),
+        complete: () => this.removingIds.delete(item.id),
+      });
+    }, this.animationDelay);
   }
 
   increaseQuantity(item: CartItem) {
