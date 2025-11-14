@@ -142,4 +142,8 @@ export class FormSearch {
   focusInput() {
     setTimeout(() => this.searchInput?.nativeElement?.focus(), 0);
   }
+
+  hasSearchValue() {
+    return !!(this.searchControl.value ?? '').length;
+  }
 }

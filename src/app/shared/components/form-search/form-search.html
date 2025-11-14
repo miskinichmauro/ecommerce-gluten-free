@@ -13,7 +13,14 @@
         (keydown)="onKeyDown($event)"
       />
 
-      <x-circle (click)="clearSearchOrClose()"/>
+      <span class="inline-flex lg:hidden">
+        <x-circle (click)="clearSearchOrClose()"/>
+      </span>
+      @if (hasSearchValue()) {
+        <span class="hidden lg:inline-flex">
+          <x-circle (click)="clearSearchOrClose()"/>
+        </span>
+      }
     </label>
   </form>
 
