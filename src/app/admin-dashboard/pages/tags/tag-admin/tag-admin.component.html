@@ -1,0 +1,10 @@
+@if (loading()) {
+  <div class="min-h-[50vh] gap-4">
+    <loading />
+  </div>
+}
+
+@if (tag()?.id) {
+  <tag-details [tag]="tag()!" />
+}
+

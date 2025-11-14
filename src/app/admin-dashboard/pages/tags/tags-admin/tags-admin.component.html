@@ -1,0 +1,24 @@
+<h1 class="text-2xl font-bold">Listado de tags</h1>
+<h3 class="text-lg">
+  Total de tags:
+  <span class="text-primary">{{ total() }}</span>
+</h3>
+
+<div class="flex gap-2 items-center h-20">
+  <div class="flex flex-1"></div>
+  <button class="btn btn-primary" routerLink="/admin/tags/new">
+    Cargar tag
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="min-h-[50vh] gap-4">
+    <loading />
+  </div>
+}
+
+<tags-table
+  [tags]="tags() ?? []"
+  (delete)="delete($event)"
+></tags-table>
+

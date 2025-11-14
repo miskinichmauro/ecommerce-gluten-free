@@ -11,6 +11,10 @@ import { UserAdminComponent } from "@admin-dashboard/pages/users/users/user-admi
 import { UsersAdminComponent } from "@admin-dashboard/pages/users/users/users-admin/users-admin.component";
 import { RolesAdminComponent } from "@admin-dashboard/pages/users/roles/roles-admin/roles-admin.component";
 import { RoleAdminComponent } from "@admin-dashboard/pages/users/roles/role-admin/role-admin.component";
+import { CategoriesAdminComponent } from "@admin-dashboard/pages/categories/categories-admin/categories-admin.component";
+import { CategoryAdminComponent } from "@admin-dashboard/pages/categories/category-admin/category-admin.component";
+import { TagsAdminComponent } from "@admin-dashboard/pages/tags/tags-admin/tags-admin.component";
+import { TagAdminComponent } from "@admin-dashboard/pages/tags/tag-admin/tag-admin.component";
 
 export const AdminDashboardRoutes: Routes = [
   {
@@ -38,6 +42,26 @@ export const AdminDashboardRoutes: Routes = [
         path: 'recipes/:id',
         title: 'Receta',
         component: RecipeAdminComponent
+      },
+      {
+        path: 'categories',
+        title: 'Categorías',
+        component: CategoriesAdminComponent
+      },
+      {
+        path: 'categories/:id',
+        title: 'Categoría',
+        component: CategoryAdminComponent
+      },
+      {
+        path: 'tags',
+        title: 'Tags',
+        component: TagsAdminComponent
+      },
+      {
+        path: 'tags/:id',
+        title: 'Tag',
+        component: TagAdminComponent
       },
       {
         path: 'contacts',
