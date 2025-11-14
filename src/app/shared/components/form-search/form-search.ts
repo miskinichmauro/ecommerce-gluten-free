@@ -81,8 +81,12 @@ export class FormSearch {
     this.searchInput?.nativeElement?.blur();
   }
 
-  clearSearch() {
-    if ((this.searchControl.value ?? '').length === 0) return;
+  clearSearchOrClose() {
+    if ((this.searchControl.value ?? '').length === 0) {
+      this.dismissed.emit();
+      return;
+    }
+
     this.searchControl.setValue('', { emitEvent: false });
     this.closeSuggestions();
     this.searchInput?.nativeElement?.focus();
