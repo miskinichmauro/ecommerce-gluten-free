@@ -5,11 +5,12 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { UserOptionsComponent } from 'src/app/store-front/pages/user/user-sidebar-options/user-sidebar-options.component';
 import { LoginComponent } from 'src/app/auth/pages/login/login.component';
 import { CartSidebarComponent } from 'src/app/store-front/pages/cart/cart-sidebar/cart-sidebar.component';
+import { XCircle } from "../x-circle/x-circle";
 
 @Component({
   selector: 'sidebar-page',
   standalone: true,
-  imports: [CommonModule, UserOptionsComponent, LoginComponent, CartSidebarComponent],
+  imports: [CommonModule, UserOptionsComponent, LoginComponent, CartSidebarComponent, XCircle],
   templateUrl: './sidebar-page.component.html',
   styleUrl: './sidebar-page.component.css',
 })

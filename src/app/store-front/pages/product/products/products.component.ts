@@ -27,7 +27,7 @@ export class ProductsComponent {
 
   searchControl = new FormControl('');
   private lastQuery = '';
-  productPerPage = signal(10);
+  productPerPage = signal(8);
 
   constructor() {
     const { productResponse, loading, error, loadProducts } = useProductsLoader();

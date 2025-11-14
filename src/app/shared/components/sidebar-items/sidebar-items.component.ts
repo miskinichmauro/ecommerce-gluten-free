@@ -2,10 +2,11 @@ import { Component, HostListener, inject, input } from '@angular/core';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
 import { MenuItemsComponent } from '@shared/components/menu-items/menu-items.component';
+import { XCircle } from "../x-circle/x-circle";
 
 @Component({
   selector: 'sidebar-items',
-  imports: [MenuItemsComponent],
+  imports: [MenuItemsComponent, XCircle],
   templateUrl: './sidebar-items.component.html',
   styleUrl: './sidebar-items.component.css',
 })

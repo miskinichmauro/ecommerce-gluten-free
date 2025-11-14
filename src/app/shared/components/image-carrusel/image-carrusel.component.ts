@@ -12,7 +12,7 @@ export class ImageCarruselComponent implements AfterViewInit{
 
   spaceBetween = 10;
   slidesPerView = 1;
-  
+
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
 
   ngAfterViewInit() {

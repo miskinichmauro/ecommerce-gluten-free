@@ -5,10 +5,11 @@ import { Product } from '@products/interfaces/product';
 import { ProductService } from '@products/services/products.service';
 import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 import { debounceTime, distinctUntilChanged, switchMap, of, filter } from 'rxjs';
+import { XCircle } from "../x-circle/x-circle";
 
 @Component({
   selector: 'form-search',
-  imports: [GuaraniesPipe, ReactiveFormsModule],
+  imports: [GuaraniesPipe, ReactiveFormsModule, XCircle],
   templateUrl: './form-search.html',
   styleUrl: './form-search.css',
 })
