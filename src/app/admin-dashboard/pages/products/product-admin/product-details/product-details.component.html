@@ -8,6 +8,7 @@
 >
   <div class="flex flex-col gap-2">
     <h2 class="text-xl font-bold h-12">Datos generales</h2>
+    <label for="title">Titulo</label>
     <input
       type="text"
       placeholder="Título"
@@ -17,14 +18,7 @@
     />
     <form-error-label [control]="productForm.get('title')!" />
 
-    <input
-      type="text" placeholder="Slug"
-      class="input input-bordered w-full"
-      formControlName="slug"
-      [class.border-red-500]="productForm.get('title')?.errors ?? false"
-    />
-    <form-error-label [control]="productForm.get('slug')!" />
-
+    <label for="unitOfMeasure">Unidad de medida</label>
     <input
       type="text"
       placeholder="Unidad de medida"
@@ -34,8 +28,9 @@
     />
     <form-error-label [control]="productForm.get('unitOfMeasure')!" />
 
+    <label for="description">Descripción</label>
     <textarea
-      class="textarea textarea-bordered"
+      class="textarea textarea-bordered w-full"
       placeholder="Descripción"
       rows="6"
       formControlName="description"
@@ -47,6 +42,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <div>
+        <label for="price">Precio</label>
         <input
           type="number"
           placeholder="Precio"
@@ -58,6 +54,7 @@
       </div>
 
       <div>
+        <label for="stock">Stock</label>
         <input
           type="number"
           placeholder="Stock"
@@ -69,16 +66,26 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-6 gap-2">
-      @for (tag of tags; track tag) {
-      <button
-        class="btn btn-sm" type="button"
-        [class.btn-primary]="isTagSelected(tag)"
-        (click)="onTagsClicked(tag)"
-      >
-        {{ tag }}
-      </button>
-      }
+    <div class="flex flex-col gap-1">
+      <h2 class="text-lg font-bold">Categorías</h2>
+      <div class="-mx-2 px-2">
+        <div class="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory">
+          @if (loadingCategories) {
+            <span class="text-sm opacity-70">Cargando categorías...</span>
+          } @else {
+            @for (category of categories; track category.id) {
+              <button
+                class="btn btn-sm whitespace-nowrap snap-start"
+                type="button"
+                [class.btn-primary]="isTagSelected(category.name)"
+                (click)="onTagsClicked(category.name)"
+              >
+                {{ category.name }}
+              </button>
+            }
+          }
+        </div>
+      </div>
     </div>
   </div>
 

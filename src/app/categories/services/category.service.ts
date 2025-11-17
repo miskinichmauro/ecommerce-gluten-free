@@ -79,4 +79,3 @@ export class CategoryService {
     this.categoriesCache.set(category.id, category);
   }
 }
-

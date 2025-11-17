@@ -7,6 +7,8 @@ import { ProductService } from 'src/app/products/services/products.service';
 import { Router } from '@angular/router';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 import { firstValueFrom } from 'rxjs';
+import { CategoryService } from 'src/app/categories/services/category.service';
+import { Category } from 'src/app/categories/interfaces/category.interface';
 
 @Component({
   selector: 'product-details',
@@ -20,6 +22,9 @@ export class ProductDetailsComponent implements OnInit {
   router = inject(Router);
   productsService = inject(ProductService);
   configurationService = inject(ConfigurationService);
+  categoryService = inject(CategoryService);
+
+  private readonly defaultCategory: Category = { id: 'default-sin-gluten', name: 'Sin Gluten' };
 
   fb = inject(FormBuilder);
   productForm = this.fb.group({
@@ -33,10 +38,28 @@ export class ProductDetailsComponent implements OnInit {
     imagesName: [['']],
   });
 
-  tags = ['Cerveza', 'Harina', 'Salado', 'Dulce']
+  categories: Category[] = [];
+  loadingCategories = false;
 
   ngOnInit(): void {
     this.productForm.reset(this.product());
+    this.loadCategories();
+  }
+
+  private loadCategories() {
+    this.loadingCategories = true;
+    this.categoryService.getAll().subscribe({
+      next: categories => {
+        this.categories = categories.length ? categories : [this.defaultCategory];
+      },
+      error: () => {
+        this.categories = [this.defaultCategory];
+        this.loadingCategories = false;
+      },
+      complete: () => {
+        this.loadingCategories = false;
+      }
+    });
   }
 
   isTagSelected(tag: string): boolean {
