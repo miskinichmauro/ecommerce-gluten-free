@@ -17,5 +17,6 @@ export interface Product {
   tags:          string[];
   deleteAt:      null;
   imagesName:    string[];
+  images?:       string[];
   user:          User;
 }

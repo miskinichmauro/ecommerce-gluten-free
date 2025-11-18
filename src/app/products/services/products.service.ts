@@ -16,9 +16,9 @@ const emptyProduct: Product = {
   description: '',
   slug: '',
   stock: 0,
-  tags: [''],
+  tags: [],
   deleteAt: null,
-  imagesName: [''],
+  imagesName: [],
   user: {} as User
 }
 

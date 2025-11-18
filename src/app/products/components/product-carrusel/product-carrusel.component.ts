@@ -18,17 +18,40 @@ export class ProductCarruselComponent implements AfterViewInit {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (!swiperEl) return;
 
-    // Más separación y centrado de slides
-    swiperEl.centeredSlides = true;
-    swiperEl.centeredSlidesBounds = true;
-    swiperEl.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
-    swiperEl.speed = 800;
-    swiperEl.breakpoints = {
-      0: { slidesPerView: 'auto', spaceBetween: 18 },
-      640: { slidesPerView: 'auto', spaceBetween: 22 },
-      1024: { slidesPerView: 'auto', spaceBetween: 26 },
-      1280: { slidesPerView: 'auto', spaceBetween: 32 }
-    };
+    const items = this.products();
+    const enableCarousel = this.shouldEnableCarousel(items.length);
+
+    if (enableCarousel) {
+      swiperEl.centeredSlides = true;
+      swiperEl.centeredSlidesBounds = true;
+      swiperEl.loop = true;
+      swiperEl.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
+      swiperEl.speed = 800;
+      swiperEl.breakpoints = {
+        0: { slidesPerView: 'auto', spaceBetween: 18 },
+        640: { slidesPerView: 'auto', spaceBetween: 22 },
+        1024: { slidesPerView: 'auto', spaceBetween: 26 },
+        1280: { slidesPerView: 'auto', spaceBetween: 32 }
+      };
+    } else {
+      swiperEl.loop = false;
+      swiperEl.autoplay = false;
+      swiperEl.centeredSlides = false;
+      swiperEl.centeredSlidesBounds = false;
+      swiperEl.allowTouchMove = false;
+      swiperEl.breakpoints = {
+        0: { slidesPerView: 'auto', spaceBetween: 18 },
+        640: { slidesPerView: 'auto', spaceBetween: 22 },
+        1024: { slidesPerView: 'auto', spaceBetween: 28 },
+        1280: { slidesPerView: 'auto', spaceBetween: 32 }
+      };
+    }
+
     swiperEl.initialize();
+  }
+
+  private shouldEnableCarousel(totalProducts: number): boolean {
+    if (window.innerWidth < 1024) return totalProducts > 1;
+    return totalProducts > 5;
   }
 }

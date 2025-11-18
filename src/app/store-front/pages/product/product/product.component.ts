@@ -6,6 +6,7 @@ import { Product } from 'src/app/products/interfaces/product';
 import { ProductService } from 'src/app/products/services/products.service';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { ImageCarruselComponent } from "src/app/shared/components/image-carrusel/image-carrusel.component";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product',
@@ -16,6 +17,7 @@ import { ImageCarruselComponent } from "src/app/shared/components/image-carrusel
 export class ProductComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
+  private readonly baseUrl = environment.baseUrl;
 
   productslug = this.activatedRoute.snapshot.params['slug'];
 
@@ -41,6 +43,28 @@ export class ProductComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  productImageUrls(): string[] {
+    const product = this.product();
+    if (!product) return [];
+
+    const primary = (product.imagesName ?? []).filter((img) => !!img);
+    const fallback = (product as any)?.images ?? [];
+    const source = primary.length ? primary : Array.isArray(fallback) ? fallback : [];
+
+    const urls = source
+      .filter((img: string) => !!img)
+      .map((img: string) => this.mapToImageUrl(img));
+
+    return urls.length ? urls : ['assets/images/default-image.jpg'];
+  }
+
+  private mapToImageUrl(value: string): string {
+    if (!value) return 'assets/images/default-image.jpg';
+    if (/^https?:\/\//.test(value)) return value;
+    if (value.startsWith('assets/')) return value;
+    return `${this.baseUrl}/files/product/${value}`;
   }
 }
 

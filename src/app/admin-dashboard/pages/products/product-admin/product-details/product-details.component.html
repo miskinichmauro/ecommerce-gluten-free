@@ -96,12 +96,44 @@
       </button>
     </div>
 
-    <!-- <product-carousel [images]="product().images" /> -->
+    <div class="mt-2 space-y-3">
+      <label class="font-semibold text-sm">Imágenes del producto</label>
+      <input
+        type="file"
+        class="file-input file-input-bordered w-full"
+        (change)="onFilesSelected($event)"
+        multiple
+        accept="image/*"
+        [disabled]="uploadingImages"
+      />
+      <p class="text-xs opacity-70">
+        Subí una o varias imágenes antes de guardar el producto.
+      </p>
+      @if (uploadingImages) {
+        <p class="text-sm text-primary">Subiendo imágenes...</p>
+      }
+      @if (imageUploadError) {
+        <p class="text-sm text-error">{{ imageUploadError }}</p>
+      }
 
-    <input
-      type="file"
-      class="file-input file-input-bordered w-full mt-4"
-      formControlName="imagesName"
-    />
+      @if (imageNames().length) {
+        <div class="grid grid-cols-2 gap-3">
+          @for (image of imageNames(); track image) {
+            <div class="relative rounded-lg overflow-hidden border border-base-300 bg-base-200">
+              <img [src]="image | productImage" alt="Imagen del producto" class="w-full h-32 object-cover object-center" />
+              <button
+                type="button"
+                class="btn btn-xs btn-error absolute top-2 right-2"
+                (click)="removeImage(image)"
+              >
+                Quitar
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="text-sm opacity-70">Aún no cargaste imágenes para este producto.</p>
+      }
+    </div>
   </div>
 </form>

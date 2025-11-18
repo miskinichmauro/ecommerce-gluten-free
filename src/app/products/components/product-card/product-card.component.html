@@ -1,12 +1,12 @@
 <div
   class="card bg-base-100 shadow-none hover:shadow-2xl transition-shadow duration-300 opacity-90 hover:opacity-300 w-full max-w-[260px] sm:max-w-[280px] md:max-w-[300px] mx-auto"
 >
-  <figure>
+  <figure class="w-full h-48 flex items-center justify-center bg-base-200 overflow-hidden">
     <img
-      [src]="product().imagesName | productImage"
+      [src]="((product().imagesName?.length ? product().imagesName : product().images) ?? []) | productImage"
       alt="{{ product().title }}"
       [routerLink]="['/product', product().slug]"
-      class="cursor-pointer"
+      class="cursor-pointer w-full h-full object-cover object-center"
     />
   </figure>
 
