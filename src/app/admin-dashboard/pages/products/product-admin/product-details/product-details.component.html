@@ -70,10 +70,10 @@
       <h2 class="text-lg font-bold">Categorías</h2>
       <div class="-mx-2 px-2">
         <div class="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory">
-          @if (loadingCategories) {
+          @if (loadingCategories()) {
             <span class="text-sm opacity-70">Cargando categorías...</span>
           } @else {
-            @for (category of categories; track category.id) {
+            @for (category of categories(); track category.id) {
               <button
                 class="btn btn-sm whitespace-nowrap snap-start"
                 type="button"
@@ -95,12 +95,12 @@
       <h2 class="text-lg font-bold">Tags</h2>
       <div class="-mx-2 px-2">
         <div class="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory">
-          @if (loadingTags) {
+          @if (loadingTags()) {
             <span class="text-sm opacity-70">Cargando tags...</span>
-          } @else if (!tagsList.length) {
+          } @else if (!tagsList().length) {
             <span class="text-sm opacity-70">No hay tags disponibles.</span>
           } @else {
-            @for (tag of tagsList; track tag.id) {
+            @for (tag of tagsList(); track tag.id) {
               <button
                 class="btn btn-xs sm:btn-sm whitespace-nowrap snap-start"
                 type="button"
@@ -174,3 +174,4 @@
     </div>
   </div>
 </form>
+

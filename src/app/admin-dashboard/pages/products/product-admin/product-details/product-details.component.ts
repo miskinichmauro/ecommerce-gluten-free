@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from 'src/app/products/interfaces/product';
 import { FormUtils } from 'src/app/utils/form-utils';
@@ -50,11 +50,11 @@ export class ProductDetailsComponent implements OnInit {
     imagesName: this.fb.nonNullable.control<string[]>([]),
   });
 
-  categories: Category[] = [];
-  tagsList: Tag[] = [];
-  loadingCategories = false;
-  loadingTags = false;
-  selectedCategoryId: string | null = null;
+  categories = signal<Category[]>([]);
+  tagsList = signal<Tag[]>([]);
+  loadingCategories = signal(false);
+  loadingTags = signal(false);
+  selectedCategoryId = signal<string | null>(null);
   uploadingImages = false;
   imageUploadError: string | null = null;
   previewImage: string | null = null;
@@ -69,35 +69,35 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   private loadCategories() {
-    this.loadingCategories = true;
+    this.loadingCategories.set(true);
     this.categoryService.getAll().subscribe({
       next: categories => {
-        this.categories = categories.length ? categories : [this.defaultCategory];
-        this.loadingCategories = false;
+        this.categories.set(categories.length ? categories : [this.defaultCategory]);
+        this.loadingCategories.set(false);
         this.cdr.detectChanges();
       },
       error: () => {
-        this.categories = [this.defaultCategory];
-        this.loadingCategories = false;
+        this.categories.set([this.defaultCategory]);
+        this.loadingCategories.set(false);
         this.cdr.detectChanges();
       },
       complete: () => {
-        this.loadingCategories = false;
+        this.loadingCategories.set(false);
       }
     });
   }
 
   private loadTags() {
-    this.loadingTags = true;
+    this.loadingTags.set(true);
     this.tagService.getAll().subscribe({
       next: tags => {
-        this.tagsList = tags;
-        this.loadingTags = false;
+        this.tagsList.set(tags);
+        this.loadingTags.set(false);
         this.cdr.detectChanges();
       },
       error: () => {
-        this.tagsList = [];
-        this.loadingTags = false;
+        this.tagsList.set([]);
+        this.loadingTags.set(false);
         this.cdr.detectChanges();
       }
     });
@@ -114,7 +114,7 @@ export class ProductDetailsComponent implements OnInit {
       tags,
       categoryId,
     });
-    this.selectedCategoryId = categoryId || null;
+    this.selectedCategoryId.set(categoryId || null);
     this.refreshImageSources();
   }
 
@@ -217,12 +217,12 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   selectCategory(category: Category) {
-    this.selectedCategoryId = category.id;
+    this.selectedCategoryId.set(category.id);
     this.productForm.get('categoryId')?.setValue(category.id);
   }
 
   isCategorySelected(category: Category) {
-    return this.selectedCategoryId === category.id;
+    return this.selectedCategoryId() === category.id;
   }
 
   imageSources(): ImageSource[] {
@@ -294,10 +294,11 @@ export class ProductDetailsComponent implements OnInit {
     const productData: Partial<Product> = {
       ...(formValue as any),
       slug,
-      imagesName,
+      images: imagesName,
       categoryId: formValue.categoryId,
-      tags,
     };
+    delete (productData as any).imagesName;
+    delete (productData as any).tags;
 
     if (this.product().id === 'new') {
       await firstValueFrom(this.productsService.createProduct(productData));

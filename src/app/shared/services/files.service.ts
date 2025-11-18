@@ -23,7 +23,7 @@ export class FilesService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<FileUploadResponse | string | string[]>(`${this.baseUrl}/files/products`, formData).pipe(
+    return this.http.post<FileUploadResponse | string | string[]>(`${this.baseUrl}/files/products/upload`, formData).pipe(
       map((res) => this.extractFileName(res))
     );
   }
