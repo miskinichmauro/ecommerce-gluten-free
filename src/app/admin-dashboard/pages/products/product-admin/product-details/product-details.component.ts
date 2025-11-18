@@ -9,12 +9,18 @@ import { ConfigurationService } from 'src/app/shared/services/configuration.serv
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { CategoryService } from 'src/app/categories/services/category.service';
 import { Category } from 'src/app/categories/interfaces/category.interface';
+import { TagService } from 'src/app/tags/services/tag.service';
+import { Tag } from 'src/app/tags/interfaces/tag.interface';
 import { FilesService } from '@shared/services/files.service';
-import { ProductImagePipe } from '@products/pipes/product-image.pipe';
+import { environment } from 'src/environments/environment';
+import { XCircle } from '@shared/components/x-circle/x-circle';
+
+type PendingImage = { file: File; preview: string };
+type ImageSource = { src: string; type: 'existing' | 'local'; identifier: string };
 
 @Component({
   selector: 'product-details',
-  imports: [ReactiveFormsModule, FormErrorLabelComponent, ProductImagePipe],
+  imports: [ReactiveFormsModule, FormErrorLabelComponent, XCircle],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -26,6 +32,7 @@ export class ProductDetailsComponent implements OnInit {
   configurationService = inject(ConfigurationService);
   categoryService = inject(CategoryService);
   filesService = inject(FilesService);
+  tagService = inject(TagService);
 
   private readonly defaultCategory: Category = { id: 'default-sin-gluten', name: 'Sin Gluten' };
 
@@ -37,19 +44,27 @@ export class ProductDetailsComponent implements OnInit {
     description: ['', Validators.required],
     price: [1, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(1)]],
+    categoryId: ['', Validators.required],
     tags: this.fb.nonNullable.control<string[]>([]),
     imagesName: this.fb.nonNullable.control<string[]>([]),
   });
 
   categories: Category[] = [];
+  tagsList: Tag[] = [];
   loadingCategories = false;
+  loadingTags = false;
+  selectedCategoryId: string | null = null;
   uploadingImages = false;
   imageUploadError: string | null = null;
+  previewImage: string | null = null;
+  pendingImages: PendingImage[] = [];
+  imageSourceList: ImageSource[] = [];
 
   ngOnInit(): void {
     this.productForm.reset(this.product());
     this.syncInitialImagesAndTags();
     this.loadCategories();
+    this.loadTags();
   }
 
   private loadCategories() {
@@ -57,6 +72,7 @@ export class ProductDetailsComponent implements OnInit {
     this.categoryService.getAll().subscribe({
       next: categories => {
         this.categories = categories.length ? categories : [this.defaultCategory];
+        this.loadingCategories = false;
       },
       error: () => {
         this.categories = [this.defaultCategory];
@@ -68,15 +84,33 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  private loadTags() {
+    this.loadingTags = true;
+    this.tagService.getAll().subscribe({
+      next: tags => {
+        this.tagsList = tags;
+        this.loadingTags = false;
+      },
+      error: () => {
+        this.tagsList = [];
+        this.loadingTags = false;
+      }
+    });
+  }
+
   private syncInitialImagesAndTags() {
     const product = this.product();
     const images = this.mapProductImages(product);
     const tags = (product?.tags ?? []).filter((tag) => !!tag);
+    const categoryId = (product as any)?.category?.id ?? '';
 
     this.productForm.patchValue({
       imagesName: images,
       tags,
+      categoryId,
     });
+    this.selectedCategoryId = categoryId || null;
+    this.refreshImageSources();
   }
 
   private mapProductImages(product: Product | null): string[] {
@@ -109,42 +143,85 @@ export class ProductDetailsComponent implements OnInit {
     const files = input.files;
     if (!files || files.length === 0) return;
 
-    this.uploadingImages = true;
     this.imageUploadError = null;
 
-    const uploads$ = Array.from(files).map((file) => this.filesService.uploadProductImage(file));
-
-    forkJoin(uploads$).subscribe({
-      next: (uploadedNames) => {
-        const validNames = uploadedNames.filter((name) => !!name);
-        if (!validNames.length) {
-          this.imageUploadError = 'No se pudo subir la imagen seleccionada.';
-          return;
-        }
-        const updated = [...this.imageNames(), ...validNames];
-        this.imagesNameControl?.setValue(updated);
-        this.imagesNameControl?.markAsDirty();
-      },
-      error: () => {
-        this.imageUploadError = 'Error al subir la imagen. Intenta nuevamente.';
-        this.uploadingImages = false;
-        if (input) {
-          input.value = '';
-        }
-      },
-      complete: () => {
-        this.uploadingImages = false;
-        if (input) {
-          input.value = '';
-        }
-      }
+    Array.from(files).forEach(file => {
+      const preview = URL.createObjectURL(file);
+      this.pendingImages.push({ file, preview });
     });
+
+    input.value = '';
+    this.refreshImageSources();
   }
 
   removeImage(image: string) {
     const remaining = this.imageNames().filter((img) => img !== image);
     this.imagesNameControl?.setValue(remaining);
     this.imagesNameControl?.markAsDirty();
+    this.refreshImageSources();
+  }
+
+  removePendingImage(preview: string) {
+    const idx = this.pendingImages.findIndex((img) => img.preview === preview);
+    if (idx >= 0) {
+      URL.revokeObjectURL(this.pendingImages[idx].preview);
+      this.pendingImages.splice(idx, 1);
+      this.refreshImageSources();
+    }
+  }
+
+  private updatePreviewImage() {
+    if (!this.imageSourceList.length) {
+      this.previewImage = null;
+      return;
+    }
+
+    if (this.previewImage && this.imageSourceList.some((src) => src.src === this.previewImage)) {
+      return;
+    }
+
+    this.previewImage = this.imageSourceList[0]?.src ?? null;
+  }
+
+  private refreshImageSources() {
+    const existing = this.imageNames().map<ImageSource>((name) => ({
+      src: this.mapExistingImageToUrl(name),
+      type: 'existing',
+      identifier: name,
+    }));
+
+    const locals = this.pendingImages.map<ImageSource>((img) => ({
+      src: img.preview,
+      type: 'local',
+      identifier: img.preview,
+    }));
+
+    this.imageSourceList = [...locals, ...existing];
+    this.updatePreviewImage();
+  }
+
+  private mapExistingImageToUrl(name: string): string {
+    if (!name) return 'assets/images/default-image.jpg';
+    if (/^https?:\/\//.test(name)) return name;
+    if (name.startsWith('assets/')) return name;
+    return `${environment.baseUrl}/files/product/${name}`;
+  }
+
+  setPreviewImage(image: string) {
+    this.previewImage = image;
+  }
+
+  selectCategory(category: Category) {
+    this.selectedCategoryId = category.id;
+    this.productForm.get('categoryId')?.setValue(category.id);
+  }
+
+  isCategorySelected(category: Category) {
+    return this.selectedCategoryId === category.id;
+  }
+
+  imageSources(): ImageSource[] {
+    return this.imageSourceList;
   }
 
   isTagSelected(tag: string): boolean {
@@ -165,12 +242,44 @@ export class ProductDetailsComponent implements OnInit {
     this.productForm.get('tags')?.setValue(currentTags);
   }
 
+  private async uploadPendingImages(): Promise<string[]> {
+    if (!this.pendingImages.length) return [];
+    this.uploadingImages = true;
+    try {
+      const uploads$ = this.pendingImages.map((item) => this.filesService.uploadProductImage(item.file));
+      const uploaded = await firstValueFrom(forkJoin(uploads$));
+      const valid = uploaded.filter((name) => !!name) as string[];
+      if (!valid.length) {
+        this.imageUploadError = 'No se pudo subir la imagen seleccionada.';
+      }
+      return valid;
+    } catch {
+      this.imageUploadError = 'Error al subir la imagen. Intenta nuevamente.';
+      return [];
+    } finally {
+      this.uploadingImages = false;
+    }
+  }
+
   async onSubmit() {
     this.productForm.markAllAsTouched();
+    this.imageUploadError = null;
+
+    const uploadedNames = await this.uploadPendingImages();
+    if (uploadedNames.length) {
+      const images = [...this.imageNames(), ...uploadedNames];
+      this.imagesNameControl?.setValue(images);
+      this.imagesNameControl?.markAsDirty();
+    }
+
     if (!this.imageNames().length) {
       this.imageUploadError = 'Primero sube al menos una imagen del producto.';
       return;
     }
+
+    this.pendingImages.forEach(img => URL.revokeObjectURL(img.preview));
+    this.pendingImages = [];
+    this.refreshImageSources();
 
     const formValue = this.productForm.value;
     const imagesName = (formValue.imagesName ?? []).filter((name) => !!name);
@@ -181,6 +290,7 @@ export class ProductDetailsComponent implements OnInit {
       ...(formValue as any),
       slug,
       imagesName,
+      categoryId: formValue.categoryId,
       tags,
     };
 

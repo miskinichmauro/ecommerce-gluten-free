@@ -77,10 +77,37 @@
               <button
                 class="btn btn-sm whitespace-nowrap snap-start"
                 type="button"
-                [class.btn-primary]="isTagSelected(category.name)"
-                (click)="onTagsClicked(category.name)"
+                [class.btn-primary]="isCategorySelected(category)"
+                (click)="selectCategory(category)"
               >
                 {{ category.name }}
+              </button>
+            }
+          }
+        </div>
+        @if (productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched) {
+          <p class="text-error text-sm mt-1">Selecciona una categoría.</p>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <h2 class="text-lg font-bold">Tags</h2>
+      <div class="-mx-2 px-2">
+        <div class="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory">
+          @if (loadingTags) {
+            <span class="text-sm opacity-70">Cargando tags...</span>
+          } @else if (!tagsList.length) {
+            <span class="text-sm opacity-70">No hay tags disponibles.</span>
+          } @else {
+            @for (tag of tagsList; track tag.id) {
+              <button
+                class="btn btn-xs sm:btn-sm whitespace-nowrap snap-start"
+                type="button"
+                [class.btn-secondary]="isTagSelected(tag.name)"
+                (click)="onTagsClicked(tag.name)"
+              >
+                {{ tag.name }}
               </button>
             }
           }
@@ -96,43 +123,53 @@
       </button>
     </div>
 
-    <div class="mt-2 space-y-3">
-      <label class="font-semibold text-sm">Imágenes del producto</label>
+    <div class="flex flex-col gap-2">
+      <label for="images">Imágenes del producto</label>
       <input
         type="file"
         class="file-input file-input-bordered w-full"
+        id="images"
         (change)="onFilesSelected($event)"
         multiple
         accept="image/*"
         [disabled]="uploadingImages"
       />
-      <p class="text-xs opacity-70">
-        Subí una o varias imágenes antes de guardar el producto.
-      </p>
+
+      <div class="w-full h-97 bg-base-200 border border-dashed border-base-300 rounded-lg flex items-center justify-center overflow-hidden">
+        @if (previewImage) {
+          <img [src]="previewImage" alt="Previsualización" class="w-full h-full object-cover object-center" />
+        } @else {
+          <span class="text-sm opacity-70">La vista previa aparecerá aquí</span>
+        }
+      </div>
+
+      @if (imageSources().length) {
+        <div class="flex gap-2 overflow-x-auto pb-2">
+          @for (thumb of imageSources(); track thumb.identifier) {
+            <div
+              class="relative min-w-[110px] h-24 rounded-md border-2 overflow-hidden cursor-pointer bg-base-200"
+              [class.border-primary]="previewImage === thumb.src"
+              [class.border-transparent]="previewImage !== thumb.src"
+              (click)="setPreviewImage(thumb.src)"
+            >
+              <img [src]="thumb.src" alt="Miniatura" class="w-full h-full object-cover rounded-md" />
+              <button
+                type="button"
+              class="absolute top-1 right-1 bg-base-100 rounded-full w-6 h-6 flex items-center justify-center shadow"
+              (click)="$event.stopPropagation(); thumb.type === 'existing' ? removeImage(thumb.identifier) : removePendingImage(thumb.identifier)"
+            >
+                <x-circle />
+              </button>
+            </div>
+          }
+        </div>
+      }
+
       @if (uploadingImages) {
         <p class="text-sm text-primary">Subiendo imágenes...</p>
       }
       @if (imageUploadError) {
         <p class="text-sm text-error">{{ imageUploadError }}</p>
-      }
-
-      @if (imageNames().length) {
-        <div class="grid grid-cols-2 gap-3">
-          @for (image of imageNames(); track image) {
-            <div class="relative rounded-lg overflow-hidden border border-base-300 bg-base-200">
-              <img [src]="image | productImage" alt="Imagen del producto" class="w-full h-32 object-cover object-center" />
-              <button
-                type="button"
-                class="btn btn-xs btn-error absolute top-2 right-2"
-                (click)="removeImage(image)"
-              >
-                Quitar
-              </button>
-            </div>
-          }
-        </div>
-      } @else {
-        <p class="text-sm opacity-70">Aún no cargaste imágenes para este producto.</p>
       }
     </div>
   </div>

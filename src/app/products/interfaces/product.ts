@@ -1,4 +1,5 @@
 import { User } from "@store-front/users/interfaces/user.interfase";
+import { Category } from "src/app/categories/interfaces/category.interface";
 
 export interface ProductResponse {
   count:    number;
@@ -18,5 +19,6 @@ export interface Product {
   deleteAt:      null;
   imagesName:    string[];
   images?:       string[];
+  category?:     Category;
   user:          User;
 }
