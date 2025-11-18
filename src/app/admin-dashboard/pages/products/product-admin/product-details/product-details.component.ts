@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from 'src/app/products/interfaces/product';
 import { FormUtils } from 'src/app/utils/form-utils';
@@ -33,6 +33,7 @@ export class ProductDetailsComponent implements OnInit {
   categoryService = inject(CategoryService);
   filesService = inject(FilesService);
   tagService = inject(TagService);
+  cdr = inject(ChangeDetectorRef);
 
   private readonly defaultCategory: Category = { id: 'default-sin-gluten', name: 'Sin Gluten' };
 
@@ -73,10 +74,12 @@ export class ProductDetailsComponent implements OnInit {
       next: categories => {
         this.categories = categories.length ? categories : [this.defaultCategory];
         this.loadingCategories = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.categories = [this.defaultCategory];
         this.loadingCategories = false;
+        this.cdr.detectChanges();
       },
       complete: () => {
         this.loadingCategories = false;
@@ -90,10 +93,12 @@ export class ProductDetailsComponent implements OnInit {
       next: tags => {
         this.tagsList = tags;
         this.loadingTags = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.tagsList = [];
         this.loadingTags = false;
+        this.cdr.detectChanges();
       }
     });
   }
