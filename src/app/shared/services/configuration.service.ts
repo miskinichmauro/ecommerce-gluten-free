@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
 
 export type SidebarStatus = 'closed' | 'open';
-export type SidebarPageRoute = 'auth' | 'userOptions' | 'cartSidebar' | '';
+export type SidebarPageRoute = 'auth' | 'userOptions' | 'cartSidebar' | 'register' | '';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {

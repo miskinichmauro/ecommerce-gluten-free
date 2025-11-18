@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { AuthService } from '../../auth.service';
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
@@ -8,7 +8,7 @@ import { SuccessComponent } from "src/app/shared/components/success/success.comp
 
 @Component({
   selector: 'login',
-  imports: [RouterLink, ReactiveFormsModule, LoadingComponent, SuccessComponent],
+  imports: [ReactiveFormsModule, LoadingComponent, SuccessComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -25,6 +25,10 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   })
+
+  openRegister() {
+    this.configurationService.openSidebar('register');
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) {

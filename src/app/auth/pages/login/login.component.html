@@ -13,7 +13,6 @@
     (ngSubmit)="onSubmit()"
   >
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full p-6">
-      <legend class="fieldset-legend text-lg font-semibold">Login</legend>
 
       <div class="flex flex-col gap-4">
         <label class="label" for="email">Email</label>
@@ -23,11 +22,9 @@
         <input type="password" class="input w-full" placeholder="Password" formControlName="password"/>
 
         <div class="w-full flex justify-end">
-          <p class="text-slate-700">
-            <a routerLink="/auth/register" class="text-primary hover:underline">
-              Registrarse
-            </a>
-          </p>
+          <button type="button" class="text-primary hover:underline cursor-pointer" (click)="openRegister()">
+            Registrarme
+          </button>
         </div>
 
         <button class="btn btn-neutral w-full">

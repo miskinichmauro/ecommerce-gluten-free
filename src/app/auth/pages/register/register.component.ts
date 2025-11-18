@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,7 @@ export class RegisterComponent {
   router = inject(Router);
 
   authService = inject(AuthService);
+  configurationService = inject(ConfigurationService);
 
   registerForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -44,5 +46,13 @@ export class RegisterComponent {
           this.error.set(null);
         }, 5000);
     });
+  }
+
+  goBack() {
+    if (this.configurationService.sidebarPageStatus() === 'open') {
+      this.configurationService.openSidebar('auth');
+    } else {
+      this.router.navigate(['/auth/login']);
+    }
   }
 }

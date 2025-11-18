@@ -6,11 +6,12 @@ import { UserOptionsComponent } from 'src/app/store-front/pages/user/user-sideba
 import { LoginComponent } from 'src/app/auth/pages/login/login.component';
 import { CartSidebarComponent } from 'src/app/store-front/pages/cart/cart-sidebar/cart-sidebar.component';
 import { XCircle } from "../x-circle/x-circle";
+import { RegisterComponent } from 'src/app/auth/pages/register/register.component';
 
 @Component({
   selector: 'sidebar-page',
   standalone: true,
-  imports: [CommonModule, UserOptionsComponent, LoginComponent, CartSidebarComponent, XCircle],
+  imports: [CommonModule, UserOptionsComponent, LoginComponent, RegisterComponent, CartSidebarComponent, XCircle],
   templateUrl: './sidebar-page.component.html',
   styleUrl: './sidebar-page.component.css',
 })
@@ -25,6 +26,8 @@ export class SidebarPageComponent {
     switch (this.routeName()) {
       case 'auth':
         return 'Iniciar sesión';
+      case 'register':
+        return 'Crear cuenta';
       case 'userOptions':
         return 'Hola, ' + (this.authService.user()?.fullName ?? '');
       case 'cartSidebar':
