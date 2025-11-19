@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap, finalize } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, finalize, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '@shared/services/toast.service';
 import { CartItem } from 'src/app/carts/interfaces/cart-item';
@@ -8,6 +8,8 @@ import { Product } from 'src/app/products/interfaces/product';
 import { AuthService } from '@auth/auth.service';
 
 const baseUrlCart = `${environment.baseUrl}/cart`;
+
+type CartItemsSource = CartItem[] | Record<string, unknown>;
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
@@ -30,9 +32,12 @@ export class CartService {
     }
     const isAuthenticated = this.auth.authStatus() === 'authenticated';
     const source$ = isAuthenticated
-      ? this.http.get<CartItem[]>(baseUrlCart)
+      ? this.http.get<CartItemsSource>(baseUrlCart)
       : of(this.getCartFromLocalStorage());
-    return source$.pipe(tap(items => this.updateCacheAndEmit(items)));
+    return source$.pipe(
+      map(items => this.normalizeCartItems(items)),
+      tap(items => this.updateCacheAndEmit(items))
+    );
   }
 
   addItem(product: Product, quantity = 1): Observable<CartItem | void> {
@@ -133,10 +138,25 @@ export class CartService {
     localStorage.setItem('guestCart', JSON.stringify(items));
   }
 
-  private updateCacheAndEmit(items: CartItem[]): void {
+  private updateCacheAndEmit(source: CartItemsSource | null | undefined): void {
+    const items = this.normalizeCartItems(source);
     this.cartCache.clear();
     items.forEach(item => this.cartCache.set(item.id, item));
     this.cartSubject.next(items);
+  }
+
+  private normalizeCartItems(source: CartItemsSource | null | undefined): CartItem[] {
+    if (!source) return [];
+    if (Array.isArray(source)) return source;
+    const candidates = source as Record<string, unknown>;
+    const possibleKeys = ['items', 'cartItems', 'data', 'cart', 'results'];
+    for (const key of possibleKeys) {
+      const value = candidates[key];
+      if (Array.isArray(value)) {
+        return value as CartItem[];
+      }
+    }
+    return [];
   }
 
   private resetCart(): void {

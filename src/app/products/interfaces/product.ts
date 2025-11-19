@@ -17,7 +17,6 @@ export interface Product {
   stock:         number;
   tags:          Array<{ id: string; name: string }> | string[];
   deleteAt:      null;
-  imagesName?:   string[];
   images?:       string[];
   category?:     Category;
   user:          User;

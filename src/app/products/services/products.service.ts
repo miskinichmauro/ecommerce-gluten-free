@@ -18,7 +18,7 @@ const emptyProduct: Product = {
   stock: 0,
   tags: [],
   deleteAt: null,
-  imagesName: [],
+  images: [],
   user: {} as User
 }
 

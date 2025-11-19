@@ -47,7 +47,7 @@ export class ProductDetailsComponent implements OnInit {
     stock: [1, [Validators.required, Validators.min(1)]],
     categoryId: ['', Validators.required],
     tags: this.fb.nonNullable.control<string[]>([]),
-    imagesName: this.fb.nonNullable.control<string[]>([]),
+    images: this.fb.nonNullable.control<string[]>([]),
   });
 
   categories = signal<Category[]>([]);
@@ -82,7 +82,7 @@ export class ProductDetailsComponent implements OnInit {
       stock: product?.stock ?? 1,
       categoryId,
       tags,
-      imagesName: images,
+      images,
     });
     this.selectedCategoryId.set(categoryId || null);
     this.refreshImageSources();
@@ -125,19 +125,27 @@ export class ProductDetailsComponent implements OnInit {
 
   private mapProductImages(product: Product | null): string[] {
     if (!product) return [];
-    const imageNames = (product.imagesName ?? []).filter((img) => !!img);
-    if (imageNames.length) return imageNames;
-    const imageUrls = (product as any)?.images ?? [];
-    if (!Array.isArray(imageUrls)) return [];
-    return imageUrls
-      .filter((url: string) => !!url)
-      .map((url: string) => {
-        if (/^https?:\/\//.test(url)) {
-          const segments = url.split('/');
-          return segments.at(-1) ?? url;
-        }
-        return url;
-      });
+    const rawImages = Array.isArray(product.images) ? product.images : [];
+    return rawImages
+      .map((img) => this.resolveImageIdentifier(img))
+      .filter((img): img is string => !!img);
+  }
+
+  private resolveImageIdentifier(image: unknown): string | null {
+    if (!image) return null;
+    if (typeof image === 'string') return image;
+    if (typeof image === 'object') {
+      const candidate =
+        (image as any).secureUrl ||
+        (image as any).url ||
+        (image as any).path ||
+        (image as any).fileName ||
+        (image as any).filename ||
+        (image as any).name ||
+        (image as any).id;
+      return typeof candidate === 'string' ? candidate : null;
+    }
+    return null;
   }
 
   private extractTagNames(rawTags: Product['tags'] | undefined): string[] {
@@ -148,12 +156,12 @@ export class ProductDetailsComponent implements OnInit {
     }).filter((tag) => !!tag);
   }
 
-  get imagesNameControl() {
-    return this.productForm.get('imagesName');
+  get imagesControl() {
+    return this.productForm.get('images');
   }
 
-  imageNames(): string[] {
-    return (this.imagesNameControl?.value as string[]) ?? [];
+  currentImages(): string[] {
+    return (this.imagesControl?.value as string[]) ?? [];
   }
 
   onFilesSelected(event: Event) {
@@ -173,9 +181,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   removeImage(image: string) {
-    const remaining = this.imageNames().filter((img) => img !== image);
-    this.imagesNameControl?.setValue(remaining);
-    this.imagesNameControl?.markAsDirty();
+    const remaining = this.currentImages().filter((img) => img !== image);
+    this.imagesControl?.setValue(remaining);
+    this.imagesControl?.markAsDirty();
     this.refreshImageSources();
   }
 
@@ -202,7 +210,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   private refreshImageSources() {
-    const existing = this.imageNames().map<ImageSource>((name) => ({
+    const existing = this.currentImages().map<ImageSource>((name) => ({
       src: this.mapExistingImageToUrl(name),
       type: 'existing',
       identifier: name,
@@ -285,12 +293,12 @@ export class ProductDetailsComponent implements OnInit {
 
     const uploadedNames = await this.uploadPendingImages();
     if (uploadedNames.length) {
-      const images = [...this.imageNames(), ...uploadedNames];
-      this.imagesNameControl?.setValue(images);
-      this.imagesNameControl?.markAsDirty();
+      const images = [...this.currentImages(), ...uploadedNames];
+      this.imagesControl?.setValue(images);
+      this.imagesControl?.markAsDirty();
     }
 
-    if (!this.imageNames().length) {
+    if (!this.currentImages().length) {
       this.imageUploadError = 'Primero sube al menos una imagen del producto.';
       return;
     }
@@ -300,14 +308,14 @@ export class ProductDetailsComponent implements OnInit {
     this.refreshImageSources();
 
     const formValue = this.productForm.value;
-    const imagesName = (formValue.imagesName ?? []).filter((name) => !!name);
+    const images = (formValue.images ?? []).filter((name) => !!name);
     const tags = this.extractTagNames(formValue.tags);
     const slug = formValue.slug && formValue.slug.length ? formValue.slug : this.generateSlug(formValue.title ?? '');
 
     const productData: Partial<Product> = {
       ...(formValue as any),
       slug,
-      imagesName,
+      images,
       categoryId: formValue.categoryId,
     };
     delete (productData as any).tags;

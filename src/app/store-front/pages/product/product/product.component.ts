@@ -49,15 +49,30 @@ export class ProductComponent implements OnInit {
     const product = this.product();
     if (!product) return [];
 
-    const primary = (product.imagesName ?? []).filter((img) => !!img);
-    const fallback = (product as any)?.images ?? [];
-    const source = primary.length ? primary : Array.isArray(fallback) ? fallback : [];
-
+    const source = Array.isArray(product.images) ? product.images : [];
     const urls = source
-      .filter((img: string) => !!img)
-      .map((img: string) => this.mapToImageUrl(img));
+      .map((img) => this.resolveImageValue(img))
+      .filter((img): img is string => !!img)
+      .map((img) => this.mapToImageUrl(img));
 
     return urls.length ? urls : ['assets/images/default-image.jpg'];
+  }
+
+  private resolveImageValue(value: unknown): string | null {
+    if (!value) return null;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object') {
+      const candidate =
+        (value as any).secureUrl ||
+        (value as any).url ||
+        (value as any).path ||
+        (value as any).fileName ||
+        (value as any).filename ||
+        (value as any).name ||
+        (value as any).id;
+      return typeof candidate === 'string' ? candidate : null;
+    }
+    return null;
   }
 
   private mapToImageUrl(value: string): string {
