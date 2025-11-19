@@ -55,7 +55,7 @@ export class ProductDetailsComponent implements OnInit {
   loadingCategories = signal(false);
   loadingTags = signal(false);
   selectedCategoryId = signal<string | null>(null);
-  uploadingImages = false;
+  uploadingImages = signal(false);
   imageUploadError: string | null = null;
   previewImage: string | null = null;
   pendingImages: PendingImage[] = [];
@@ -286,7 +286,7 @@ export class ProductDetailsComponent implements OnInit {
 
   private async uploadPendingImages(): Promise<string[]> {
     if (!this.pendingImages.length) return [];
-    this.uploadingImages = true;
+    this.uploadingImages.set(true);
     try {
       const uploads$ = this.pendingImages.map((item) => this.filesService.uploadProductImage(item.file));
       const uploaded = await firstValueFrom(forkJoin(uploads$));
@@ -299,7 +299,7 @@ export class ProductDetailsComponent implements OnInit {
       this.imageUploadError = 'Error al subir la imagen. Intenta nuevamente.';
       return [];
     } finally {
-      this.uploadingImages = false;
+      this.uploadingImages.set(false);
     }
   }
 
