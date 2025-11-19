@@ -15,9 +15,9 @@ export interface Product {
   description:   string;
   slug:          string;
   stock:         number;
-  tags:          string[];
+  tags:          Array<{ id: string; name: string }> | string[];
   deleteAt:      null;
-  imagesName:    string[];
+  imagesName?:   string[];
   images?:       string[];
   category?:     Category;
   user:          User;

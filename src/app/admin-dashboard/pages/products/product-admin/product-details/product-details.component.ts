@@ -62,10 +62,30 @@ export class ProductDetailsComponent implements OnInit {
   imageSourceList: ImageSource[] = [];
 
   ngOnInit(): void {
-    this.productForm.reset(this.product());
-    this.syncInitialImagesAndTags();
+    this.initializeFormFromProduct();
     this.loadCategories();
     this.loadTags();
+  }
+
+  private initializeFormFromProduct() {
+    const product = this.product();
+    const images = this.mapProductImages(product);
+    const tags = this.extractTagNames(product?.tags);
+    const categoryId = (product as any)?.category?.id ?? '';
+
+    this.productForm.reset({
+      title: product?.title ?? '',
+      slug: product?.slug ?? '',
+      unitOfMeasure: product?.unitOfMeasure ?? '',
+      description: product?.description ?? '',
+      price: product?.price ?? 1,
+      stock: product?.stock ?? 1,
+      categoryId,
+      tags,
+      imagesName: images,
+    });
+    this.selectedCategoryId.set(categoryId || null);
+    this.refreshImageSources();
   }
 
   private loadCategories() {
@@ -103,21 +123,6 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  private syncInitialImagesAndTags() {
-    const product = this.product();
-    const images = this.mapProductImages(product);
-    const tags = (product?.tags ?? []).filter((tag) => !!tag);
-    const categoryId = (product as any)?.category?.id ?? '';
-
-    this.productForm.patchValue({
-      imagesName: images,
-      tags,
-      categoryId,
-    });
-    this.selectedCategoryId.set(categoryId || null);
-    this.refreshImageSources();
-  }
-
   private mapProductImages(product: Product | null): string[] {
     if (!product) return [];
     const imageNames = (product.imagesName ?? []).filter((img) => !!img);
@@ -133,6 +138,14 @@ export class ProductDetailsComponent implements OnInit {
         }
         return url;
       });
+  }
+
+  private extractTagNames(rawTags: Product['tags'] | undefined): string[] {
+    if (!rawTags) return [];
+    return (rawTags as Array<string | { name?: string }>).map((tag) => {
+      if (typeof tag === 'string') return tag;
+      return tag?.name ?? '';
+    }).filter((tag) => !!tag);
   }
 
   get imagesNameControl() {
@@ -288,16 +301,15 @@ export class ProductDetailsComponent implements OnInit {
 
     const formValue = this.productForm.value;
     const imagesName = (formValue.imagesName ?? []).filter((name) => !!name);
-    const tags = (formValue.tags ?? []).filter((tag) => !!tag);
+    const tags = this.extractTagNames(formValue.tags);
     const slug = formValue.slug && formValue.slug.length ? formValue.slug : this.generateSlug(formValue.title ?? '');
 
     const productData: Partial<Product> = {
       ...(formValue as any),
       slug,
-      images: imagesName,
+      imagesName,
       categoryId: formValue.categoryId,
     };
-    delete (productData as any).imagesName;
     delete (productData as any).tags;
 
     if (this.product().id === 'new') {
