@@ -47,7 +47,7 @@ export class ProductDetailsComponent implements OnInit {
     stock: [1, [Validators.required, Validators.min(1)]],
     categoryId: ['', Validators.required],
     tags: this.fb.nonNullable.control<string[]>([]),
-    images: this.fb.nonNullable.control<string[]>([]),
+    imageIds: this.fb.nonNullable.control<string[]>([]),
   });
 
   categories = signal<Category[]>([]);
@@ -69,7 +69,7 @@ export class ProductDetailsComponent implements OnInit {
 
   private initializeFormFromProduct() {
     const product = this.product();
-    const images = this.mapProductImages(product);
+    const images = this.mapProductImageIds(product);
     const tags = this.extractTagNames(product?.tags);
     const categoryId = (product as any)?.category?.id ?? '';
 
@@ -82,7 +82,7 @@ export class ProductDetailsComponent implements OnInit {
       stock: product?.stock ?? 1,
       categoryId,
       tags,
-      images,
+      imageIds: images,
     });
     this.selectedCategoryId.set(categoryId || null);
     this.refreshImageSources();
@@ -123,8 +123,11 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  private mapProductImages(product: Product | null): string[] {
+  private mapProductImageIds(product: Product | null): string[] {
     if (!product) return [];
+    if (Array.isArray(product.imageIds) && product.imageIds.length) {
+      return product.imageIds.filter((img) => !!img);
+    }
     const rawImages = Array.isArray(product.images) ? product.images : [];
     return rawImages
       .map((img) => this.resolveImageIdentifier(img))
@@ -133,19 +136,32 @@ export class ProductDetailsComponent implements OnInit {
 
   private resolveImageIdentifier(image: unknown): string | null {
     if (!image) return null;
-    if (typeof image === 'string') return image;
+    if (typeof image === 'string') return this.normalizeImageIdentifier(image);
     if (typeof image === 'object') {
       const candidate =
-        (image as any).secureUrl ||
-        (image as any).url ||
-        (image as any).path ||
+        (image as any).id ||
+        (image as any).name ||
         (image as any).fileName ||
         (image as any).filename ||
-        (image as any).name ||
-        (image as any).id;
-      return typeof candidate === 'string' ? candidate : null;
+        (image as any).path ||
+        (image as any).secureUrl ||
+        (image as any).url;
+      return typeof candidate === 'string' ? this.normalizeImageIdentifier(candidate) : null;
     }
     return null;
+  }
+
+  private normalizeImageIdentifier(value: string): string {
+    if (!value) return '';
+    const cleanValue = value.split('?')[0];
+    const normalized = cleanValue.replace(/\\/g, '/');
+    const isAsset = normalized.startsWith('assets/');
+    const needsSplit = /^https?:\/\//.test(normalized) || (!isAsset && normalized.includes('/'));
+    if (!needsSplit) {
+      return normalized;
+    }
+    const segments = normalized.split('/');
+    return segments.pop() ?? normalized;
   }
 
   private extractTagNames(rawTags: Product['tags'] | undefined): string[] {
@@ -156,12 +172,12 @@ export class ProductDetailsComponent implements OnInit {
     }).filter((tag) => !!tag);
   }
 
-  get imagesControl() {
-    return this.productForm.get('images');
+  get imageIdsControl() {
+    return this.productForm.get('imageIds');
   }
 
-  currentImages(): string[] {
-    return (this.imagesControl?.value as string[]) ?? [];
+  currentImageIds(): string[] {
+    return (this.imageIdsControl?.value as string[]) ?? [];
   }
 
   onFilesSelected(event: Event) {
@@ -181,9 +197,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   removeImage(image: string) {
-    const remaining = this.currentImages().filter((img) => img !== image);
-    this.imagesControl?.setValue(remaining);
-    this.imagesControl?.markAsDirty();
+    const remaining = this.currentImageIds().filter((img) => img !== image);
+    this.imageIdsControl?.setValue(remaining);
+    this.imageIdsControl?.markAsDirty();
     this.refreshImageSources();
   }
 
@@ -210,7 +226,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   private refreshImageSources() {
-    const existing = this.currentImages().map<ImageSource>((name) => ({
+    const existing = this.currentImageIds().map<ImageSource>((name) => ({
       src: this.mapExistingImageToUrl(name),
       type: 'existing',
       identifier: name,
@@ -293,12 +309,12 @@ export class ProductDetailsComponent implements OnInit {
 
     const uploadedNames = await this.uploadPendingImages();
     if (uploadedNames.length) {
-      const images = [...this.currentImages(), ...uploadedNames];
-      this.imagesControl?.setValue(images);
-      this.imagesControl?.markAsDirty();
+      const images = [...this.currentImageIds(), ...uploadedNames];
+      this.imageIdsControl?.setValue(images);
+      this.imageIdsControl?.markAsDirty();
     }
 
-    if (!this.currentImages().length) {
+    if (!this.currentImageIds().length) {
       this.imageUploadError = 'Primero sube al menos una imagen del producto.';
       return;
     }
@@ -308,14 +324,14 @@ export class ProductDetailsComponent implements OnInit {
     this.refreshImageSources();
 
     const formValue = this.productForm.value;
-    const images = (formValue.images ?? []).filter((name) => !!name);
+    const imageIds = (formValue.imageIds ?? []).filter((name) => !!name);
     const tags = this.extractTagNames(formValue.tags);
     const slug = formValue.slug && formValue.slug.length ? formValue.slug : this.generateSlug(formValue.title ?? '');
 
     const productData: Partial<Product> = {
       ...(formValue as any),
       slug,
-      images,
+      imageIds,
       categoryId: formValue.categoryId,
     };
     delete (productData as any).tags;
