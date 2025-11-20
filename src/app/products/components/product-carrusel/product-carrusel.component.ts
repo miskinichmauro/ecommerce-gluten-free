@@ -14,6 +14,7 @@ export class ProductCarruselComponent implements AfterViewInit {
   products = input.required<Product[]>();
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
   private initialized = false;
+  private listenersAttached = false;
 
   ngAfterViewInit() {
     this.configureSwiper();
@@ -30,6 +31,7 @@ export class ProductCarruselComponent implements AfterViewInit {
 
     const items = this.products() ?? [];
     const enableCarousel = items.length > 1;
+    const instance = swiperEl.swiper as any | undefined;
 
     if (enableCarousel) {
       swiperEl.navigation = true;
@@ -45,6 +47,14 @@ export class ProductCarruselComponent implements AfterViewInit {
         1024: { slidesPerView: 'auto', spaceBetween: 26 },
         1280: { slidesPerView: 'auto', spaceBetween: 32 }
       };
+      if (instance) {
+        instance.params.allowTouchMove = true;
+        instance.allowTouchMove = true;
+        instance.params.autoplay = instance.params.autoplay || {};
+        instance.params.autoplay.pauseOnMouseEnter = true;
+        instance.params.autoplay.disableOnInteraction = false;
+        this.attachHoverHandlers(swiperEl);
+      }
     } else {
       swiperEl.navigation = false;
       swiperEl.loop = false;
@@ -58,6 +68,11 @@ export class ProductCarruselComponent implements AfterViewInit {
         1024: { slidesPerView: 'auto', spaceBetween: 28 },
         1280: { slidesPerView: 'auto', spaceBetween: 32 }
       };
+      if (instance) {
+        instance.params.allowTouchMove = false;
+        instance.allowTouchMove = false;
+        this.detachHoverHandlers(swiperEl);
+      }
     }
 
     if (this.initialized) {
@@ -72,5 +87,24 @@ export class ProductCarruselComponent implements AfterViewInit {
       swiperEl.initialize();
       this.initialized = true;
     }
+  }
+
+  private attachHoverHandlers(swiperEl: any) {
+    if (this.listenersAttached) return;
+
+    swiperEl.addEventListener('mouseenter', () => {
+      swiperEl.swiper?.autoplay?.stop?.();
+    });
+
+    swiperEl.addEventListener('mouseleave', () => {
+      swiperEl.swiper?.autoplay?.start?.();
+    });
+
+    this.listenersAttached = true;
+  }
+
+  private detachHoverHandlers(swiperEl: any) {
+    // Not removing listeners to keep logic simple; autoplay is stopped when carousel is disabled.
+    swiperEl.swiper?.autoplay?.stop?.();
   }
 }
