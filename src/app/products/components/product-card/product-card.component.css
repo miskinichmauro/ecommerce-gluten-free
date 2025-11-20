@@ -7,3 +7,20 @@
   max-width: 280px;
   margin-inline: auto;
 }
+
+.product-appear {
+  animation: productFadeIn 700ms cubic-bezier(0.2, 0.8, 0.35, 1) forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+@keyframes productFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
