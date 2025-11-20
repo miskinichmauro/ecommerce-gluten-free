@@ -2,10 +2,11 @@ import { Component, EventEmitter, input, Output, ViewChild } from '@angular/core
 import { RouterLink } from "@angular/router";
 import { Contact } from '../../interfaces/contact.interface';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableActionButtonsComponent } from 'src/app/shared/components/table-action-buttons/table-action-buttons.component';
 
 @Component({
   selector: 'contacts-table',
-  imports: [RouterLink, ConfirmDialogComponent],
+  imports: [RouterLink, ConfirmDialogComponent, TableActionButtonsComponent],
   templateUrl: './contacts-table.component.html',
   styleUrls: ['./contacts-table.component.css'],
 })

@@ -3,10 +3,11 @@ import { RouterLink } from "@angular/router";
 import { SlicePipe } from '@angular/common';
 import { Recipe } from '../../interfaces/recipe.interface';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { TableActionButtonsComponent } from 'src/app/shared/components/table-action-buttons/table-action-buttons.component';
 
 @Component({
   selector: 'recipes-table',
-  imports: [RouterLink, SlicePipe, ConfirmDialogComponent],
+  imports: [RouterLink, SlicePipe, ConfirmDialogComponent, TableActionButtonsComponent],
   templateUrl: './recipes-table.component.html',
   styleUrls: ['./recipes-table.component.css'],
 })

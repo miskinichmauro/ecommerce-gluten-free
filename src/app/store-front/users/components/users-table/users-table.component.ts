@@ -2,10 +2,11 @@ import { Component, EventEmitter, input, Output, ViewChild } from '@angular/core
 import { RouterLink } from '@angular/router';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { User } from '@store-front/users/interfaces/user.interfase';
+import { TableActionButtonsComponent } from 'src/app/shared/components/table-action-buttons/table-action-buttons.component';
 
 @Component({
   selector: 'users-table',
-  imports: [RouterLink, ConfirmDialogComponent],
+  imports: [RouterLink, ConfirmDialogComponent, TableActionButtonsComponent],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.css',
 })
