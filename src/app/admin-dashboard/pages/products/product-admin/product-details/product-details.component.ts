@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from 'src/app/products/interfaces/product';
 import { FormUtils } from 'src/app/utils/form-utils';
@@ -24,7 +24,7 @@ type ImageSource = { src: string; type: 'existing' | 'local'; identifier: string
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit, OnDestroy {
   product = input.required<Product>();
 
   router = inject(Router);
@@ -60,11 +60,16 @@ export class ProductDetailsComponent implements OnInit {
   previewImage: string | null = null;
   pendingImages: PendingImage[] = [];
   imageSourceList: ImageSource[] = [];
+  private uploadedPreviewMap = new Map<string, string>();
 
   ngOnInit(): void {
     this.initializeFormFromProduct();
     this.loadCategories();
     this.loadTags();
+  }
+
+  ngOnDestroy(): void {
+    this.cleanupObjectUrls();
   }
 
   private initializeFormFromProduct() {
@@ -200,6 +205,11 @@ export class ProductDetailsComponent implements OnInit {
     const remaining = this.currentImageIds().filter((img) => img !== image);
     this.imageIdsControl?.setValue(remaining);
     this.imageIdsControl?.markAsDirty();
+    const tempPreview = this.uploadedPreviewMap.get(image);
+    if (tempPreview) {
+      URL.revokeObjectURL(tempPreview);
+      this.uploadedPreviewMap.delete(image);
+    }
     this.refreshImageSources();
   }
 
@@ -227,7 +237,7 @@ export class ProductDetailsComponent implements OnInit {
 
   private refreshImageSources() {
     const existing = this.currentImageIds().map<ImageSource>((name) => ({
-      src: this.mapExistingImageToUrl(name),
+      src: this.uploadedPreviewMap.get(name) ?? this.mapExistingImageToUrl(name),
       type: 'existing',
       identifier: name,
     }));
@@ -288,13 +298,28 @@ export class ProductDetailsComponent implements OnInit {
     if (!this.pendingImages.length) return [];
     this.uploadingImages.set(true);
     try {
-      const uploads$ = this.pendingImages.map((item) => this.filesService.uploadProductImage(item.file));
+      const batch = [...this.pendingImages];
+      const uploads$ = batch.map((item) => this.filesService.uploadProductImage(item.file));
       const uploaded = await firstValueFrom(forkJoin(uploads$));
-      const valid = uploaded.filter((name) => !!name) as string[];
-      if (!valid.length) {
+      const successful = uploaded
+        .map((name, idx) => ({
+          name: (name ?? '').toString().trim(),
+          preview: batch[idx]?.preview,
+        }))
+        .filter((item) => !!item.name) as Array<{ name: string; preview: string }>;
+
+      if (!successful.length) {
         this.imageUploadError = 'No se pudo subir la imagen seleccionada.';
       }
-      return valid;
+
+      const previewsToRemove = new Set(successful.map(({ preview }) => preview));
+      this.pendingImages = this.pendingImages.filter((img) => !previewsToRemove.has(img.preview));
+      successful.forEach(({ name, preview }) => {
+        if (preview) {
+          this.uploadedPreviewMap.set(name, preview);
+        }
+      });
+      return successful.map(({ name }) => name);
     } catch {
       this.imageUploadError = 'Error al subir la imagen. Intenta nuevamente.';
       return [];
@@ -314,14 +339,12 @@ export class ProductDetailsComponent implements OnInit {
       this.imageIdsControl?.markAsDirty();
     }
 
+    this.refreshImageSources();
+
     if (!this.currentImageIds().length) {
       this.imageUploadError = 'Primero sube al menos una imagen del producto.';
       return;
     }
-
-    this.pendingImages.forEach(img => URL.revokeObjectURL(img.preview));
-    this.pendingImages = [];
-    this.refreshImageSources();
 
     const formValue = this.productForm.value;
     const imageIds = (formValue.imageIds ?? []).filter((name) => !!name);
@@ -368,5 +391,12 @@ export class ProductDetailsComponent implements OnInit {
       .replace(/[\s_]+/g, '-')
       .replace(/[^a-z0-9-]/g, '')
       .replace(/-+/g, '-');
+  }
+
+  private cleanupObjectUrls() {
+    this.pendingImages.forEach(img => URL.revokeObjectURL(img.preview));
+    this.pendingImages = [];
+    this.uploadedPreviewMap.forEach((url) => URL.revokeObjectURL(url));
+    this.uploadedPreviewMap.clear();
   }
 }
