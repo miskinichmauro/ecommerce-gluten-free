@@ -13,6 +13,7 @@ import { Product } from '../../interfaces/product';
 export class ProductCarruselComponent implements AfterViewInit {
   products = input.required<Product[]>();
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
+  private initialized = false;
 
   ngAfterViewInit() {
     this.configureSwiper();
@@ -28,15 +29,15 @@ export class ProductCarruselComponent implements AfterViewInit {
     if (!swiperEl) return;
 
     const items = this.products() ?? [];
-    const enableCarousel = this.shouldEnableCarousel(items.length);
+    const enableCarousel = items.length > 1;
 
     if (enableCarousel) {
       swiperEl.navigation = true;
       swiperEl.centeredSlides = true;
       swiperEl.centeredSlidesBounds = true;
-      swiperEl.loop = true;
+      swiperEl.loop = items.length > 2;
       swiperEl.allowTouchMove = true;
-      swiperEl.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
+      swiperEl.autoplay = { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true };
       swiperEl.speed = 800;
       swiperEl.breakpoints = {
         0: { slidesPerView: 'auto', spaceBetween: 18 },
@@ -59,12 +60,17 @@ export class ProductCarruselComponent implements AfterViewInit {
       };
     }
 
-    swiperEl.initialize();
-  }
-
-  private shouldEnableCarousel(totalProducts: number): boolean {
-    if (typeof window === 'undefined') return false;
-    if (window.innerWidth < 1024) return totalProducts > 1;
-    return totalProducts > 5;
+    if (this.initialized) {
+      swiperEl.updateSwiper?.();
+      if (enableCarousel) {
+        swiperEl.swiper?.slideToLoop?.(0);
+        swiperEl.swiper?.autoplay?.start?.();
+      } else {
+        swiperEl.swiper?.autoplay?.stop?.();
+      }
+    } else {
+      swiperEl.initialize();
+      this.initialized = true;
+    }
   }
 }
