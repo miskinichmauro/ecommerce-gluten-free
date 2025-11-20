@@ -22,6 +22,7 @@ export class ProductCarruselComponent implements AfterViewInit {
     const enableCarousel = this.shouldEnableCarousel(items.length);
 
     if (enableCarousel) {
+      swiperEl.navigation = true;
       swiperEl.centeredSlides = true;
       swiperEl.centeredSlidesBounds = true;
       swiperEl.loop = true;
@@ -34,6 +35,7 @@ export class ProductCarruselComponent implements AfterViewInit {
         1280: { slidesPerView: 'auto', spaceBetween: 32 }
       };
     } else {
+      swiperEl.navigation = false;
       swiperEl.loop = false;
       swiperEl.autoplay = false;
       swiperEl.centeredSlides = false;
@@ -51,6 +53,7 @@ export class ProductCarruselComponent implements AfterViewInit {
   }
 
   private shouldEnableCarousel(totalProducts: number): boolean {
+    if (typeof window === 'undefined') return false;
     if (window.innerWidth < 1024) return totalProducts > 1;
     return totalProducts > 5;
   }
