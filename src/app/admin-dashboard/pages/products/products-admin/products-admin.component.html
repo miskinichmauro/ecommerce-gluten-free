@@ -35,4 +35,5 @@
   [products]="productResponse()?.products ?? []"
   [currentPage]="paginationService.currentPage()"
   [countPage]="this.productPerPage()"
+  (delete)="onDeleteProduct($event)"
 ></products-table>

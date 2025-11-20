@@ -14,6 +14,7 @@ export interface Product {
   description:   string;
   slug:          string;
   stock:         number;
+  isFeatured?:   boolean;
   tags:          Array<{ id: string; name: string }> | string[];
   deleteAt:      null;
   images?:       Array<string | Record<string, any>>;

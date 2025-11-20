@@ -13,24 +13,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   border-radius: 9999px;
   background-color: transparent;
+  cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .action-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .action-btn:hover {
-  background-color: var(--fallback-b2, rgba(229, 231, 235, 0.8));
+  background-color: rgba(229, 231, 235, 0.6);
 }
 
 .action-btn-edit {
-  color: var(--fallback-bc, #0f172a);
+  color: #c57f2f;
 }
 
 .action-btn-danger {

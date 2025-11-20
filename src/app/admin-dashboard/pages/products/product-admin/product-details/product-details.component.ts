@@ -44,6 +44,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     description: ['', Validators.required],
     price: [1, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(1)]],
+    isFeatured: [false],
     categoryId: ['', Validators.required],
     tags: this.fb.nonNullable.control<string[]>([]),
     imageIds: this.fb.nonNullable.control<string[]>([]),
@@ -83,6 +84,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       description: product?.description ?? '',
       price: product?.price ?? 1,
       stock: product?.stock ?? 1,
+      isFeatured: product?.isFeatured ?? false,
       categoryId,
       tags,
       imageIds: images,
@@ -354,6 +356,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       slug,
       imageIds,
       categoryId: formValue.categoryId,
+      isFeatured: !!formValue.isFeatured,
     };
     delete (productData as any).tags;
 

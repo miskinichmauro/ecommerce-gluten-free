@@ -28,13 +28,13 @@ export class ConfirmDialogComponent {
     this.visible.set(false);
     if (this.resolver) {
       this.resolver(result);
-      this.resolver?.(false);
+      this.resolver = undefined;
     }
   }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (!this.visible) return;
+    if (!this.visible()) return;
 
     switch (event.key) {
       case 'Enter':

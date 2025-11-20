@@ -15,6 +15,7 @@ const emptyProduct: Product = {
   description: '',
   slug: '',
   stock: 0,
+  isFeatured: false,
   tags: [],
   deleteAt: null,
   images: [],
@@ -94,6 +95,20 @@ export class ProductService {
     return this.http.patch<Product>(`${baseUrlProducts}/${id}`, partialProduct).pipe(
       tap((res) => {
         this.insertOrUpdateCache(res);
+        this.toastService.activateSuccess();
+      }),
+      finalize(() => this.toastService.deactivateLoading())
+    );
+  }
+
+  deleteProduct(id: string): Observable<void> {
+    this.toastService.activateLoading();
+    return this.http.delete<void>(`${baseUrlProducts}/${id}`).pipe(
+      tap(() => {
+        this.productCache.delete(id);
+        this.productsCache.forEach((response) => {
+          response.products = response.products.filter((p) => p.id !== id);
+        });
         this.toastService.activateSuccess();
       }),
       finalize(() => this.toastService.deactivateLoading())
