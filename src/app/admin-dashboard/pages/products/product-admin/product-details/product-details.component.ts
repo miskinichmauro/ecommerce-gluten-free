@@ -41,7 +41,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   productForm = this.fb.group({
     title: ['', Validators.required],
     slug: ['', [Validators.required, Validators.pattern(FormUtils.slugPattern)]],
-    unitOfMeasure: ['', [Validators.required]],
     description: ['', Validators.required],
     price: [1, [Validators.required, Validators.min(1)]],
     stock: [1, [Validators.required, Validators.min(1)]],
@@ -81,7 +80,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.productForm.reset({
       title: product?.title ?? '',
       slug: product?.slug ?? '',
-      unitOfMeasure: product?.unitOfMeasure ?? '',
       description: product?.description ?? '',
       price: product?.price ?? 1,
       stock: product?.stock ?? 1,

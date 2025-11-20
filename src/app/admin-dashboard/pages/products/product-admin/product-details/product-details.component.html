@@ -18,16 +18,6 @@
     />
     <form-error-label [control]="productForm.get('title')!" />
 
-    <label for="unitOfMeasure">Unidad de medida</label>
-    <input
-      type="text"
-      placeholder="Unidad de medida"
-      class="input input-bordered w-full"
-      formControlName="unitOfMeasure"
-      [class.border-red-500]="productForm.get('unitOfMeasure')?.errors ?? false"
-    />
-    <form-error-label [control]="productForm.get('unitOfMeasure')!" />
-
     <label for="description">Descripción</label>
     <textarea
       class="textarea textarea-bordered w-full"

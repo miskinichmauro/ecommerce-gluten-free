@@ -1,10 +1,15 @@
-<menu-items
-  [menuItems]="menuItems"
-/>
+<div class="sidebar-options">
+  <menu-items
+    [menuItems]="menuItems"
+  />
 
-<button
-  class="cursor-pointer hover:bg-gray-500 btn btn-ghost text-secondary w-full"
-  (click)="[authService.logout(), configurationService.toggleSidebarPageStatus('closed')]"
->
-  Cerrar sesión
-</button>
+  <div class="logout-block">
+    <div class="divider my-2"></div>
+    <button
+      class="btn btn-ghost w-full justify-center text-error hover:bg-base-200"
+      (click)="[authService.logout(), configurationService.toggleSidebarPageStatus('closed')]"
+    >
+      Cerrar sesion
+    </button>
+  </div>
+</div>

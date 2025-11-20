@@ -11,7 +11,6 @@ export interface Product {
   id:            string;
   title:         string;
   price:         number;
-  unitOfMeasure: string;
   description:   string;
   slug:          string;
   stock:         number;

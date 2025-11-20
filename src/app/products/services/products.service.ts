@@ -12,7 +12,6 @@ const emptyProduct: Product = {
   id: 'new',
   title: '',
   price: 0,
-  unitOfMeasure: '',
   description: '',
   slug: '',
   stock: 0,

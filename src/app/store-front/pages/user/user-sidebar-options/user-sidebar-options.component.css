@@ -1,3 +1,17 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-options {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logout-block {
+  margin-top: auto;
+  padding-inline: 1rem;
+  padding-bottom: 0.75rem;
 }

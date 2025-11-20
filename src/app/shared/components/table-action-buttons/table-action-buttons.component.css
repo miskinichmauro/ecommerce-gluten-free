@@ -1,0 +1,38 @@
+:host {
+  display: inline-block;
+}
+
+.action-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.action-btn:hover {
+  background-color: var(--fallback-b2, rgba(229, 231, 235, 0.8));
+}
+
+.action-btn-edit {
+  color: var(--fallback-bc, #0f172a);
+}
+
+.action-btn-danger {
+  color: #ef4444;
+}
