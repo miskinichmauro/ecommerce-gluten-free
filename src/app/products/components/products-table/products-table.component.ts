@@ -9,7 +9,7 @@ import { TableActionButtonsComponent } from 'src/app/shared/components/table-act
 
 @Component({
   selector: 'products-table',
-  imports: [ProductImagePipe, RouterLink, CurrencyPipe, GuaraniesPipe, ConfirmDialogComponent, TableActionButtonsComponent],
+  imports: [ProductImagePipe, RouterLink, GuaraniesPipe, ConfirmDialogComponent, TableActionButtonsComponent],
   templateUrl: './products-table.component.html',
   styleUrl: './products-table.component.css',
 })
