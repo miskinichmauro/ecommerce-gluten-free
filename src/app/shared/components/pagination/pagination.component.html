@@ -1,6 +1,6 @@
 <div class="join flex justify-center items-center">
   <button
-    class="join-item btn"
+    class="join-item btn btn-sm w-10"
     type="button"
     aria-label="Primera página"
     [disabled]="isFirstPage() || !totalPages()"
@@ -15,7 +15,7 @@
     </svg>
   </button>
   <button
-    class="join-item btn"
+    class="join-item btn btn-sm w-10"
     type="button"
     aria-label="Página anterior"
     [disabled]="isFirstPage() || !totalPages()"
@@ -31,7 +31,7 @@
 
   @for (page of getPagesList(); track page) {
     <button
-      class="join-item btn"
+      class="join-item btn btn-sm w-10"
       type="button"
       [class.btn-primary]="page === activePage()"
       [routerLink]="[]"
@@ -47,7 +47,7 @@
   }
 
   <button
-    class="join-item btn"
+    class="join-item btn btn-sm w-10"
     type="button"
     aria-label="Página siguiente"
     [disabled]="isLastPage() || !totalPages()"
@@ -61,7 +61,7 @@
     </svg>
   </button>
   <button
-    class="join-item btn"
+    class="join-item btn btn-sm w-10"
     type="button"
     aria-label="Última página"
     [disabled]="isLastPage() || !totalPages()"

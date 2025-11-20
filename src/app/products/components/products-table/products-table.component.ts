@@ -3,12 +3,13 @@ import { Product } from '../../interfaces/product';
 import { ProductImagePipe } from '../../pipes/product-image.pipe';
 import { RouterLink } from "@angular/router";
 import { CurrencyPipe } from '@angular/common';
+import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { TableActionButtonsComponent } from 'src/app/shared/components/table-action-buttons/table-action-buttons.component';
 
 @Component({
   selector: 'products-table',
-  imports: [ProductImagePipe, RouterLink, CurrencyPipe, ConfirmDialogComponent, TableActionButtonsComponent],
+  imports: [ProductImagePipe, RouterLink, CurrencyPipe, GuaraniesPipe, ConfirmDialogComponent, TableActionButtonsComponent],
   templateUrl: './products-table.component.html',
   styleUrl: './products-table.component.css',
 })
