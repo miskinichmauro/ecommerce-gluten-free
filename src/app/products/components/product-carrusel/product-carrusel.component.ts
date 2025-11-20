@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, input, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { Product } from '../../interfaces/product';
 
@@ -15,10 +15,19 @@ export class ProductCarruselComponent implements AfterViewInit {
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
 
   ngAfterViewInit() {
+    this.configureSwiper();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.configureSwiper();
+  }
+
+  private configureSwiper() {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (!swiperEl) return;
 
-    const items = this.products();
+    const items = this.products() ?? [];
     const enableCarousel = this.shouldEnableCarousel(items.length);
 
     if (enableCarousel) {
@@ -26,6 +35,7 @@ export class ProductCarruselComponent implements AfterViewInit {
       swiperEl.centeredSlides = true;
       swiperEl.centeredSlidesBounds = true;
       swiperEl.loop = true;
+      swiperEl.allowTouchMove = true;
       swiperEl.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
       swiperEl.speed = 800;
       swiperEl.breakpoints = {
