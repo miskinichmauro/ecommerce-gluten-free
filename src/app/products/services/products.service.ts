@@ -106,9 +106,7 @@ export class ProductService {
     return this.http.delete<void>(`${baseUrlProducts}/${id}`).pipe(
       tap(() => {
         this.productCache.delete(id);
-        this.productsCache.forEach((response) => {
-          response.products = response.products.filter((p) => p.id !== id);
-        });
+        this.productsCache.clear();
         this.toastService.activateSuccess();
       }),
       finalize(() => this.toastService.deactivateLoading())

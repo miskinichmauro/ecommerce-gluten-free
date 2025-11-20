@@ -50,7 +50,12 @@ export class ProductsAdminComponent {
   onDeleteProduct(id: string) {
     this.productService.deleteProduct(id).subscribe({
       next: () => {
-        const page = this.paginationService.currentPage();
+        const current = this.productResponse();
+        const isLastItemOnPage = current && current.products.length <= 1;
+        const page = isLastItemOnPage && this.paginationService.currentPage() > 1
+          ? this.paginationService.currentPage() - 1
+          : this.paginationService.currentPage();
+        this.paginationService.setCurrentPage(page);
         const perPage = this.productPerPage();
         const offset = (page - 1) * perPage;
         this.loadProducts({ offset, limit: perPage });
