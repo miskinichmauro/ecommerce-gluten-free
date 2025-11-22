@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/products/services/products.service';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { ImageCarruselComponent } from "src/app/shared/components/image-carrusel/image-carrusel.component";
 import { environment } from 'src/environments/environment';
+import { CartService } from 'src/app/carts/services/cart.service';
 
 @Component({
   selector: 'app-product',
@@ -17,6 +18,7 @@ import { environment } from 'src/environments/environment';
 export class ProductComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
   private readonly baseUrl = environment.baseUrl;
 
   productslug = this.activatedRoute.snapshot.params['slug'];
@@ -24,6 +26,8 @@ export class ProductComponent implements OnInit {
   product = signal<Product | null>(null);
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
+  quantity = signal<number>(1);
+  currentSlide = signal(0);
 
   constructor() {}
 
@@ -81,5 +85,42 @@ export class ProductComponent implements OnInit {
     if (value.startsWith('assets/')) return value;
     return `${this.baseUrl}/files/product/${value}`;
   }
-}
 
+  toTagName(tag: unknown): string {
+    if (!tag) return '';
+    if (typeof tag === 'string') return tag;
+    if (typeof tag === 'object' && 'name' in tag && typeof (tag as any).name === 'string') {
+      return (tag as any).name;
+    }
+    return '';
+  }
+
+  categoryName(): string {
+    const cat = this.product()?.category as unknown;
+    if (!cat) return '';
+    if (typeof cat === 'string') return cat;
+    if (typeof cat === 'object' && 'name' in cat && typeof (cat as any).name === 'string') {
+      return (cat as any).name;
+    }
+    return '';
+  }
+
+  onSlideChange(idx: number) {
+    this.currentSlide.set(idx);
+  }
+
+  increment() {
+    const next = Math.min((this.product()?.stock ?? 99), this.quantity() + 1);
+    this.quantity.set(next);
+  }
+
+  decrement() {
+    this.quantity.update((q) => Math.max(1, q - 1));
+  }
+
+  addToCart() {
+    const prod = this.product();
+    if (!prod) return;
+    this.cartService.addItem(prod, this.quantity()).subscribe();
+  }
+}

@@ -5,23 +5,79 @@
 }
 
 @if (!loading() && product()) {
-  <div div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-    <div class="flex justify-end sm:justify-end">
-      <image-carrusel
-        [images]="productImageUrls()"
-      />
+  <section class="product-details-card">
+    <div class="product-grid">
+      <div class="image-wrap">
+        <image-carrusel #carousel [images]="productImageUrls()" (slideChange)="onSlideChange($event)" />
+
+        @if (productImageUrls().length > 1) {
+          <div class="thumbs">
+            @for (thumb of productImageUrls(); track $index) {
+              <button
+                type="button"
+                class="thumb"
+                [class.active]="currentSlide() === $index"
+                (click)="carousel.goTo($index)"
+              >
+                <img [src]="thumb" alt="Miniatura {{ $index + 1 }}" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="info-wrap">
+        <header class="space-y-2">
+          <h1 class="text-3xl font-bold leading-tight text-slate-900">{{ product()?.title }}</h1>
+        </header>
+
+        <div class="section">
+          <h3 class="section-title">Descripción</h3>
+          <p class="text-slate-700 leading-relaxed">
+            {{ product()?.description || 'Sin descripción disponible.' }}
+          </p>
+        </div>
+
+        <div class="section meta">
+          <div>
+            <h3 class="section-title">Categoría</h3>
+            <p class="text-slate-800 font-medium">
+              {{ categoryName() || 'Sin categoría' }}
+            </p>
+          </div>
+          <div>
+            <h3 class="section-title">Tags</h3>
+            <div class="flex flex-wrap gap-2">
+              @if (product()?.tags?.length) {
+                @for (tag of product()?.tags; track $index) {
+                  <span class="tag-chip">{{ toTagName(tag) }}</span>
+                }
+              } @else {
+                <span class="text-slate-500 text-sm">Sin tags</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="section add-cart">
+          <h3 class="section-title">Agregar al carrito</h3>
+          <div class="add-row">
+            <div class="qty">
+              <button type="button" (click)="decrement()">-</button>
+              <input type="number" [value]="quantity()" min="1" [max]="product()?.stock || undefined" readonly />
+              <button type="button" (click)="increment()">+</button>
+            </div>
+            <button class="btn-add" type="button" (click)="addToCart()">
+              Agregar al carrito
+            </button>
+          </div>
+          <p class="text-xs text-slate-500" *ngIf="product()?.stock !== undefined">Stock: {{ product()?.stock }}</p>
+        </div>
+      </div>
     </div>
+  </section>
+}
 
-    <div class="flex flex-col justify-start">
-      <h2 class="text-2xl font-bold">
-        {{ product()?.title }}
-      </h2>
-
-      <div class="divider"></div>
-
-      <p>
-        {{ product()?.description}}
-      </p>
-    </div>
-  </div>
+@if (!loading() && !product()) {
+  <p class="text-center text-slate-500 mt-10">No se encontró el producto.</p>
 }

@@ -1,3 +1,153 @@
 :host {
   display: block;
 }
+
+.product-details-card {
+  padding: 0.5rem 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr 1.1fr;
+    align-items: start;
+  }
+}
+
+.image-wrap {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: clamp(260px, 50vw, 520px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.info-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.image-wrap image-carrusel,
+.image-wrap swiper-container,
+.image-wrap swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+
+.image-wrap swiper-slide img {
+  object-fit: contain;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.section.meta {
+  gap: 1rem;
+}
+
+.section-title {
+  font-weight: 700;
+  color: #111827;
+  font-size: 0.95rem;
+}
+
+.tag-chip {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid #e0e7ff;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.thumb {
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  background: #f8fafc;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.thumb:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.thumb.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.add-cart .add-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.qty button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.qty input {
+  width: 3rem;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-add:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+}

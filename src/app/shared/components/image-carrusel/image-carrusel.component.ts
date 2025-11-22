@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, input } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmitter, Output, ViewChild, input } from '@angular/core';
 
 @Component({
   selector: 'image-carrusel',
@@ -12,6 +12,7 @@ export class ImageCarruselComponent implements AfterViewInit{
 
   spaceBetween = 10;
   slidesPerView = 1;
+  @Output() slideChange = new EventEmitter<number>();
 
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
 
@@ -36,6 +37,19 @@ export class ImageCarruselComponent implements AfterViewInit{
       swiperEl.slidesPerView = this.slidesPerView;
       swiperEl.loop = imgs && imgs.length > 1;
       swiperEl.initialize();
+
+      swiperEl.addEventListener('slidechange', () => {
+        const idx = swiperEl.swiper?.realIndex ?? 0;
+        this.slideChange.emit(idx);
+      });
+    }
+  }
+
+  goTo(index: number) {
+    const swiperEl = this.swiperRef?.nativeElement as any;
+    if (swiperEl?.swiper) {
+      swiperEl.swiper.slideToLoop(index);
+      this.slideChange.emit(index);
     }
   }
 }
