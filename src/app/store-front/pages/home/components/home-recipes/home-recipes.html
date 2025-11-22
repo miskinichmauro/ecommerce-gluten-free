@@ -6,11 +6,16 @@
 
   @if (loading()) {
     <loading />
-  } @else {
+  } @else if (recipes().length) {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center justify-items-center">
       @for (rec of recipes(); track $index) {
         <recipe-card [recipe]="rec" />
       }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p class="text-base-content/70">No hay recetas disponibles hoy.</p>
+      <button routerLink="/recipe" class="btn btn-primary btn-sm mt-3">Ver recetas</button>
     </div>
   }
 </section>

@@ -3,11 +3,16 @@
 
   @if (loading()) {
     <loading />
-  } @else {
+  } @else if (contacts().length) {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center justify-items-center">
       @for (contact of contacts(); track $index) {
         <contact-card [contact]="contact" />
       }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p class="text-base-content/70">No hay contactos disponibles.</p>
+      <button routerLink="/contact" class="btn btn-primary btn-sm mt-3">Ver información de contacto</button>
     </div>
   }
 </section>

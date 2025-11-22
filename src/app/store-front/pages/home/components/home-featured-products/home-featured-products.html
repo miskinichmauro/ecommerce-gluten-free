@@ -6,7 +6,12 @@
 
   @if (loading()) {
     <loading />
+  } @else if (productResponse()?.products?.length) {
+    <product-carrusel [products]="productResponse()?.products ?? []" />
+  } @else {
+    <div class="empty-state">
+      <p class="text-base-content/70">No hay productos destacados por ahora.</p>
+      <button routerLink="/products" class="btn btn-primary btn-sm mt-3">Explorar productos</button>
+    </div>
   }
-
-  <product-carrusel [products]="productResponse()?.products ?? []" />
 </section>
