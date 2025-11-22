@@ -1,15 +1,15 @@
 import { Component, HostListener, inject, input, signal } from '@angular/core';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
-import { MenuItemsComponent } from '@shared/components/menu-items/menu-items.component';
 import { XCircle } from "../x-circle/x-circle";
 import { MobileProductFiltersComponent } from 'src/app/store-front/components/mobile-product-filters/mobile-product-filters.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'sidebar-items',
-  imports: [MenuItemsComponent, XCircle, MobileProductFiltersComponent],
+  imports: [XCircle, MobileProductFiltersComponent],
   templateUrl: './sidebar-items.component.html',
   styleUrl: './sidebar-items.component.css',
 })
@@ -18,6 +18,7 @@ export class SidebarItemsComponent {
 
   configurationService = inject(ConfigurationService);
   private router = inject(Router);
+  authService = inject(AuthService);
 
   showProductFilters = signal(false);
   isOnProducts = signal(false);
@@ -57,11 +58,33 @@ export class SidebarItemsComponent {
     this.showProductFilters.update((v) => !v);
   }
 
-  interceptMenuClick = (item: MenuItem): boolean => {
-    if (this.isMobile() && item.routerLink === '/products') {
+  handleProductClick() {
+    if (this.isMobile()) {
       this.toggleProductFilters();
-      return true; // stop navigation
+      return;
     }
-    return false;
-  };
+
+    if (this.isOnProducts()) {
+      this.toggleProductFilters();
+      return;
+    }
+
+    this.showProductFilters.set(true);
+    this.configurationService.toggleSidebarItemsStatus('closed');
+    this.configurationService.toggleSidebarPageStatus('closed');
+    this.router.navigateByUrl('/products');
+  }
+
+  handleMenuClick(item: MenuItem) {
+    if (item.adminOnly && !this.authService.isAdmin()) return;
+
+    this.configurationService.toggleSidebarItemsStatus('closed');
+    this.configurationService.toggleSidebarPageStatus('closed');
+
+    if (typeof item.routerLink === 'string') {
+      this.router.navigateByUrl(item.routerLink);
+    } else {
+      this.router.navigate([item.routerLink]);
+    }
+  }
 }

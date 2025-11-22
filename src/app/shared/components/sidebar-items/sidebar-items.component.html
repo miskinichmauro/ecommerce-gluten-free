@@ -3,19 +3,51 @@
   [class.translate-x-0]="isOpen()"
 >
   <div class="flex justify-end">
-    <button (click)="configurationService.toggleSidebarItemsStatus('closed')" class="btn btn-ghost">
+    <button (click)="configurationService.toggleSidebarItemsStatus('closed')" class="p-2">
       <x-circle />
     </button>
   </div>
 
-  <menu-items
-    [menuItems]="menuItems()"
-    [interceptor]="interceptMenuClick"
-  />
+  <nav class="flex flex-col gap-2 px-4">
+    @for (item of menuItems(); track $index) {
+      @if (!item.adminOnly || authService.isAdmin()) {
+      @if (item.routerLink === '/products') {
+        <button
+          class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200 flex items-center gap-2"
+          type="button"
+          (click)="handleProductClick()"
+        >
+          <span>Productos</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-3.5 h-3.5 text-slate-500 transition-transform duration-300"
+            [class.rotate-90]="showProductFilters()"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
 
-  @if (isOnProducts() && showProductFilters()) {
-    <div class="px-4 pb-4">
-      <mobile-product-filters class="block lg:hidden mt-3" />
-    </div>
-  }
+        <div
+          class="submenu-container"
+          [class.open]="showProductFilters()"
+        >
+          <div class="submenu-inner">
+            <mobile-product-filters class="block lg:hidden mt-2" />
+          </div>
+        </div>
+      } @else {
+        <a
+          class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200"
+          (click)="handleMenuClick(item)"
+        >
+          {{ item.label }}
+        </a>
+      }
+      }
+    }
+  </nav>
 </div>
