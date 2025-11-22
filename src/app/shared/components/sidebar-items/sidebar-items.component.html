@@ -10,5 +10,12 @@
 
   <menu-items
     [menuItems]="menuItems()"
+    [interceptor]="interceptMenuClick"
   />
+
+  @if (isOnProducts() && showProductFilters()) {
+    <div class="px-4 pb-4">
+      <mobile-product-filters class="block lg:hidden mt-3" />
+    </div>
+  }
 </div>

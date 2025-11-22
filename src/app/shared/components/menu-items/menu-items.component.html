@@ -3,7 +3,7 @@
       @if (!item.adminOnly || authService.isAdmin()) {
         <a
           class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 hover:text-base-content transition-colors duration-200"
-          (click)="handleOnClick(item.routerLink)"
+          (click)="handleOnClick(item.routerLink, item)"
         >
           {{ item.label }}
         </a>

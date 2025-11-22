@@ -1,0 +1,55 @@
+<div class="mobile-filters">
+  <div class="flex items-center justify-between mb-2">
+    <h4 class="font-semibold">Categorías</h4>
+    <button class="text-primary text-xs" type="button" (click)="selectCategory('all')">Todos</button>
+  </div>
+  <ul class="flex flex-col gap-1 mb-4">
+    <li>
+      <button
+        type="button"
+        class="filter-item cursor-pointer"
+        [class.active]="selectedCategory() === 'all'"
+        (click)="selectCategory('all')"
+      >
+        Todos
+      </button>
+    </li>
+    @for (cat of categories(); track cat.id) {
+      <li>
+        <button
+          type="button"
+          class="filter-item cursor-pointer"
+          [class.active]="selectedCategory() === cat.id"
+          (click)="selectCategory(cat.id)"
+        >
+          {{ cat.name }}
+        </button>
+      </li>
+    }
+  </ul>
+
+  <div class="flex items-center justify-between mb-2">
+    <h4 class="font-semibold">Tags</h4>
+    <button
+      class="text-primary text-xs"
+      type="button"
+      [disabled]="!selectedTags().size"
+      [class.opacity-50]="!selectedTags().size"
+      (click)="resetTags()"
+    >
+      Limpiar
+    </button>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    @for (tag of tags(); track tag.id) {
+      <button
+        type="button"
+        class="filter-tag cursor-pointer"
+        [class.active]="selectedTags().has(tag.id)"
+        (click)="toggleTag(tag.id)"
+      >
+        {{ tag.name }}
+      </button>
+    }
+  </div>
+</div>

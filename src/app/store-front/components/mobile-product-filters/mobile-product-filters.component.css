@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.mobile-filters {
+  padding: 10px 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.filter-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-item:hover {
+  background: var(--fallback-b2, rgba(229, 231, 235, 0.6));
+  color: var(--fallback-bc, #1f2937);
+}
+
+.filter-item.active {
+  background: var(--fallback-b2, rgba(229, 231, 235, 0.8));
+  border-color: var(--fallback-b2, rgba(229, 231, 235, 0.8));
+  color: var(--fallback-bc, #1f2937);
+  font-weight: 600;
+}
+
+.filter-tag {
+  background: #eef2f6;
+  border-radius: 16px;
+  padding: 6px 10px;
+  font-size: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-tag.active,
+.filter-tag:hover {
+  background: var(--fallback-b2, rgba(229, 231, 235, 0.8));
+  color: var(--fallback-bc, #1f2937);
+  font-weight: 600;
+}
