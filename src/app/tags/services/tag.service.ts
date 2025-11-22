@@ -16,15 +16,19 @@ const emptyTag: Tag = {
 export class TagService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly tagsCache = new Map<string, Tag>();
+  private readonly tagsCache = new Map<string, Tag[]>();
 
-  getAll(): Observable<Tag[]> {
-    if (this.tagsCache.size) {
-      return of(Array.from(this.tagsCache.values()));
+  getAll(categoryId?: string): Observable<Tag[]> {
+    const key = categoryId ?? 'all';
+    if (this.tagsCache.has(key)) {
+      return of(this.tagsCache.get(key)!);
     }
 
-    return this.http.get<Tag[]>(baseUrlTags).pipe(
-      tap(res => res.forEach(tag => this.tagsCache.set(tag.id, tag)))
+    return this.http.get<Tag[]>(baseUrlTags, {
+      params: categoryId ? { categoryId } : undefined,
+      responseType: 'json',
+    }).pipe(
+      tap(res => this.tagsCache.set(key, res))
     );
   }
 
@@ -33,12 +37,12 @@ export class TagService {
       return of(emptyTag);
     }
 
-    if (this.tagsCache.has(id)) {
-      return of(this.tagsCache.get(id)!);
-    }
-
+    // no per-category cache here, just fetch directly
     return this.http.get<Tag>(`${baseUrlTags}/${id}`).pipe(
-      tap(res => this.tagsCache.set(id, res))
+      tap(res => {
+        this.tagsCache.clear(); // invalidate caches to keep consistency
+        this.tagsCache.set(res.id, [res]);
+      })
     );
   }
 
@@ -46,7 +50,7 @@ export class TagService {
     this.toastService.activateLoading();
     return this.http.post<Tag>(baseUrlTags, tag).pipe(
       tap(res => {
-        this.insertOrUpdateCache(res);
+        this.tagsCache.clear();
         this.toastService.activateSuccess();
       }),
       finalize(() => this.toastService.deactivateLoading())
@@ -57,7 +61,7 @@ export class TagService {
     this.toastService.activateLoading();
     return this.http.patch<Tag>(`${baseUrlTags}/${id}`, partialTag).pipe(
       tap(res => {
-        this.insertOrUpdateCache(res);
+        this.tagsCache.clear();
         this.toastService.activateSuccess();
       }),
       finalize(() => this.toastService.deactivateLoading())
@@ -68,15 +72,10 @@ export class TagService {
     this.toastService.activateLoading();
     return this.http.delete<Tag>(`${baseUrlTags}/${id}`).pipe(
       tap(() => {
-        this.tagsCache.delete(id);
+        this.tagsCache.clear();
         this.toastService.activateSuccess();
       }),
       finalize(() => this.toastService.deactivateLoading())
     );
   }
-
-  private insertOrUpdateCache(tag: Tag) {
-    this.tagsCache.set(tag.id, tag);
-  }
 }
-

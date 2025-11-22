@@ -33,19 +33,32 @@ export class ProductService {
 
   getProducts(options: ProductOptions = {}): Observable<ProductResponse> {
     const limitEnvironment = environment.cantProducts;
-    const { limit = limitEnvironment, offset = 0, isFeatured = false } = options;
+    const {
+      limit = limitEnvironment,
+      offset = 0,
+      isFeatured = false,
+      categoryId,
+      tagIds,
+      query
+    } = options;
 
     const cacheKey = isFeatured
       ? 'isFeatured'
-      : `${limit}-${offset}`;
+      : `${limit}-${offset}-${categoryId ?? 'all'}-${(tagIds ?? []).join(',')}-${query ?? ''}`;
 
     if (this.productsCache.has(cacheKey)) {
       return of(this.productsCache.get(cacheKey)!);
     }
 
+    const params: Record<string, any> = { limit, offset };
+    if (isFeatured !== undefined) params['isFeatured'] = isFeatured;
+    if (categoryId) params['categoryId'] = categoryId;
+    if (tagIds && tagIds.length) params['tagIds'] = tagIds;
+    if (query) params['query'] = query;
+
     const response = this.http
       .get<ProductResponse>(baseUrlProducts, {
-        params: { limit, offset, isFeatured },
+        params,
         responseType: 'json',
       })
       .pipe(tap((res) => this.productsCache.set(cacheKey, res)));
@@ -54,12 +67,21 @@ export class ProductService {
   }
 
   searchProducts(options: ProductOptions = {}): Observable<ProductResponse> {
-    const { query = '', limit = environment.cantProducts, offset = 0 } = options;
+    const {
+      query = '',
+      limit = environment.cantProducts,
+      offset = 0,
+      categoryId,
+      tagIds,
+      isFeatured,
+    } = options;
 
-    return this.http.get<ProductResponse>(`${baseUrlProducts}/search`, {
-      params: { query, limit, offset },
-      responseType: 'json',
-    });
+    const params: Record<string, any> = { query, limit, offset };
+    if (categoryId) params['categoryId'] = categoryId;
+    if (tagIds && tagIds.length) params['tagIds'] = tagIds;
+    if (isFeatured !== undefined) params['isFeatured'] = isFeatured;
+
+    return this.http.get<ProductResponse>(`${baseUrlProducts}/search`, { params, responseType: 'json' });
   }
 
   getProductByIdSlug(idSlug: string): Observable<Product> {

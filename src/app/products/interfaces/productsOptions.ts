@@ -3,4 +3,6 @@ interface ProductOptions {
   offset?: number;
   isFeatured?: boolean;
   query?: string;
+  categoryId?: string;
+  tagIds?: string[];
 }
