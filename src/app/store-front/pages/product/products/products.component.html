@@ -4,16 +4,6 @@
   <aside class="filter-card hidden lg:block">
     <h3 class="text-lg font-semibold mb-3">Categorías</h3>
     <ul class="flex flex-col gap-1 max-h-[60vh] overflow-auto pr-1">
-      <li>
-        <button
-          class="filter-item cursor-pointer"
-          [class.active]="selectedCategory() === 'all'"
-          type="button"
-          (click)="selectCategory('all')"
-        >
-          Todos
-        </button>
-      </li>
       @for (cat of categories(); track cat.id) {
         <li>
           <button

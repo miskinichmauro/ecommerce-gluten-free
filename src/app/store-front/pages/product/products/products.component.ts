@@ -100,7 +100,8 @@ export class ProductsComponent {
   }
 
   selectCategory(id: string) {
-    this.selectedCategory.set(id);
+    const nextCategory = this.selectedCategory() === id ? 'all' : id;
+    this.selectedCategory.set(nextCategory);
     this.selectedTags.set(new Set()); // reset tags when category changes
     this.loadTagsForCategory(this.categoryIdForRequest());
     this.paginationService.setCurrentPage(1);
