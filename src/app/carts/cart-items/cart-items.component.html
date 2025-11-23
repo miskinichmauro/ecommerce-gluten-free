@@ -18,7 +18,7 @@
         <h2 class="card-title cursor-pointer min-h-10 sm:min-h-12 md:min-h-14 text-sm sm:text-base md:text-lg line-clamp-2" [routerLink]="['/product', item.productId]">
           {{ item.product?.title | slice:0:70 }}
         </h2>
-        <p class="min-h-12 sm:min-h-16 md:min-h-18 text-xs sm:text-sm md:text-base text-gray-500 mt-1 line-clamp-3">
+        <p class="min-h-12 sm:min-h-16 md:min-h-18 text-xs sm:text-sm md:text-base text-base-content/70 mt-1 line-clamp-3">
           {{ item.product?.description | slice:0:100 }}
         </p>
       </div>
@@ -27,10 +27,28 @@
           {{ (item.product?.price! * item.quantity) | guaranies }}
         </p>
         <div class="flex items-center space-x-2">
-          <div class="flex items-center border rounded-lg border-gray-600">
-            <button (click)="decreaseQuantity(item)" class="px-2 cursor-pointer">-</button>
-            <span class="w-4 text-center">{{ item.quantity }}</span>
-            <button (click)="increaseQuantity(item)" class="px-2 cursor-pointer">+</button>
+          <div class="inline-flex items-center border border-base-200 bg-base-200/60 rounded-md overflow-hidden">
+            <button
+              type="button"
+              (click)="decreaseQuantity(item)"
+              class="w-9 h-9 flex items-center justify-center text-lg font-semibold text-base-content hover:bg-base-300/80 active:bg-base-300 focus:outline-none"
+            >
+              -
+            </button>
+            <input
+              class="w-10 h-9 text-center bg-base-100/90 text-sm font-semibold text-base-content border-none focus:outline-none"
+              type="number"
+              [value]="item.quantity"
+              min="1"
+              (input)="onQuantityInput($event, item)"
+            />
+            <button
+              type="button"
+              (click)="increaseQuantity(item)"
+              class="w-9 h-9 flex items-center justify-center text-lg font-semibold text-base-content hover:bg-base-300/80 active:bg-base-300 focus:outline-none"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>

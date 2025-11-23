@@ -28,7 +28,7 @@
           </p>
         </div>
 
-        <div class="section meta">
+        <div class="section meta meta-compact">
           <div>
             <h3 class="section-title">Categoría</h3>
             <p class="font-medium">
@@ -49,20 +49,31 @@
           </div>
         </div>
 
-        <div class="section add-cart">
-          <h3 class="section-title">Agregar al carrito</h3>
+        <div class="section add-cart add-cart-bottom">
           <div class="add-row">
-            <div class="qty">
-              <button class="qty-btn" type="button" (click)="decrement()">-</button>
+            <div class="inline-flex items-center border border-base-200 bg-base-200/60 rounded-md overflow-hidden">
+              <button
+                type="button"
+                (click)="decrement()"
+                class="w-9 h-9 flex items-center justify-center text-lg font-semibold text-base-content hover:bg-base-300/80 active:bg-base-300 focus:outline-none"
+              >
+                -
+              </button>
               <input
-                class="qty-input"
+                class="w-10 h-9 text-center bg-base-100/90 text-sm font-semibold text-base-content border-none focus:outline-none"
                 type="number"
                 [value]="quantity()"
                 min="1"
                 [max]="product()?.stock || undefined"
-                readonly
+                (input)="onQuantityInput($event)"
               />
-              <button class="qty-btn" type="button" (click)="increment()">+</button>
+              <button
+                type="button"
+                (click)="increment()"
+                class="w-9 h-9 flex items-center justify-center text-lg font-semibold text-base-content hover:bg-base-300/80 active:bg-base-300 focus:outline-none"
+              >
+                +
+              </button>
             </div>
             <add-to-cart-button
               [product]="product()!"
@@ -71,7 +82,6 @@
               buttonClass="btn-md w-full md:w-auto"
             />
           </div>
-          <p class="text-xs text-subtle" *ngIf="product()?.stock !== undefined">Stock: {{ product()?.stock }}</p>
         </div>
       </div>
     </div>

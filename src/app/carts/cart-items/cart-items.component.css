@@ -11,3 +11,14 @@
   transform: translateY(12px);
   filter: blur(2px);
 }
+
+/* Ocultar flechas nativas del input number en el carrito */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

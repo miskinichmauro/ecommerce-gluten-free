@@ -44,4 +44,12 @@ export class CartItemsComponent {
       this.cartService.updateItem(item.id, item.quantity - 1).subscribe();
     }
   }
+
+  onQuantityInput(event: Event, item: CartItem) {
+    const target = event.target as HTMLInputElement | null;
+    if (!target) return;
+    let value = parseInt(target.value, 10);
+    if (isNaN(value) || value < 1) value = 1;
+    this.cartService.updateItem(item.id, value).subscribe();
+  }
 }

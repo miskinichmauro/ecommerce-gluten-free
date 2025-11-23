@@ -121,4 +121,16 @@ export class ProductComponent implements OnInit {
   decrement() {
     this.quantity.update((q) => Math.max(1, q - 1));
   }
+
+  onQuantityInput(event: Event) {
+    const target = event.target as HTMLInputElement | null;
+    if (!target) return;
+    const maxStock = this.product()?.stock;
+    let value = parseInt(target.value, 10);
+    if (isNaN(value) || value < 1) value = 1;
+    if (typeof maxStock === 'number' && maxStock > 0 && value > maxStock) {
+      value = maxStock;
+    }
+    this.quantity.set(value);
+  }
 }
