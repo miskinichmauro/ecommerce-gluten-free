@@ -47,7 +47,6 @@ export class LoginComponent {
         await this.isSuccess();
 
         if (isAuthenticated) {
-          this.router.navigateByUrl('/');
           return;
         }
 

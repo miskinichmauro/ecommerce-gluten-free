@@ -9,6 +9,7 @@ import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, EventEmit
 })
 export class ImageCarruselComponent implements AfterViewInit{
   images = input.required<string[]>();
+  autoplay = input<boolean>(true);
 
   spaceBetween = 10;
   slidesPerView = 1;
@@ -20,14 +21,18 @@ export class ImageCarruselComponent implements AfterViewInit{
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (swiperEl) {
       const imgs = this.images();
+      const enableAutoplay = this.autoplay() && imgs && imgs.length > 1;
+
       swiperEl.pagination = { clickable: true, dynamicBullets: true, type: 'bullets' };
       swiperEl.navigation = true;
-      swiperEl.autoplay = {
-        delay: 5000,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true,
-        reverseDirection: false
-      };
+      swiperEl.autoplay = enableAutoplay
+        ? {
+            delay: 5000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+            reverseDirection: false
+          }
+        : false;
       swiperEl.speed = 1200;
       swiperEl.effect = 'fade';
       swiperEl.fadeEffect = { crossFade: true };

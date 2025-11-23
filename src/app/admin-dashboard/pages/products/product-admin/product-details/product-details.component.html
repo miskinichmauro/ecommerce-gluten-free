@@ -130,35 +130,12 @@
         [disabled]="uploadingImages()"
       />
 
-      <div class="w-full h-97 bg-base-200 border border-dashed border-base-300 rounded-lg flex items-center justify-center overflow-hidden">
-        @if (previewImage) {
-          <img [src]="previewImage" alt="Previsualización" class="w-full h-full object-cover object-center" />
-        } @else {
-          <span class="text-sm opacity-70">La vista previa aparecerá aquí</span>
-        }
-      </div>
-
-      @if (imageSources().length) {
-        <div class="flex gap-2 overflow-x-auto pb-2">
-          @for (thumb of imageSources(); track thumb.identifier) {
-            <div
-              class="relative min-w-[110px] h-24 rounded-md border-2 overflow-hidden cursor-pointer bg-base-200"
-              [class.border-primary]="previewImage === thumb.src"
-              [class.border-transparent]="previewImage !== thumb.src"
-              (click)="setPreviewImage(thumb.src)"
-            >
-              <img [src]="thumb.src" alt="Miniatura" class="w-full h-full object-cover rounded-md" />
-              <button
-                type="button"
-              class="absolute top-1 right-1 bg-base-100 rounded-full w-6 h-6 flex items-center justify-center shadow"
-              (click)="$event.stopPropagation(); thumb.type === 'existing' ? removeImage(thumb.identifier) : removePendingImage(thumb.identifier)"
-            >
-                <x-circle />
-              </button>
-            </div>
-          }
-        </div>
-      }
+      <image-gallery
+        [images]="imageSources()"
+        [removable]="true"
+        (slideChange)="onGallerySlideChange($event)"
+        (remove)="onGalleryRemove($event)"
+      />
 
       @if (uploadingImages()) {
         <p class="text-sm text-primary">Subiendo imágenes...</p>
@@ -169,4 +146,3 @@
     </div>
   </div>
 </form>
-

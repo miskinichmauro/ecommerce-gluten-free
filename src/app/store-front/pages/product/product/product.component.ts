@@ -5,13 +5,13 @@ import { firstValueFrom } from 'rxjs';
 import { Product } from 'src/app/products/interfaces/product';
 import { ProductService } from 'src/app/products/services/products.service';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
-import { ImageCarruselComponent } from "src/app/shared/components/image-carrusel/image-carrusel.component";
 import { environment } from 'src/environments/environment';
 import { AddToCartButtonComponent } from 'src/app/products/components/add-to-cart-button/add-to-cart-button.component';
+import { ImageGalleryComponent, GalleryImage } from 'src/app/shared/components/image-gallery/image-gallery.component';
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, LoadingComponent, ImageCarruselComponent, AddToCartButtonComponent],
+  imports: [CommonModule, LoadingComponent, ImageGalleryComponent, AddToCartButtonComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
@@ -26,7 +26,6 @@ export class ProductComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
   quantity = signal<number>(1);
-  currentSlide = signal(0);
 
   constructor() {}
 
@@ -96,17 +95,12 @@ export class ProductComponent implements OnInit {
 
   categoryName(): string {
     const cat = this.product()?.category as unknown;
-    console.log(this.product());
     if (!cat) return '';
     if (typeof cat === 'string') return cat;
     if (typeof cat === 'object' && 'name' in cat && typeof (cat as any).name === 'string') {
       return (cat as any).name;
     }
     return '';
-  }
-
-  onSlideChange(idx: number) {
-    this.currentSlide.set(idx);
   }
 
   increment() {
@@ -116,5 +110,13 @@ export class ProductComponent implements OnInit {
 
   decrement() {
     this.quantity.update((q) => Math.max(1, q - 1));
+  }
+
+  productGalleryImages(): GalleryImage[] {
+    return this.productImageUrls().map((src, idx) => ({
+      src,
+      identifier: `${idx}-${src}`,
+      alt: this.product()?.title ?? `Imagen ${idx + 1}`,
+    }));
   }
 }

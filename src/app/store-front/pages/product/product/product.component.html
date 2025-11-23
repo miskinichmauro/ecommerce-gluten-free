@@ -8,22 +8,10 @@
   <section class="product-details-card text-base-content">
     <div class="product-grid">
       <div class="image-wrap">
-        <image-carrusel #carousel [images]="productImageUrls()" (slideChange)="onSlideChange($event)" />
-
-        @if (productImageUrls().length > 1) {
-          <div class="thumbs">
-            @for (thumb of productImageUrls(); track $index) {
-              <button
-                type="button"
-                class="thumb"
-                [class.active]="currentSlide() === $index"
-                (click)="carousel.goTo($index)"
-              >
-                <img [src]="thumb" alt="Miniatura {{ $index + 1 }}" />
-              </button>
-            }
-          </div>
-        }
+        <image-gallery
+          [images]="productGalleryImages()"
+          [removable]="false"
+        />
       </div>
 
       <div class="info-wrap">

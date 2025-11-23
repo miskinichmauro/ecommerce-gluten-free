@@ -13,14 +13,14 @@ import { TagService } from 'src/app/tags/services/tag.service';
 import { Tag } from 'src/app/tags/interfaces/tag.interface';
 import { FilesService } from '@shared/services/files.service';
 import { environment } from 'src/environments/environment';
-import { XCircle } from '@shared/components/x-circle/x-circle';
+import { ImageGalleryComponent } from 'src/app/shared/components/image-gallery/image-gallery.component';
 
 type PendingImage = { file: File; preview: string };
 type ImageSource = { src: string; type: 'existing' | 'local'; identifier: string };
 
 @Component({
   selector: 'product-details',
-  imports: [ReactiveFormsModule, FormErrorLabelComponent, XCircle],
+  imports: [ReactiveFormsModule, FormErrorLabelComponent, ImageGalleryComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -61,6 +61,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   pendingImages: PendingImage[] = [];
   imageSourceList: ImageSource[] = [];
   private uploadedPreviewMap = new Map<string, string>();
+  currentSlide = signal<number>(0);
 
   ngOnInit(): void {
     this.initializeFormFromProduct();
@@ -225,14 +226,14 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private updatePreviewImage() {
     if (!this.imageSourceList.length) {
       this.previewImage = null;
+      this.currentSlide.set(0);
       return;
     }
 
-    if (this.previewImage && this.imageSourceList.some((src) => src.src === this.previewImage)) {
-      return;
-    }
-
-    this.previewImage = this.imageSourceList[0]?.src ?? null;
+    const existingIdx = this.imageSourceList.findIndex((src) => src.src === this.previewImage);
+    const nextIdx = existingIdx >= 0 ? existingIdx : 0;
+    this.previewImage = this.imageSourceList[nextIdx]?.src ?? null;
+    this.currentSlide.set(nextIdx);
   }
 
   private refreshImageSources() {
@@ -274,6 +275,21 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   imageSources(): ImageSource[] {
     return this.imageSourceList;
+  }
+
+  onGallerySlideChange(idx: number) {
+    this.currentSlide.set(idx);
+    this.previewImage = this.imageSourceList[idx]?.src ?? this.previewImage;
+  }
+
+  onGalleryRemove(identifier: string) {
+    const target = this.imageSourceList.find((img) => img.identifier === identifier);
+    if (!target) return;
+    if (target.type === 'existing') {
+      this.removeImage(identifier);
+    } else {
+      this.removePendingImage(identifier);
+    }
   }
 
   isTagSelected(tag: string): boolean {

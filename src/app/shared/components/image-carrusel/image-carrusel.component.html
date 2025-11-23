@@ -1,4 +1,4 @@
-<swiper-container #swiper class="w-full h-full" navigation="true" pagination="true" pagination-clickable="true" autoplay="true" autoplay-delay="5000" autoplay-disable-on-interaction="false" autoplay-pause-on-mouse-enter="true" speed="1200" effect="fade" fade-effect-cross-fade="true" dir="ltr">
+<swiper-container #swiper class="w-full h-full" navigation="true" pagination="true" pagination-clickable="true" speed="1200" effect="fade" fade-effect-cross-fade="true" dir="ltr">
   @if (images().length) {
     @for (image of images(); track $index) {
       <swiper-slide class="w-full h-full flex justify-center items-center">

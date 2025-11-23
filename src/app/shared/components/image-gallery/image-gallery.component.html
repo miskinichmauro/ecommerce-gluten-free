@@ -1,0 +1,33 @@
+<div class="gallery">
+  <div class="gallery-main">
+    <image-carrusel
+      #carousel
+      [images]="imageUrls()"
+      (slideChange)="handleSlideChange($event)"
+    />
+  </div>
+
+  @if (images().length) {
+    <div class="gallery-thumbs">
+      @for (img of images(); track img.identifier ?? img.src; let i = $index) {
+        <button
+          type="button"
+          class="thumb"
+          [class.active]="currentIndex() === i"
+          (click)="goTo(i)"
+        >
+          <img [src]="img.src" [alt]="img.alt || ('Imagen ' + (i + 1))" />
+
+          @if (removable()) {
+            <span
+              class="remove-btn"
+              (click)="onRemove($event, img.identifier ?? img.src)"
+            >
+              <x-circle />
+            </span>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>
