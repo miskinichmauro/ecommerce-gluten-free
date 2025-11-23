@@ -3,6 +3,9 @@
     <image-carrusel
       #carousel
       [images]="imageUrls()"
+      [autoplay]="autoplay()"
+      [loop]="loop()"
+      [effect]="effect()"
       (slideChange)="handleSlideChange($event)"
     />
   </div>

@@ -19,6 +19,9 @@ export interface GalleryImage {
 export class ImageGalleryComponent implements OnChanges {
   images = input.required<GalleryImage[]>();
   removable = input<boolean>(false);
+  autoplay = input<boolean>(true);
+  loop = input<boolean>(true);
+  effect = input<'fade' | 'slide'>('fade');
 
   remove = output<string>();
   slideChange = output<number>();

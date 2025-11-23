@@ -12,12 +12,29 @@
 .gallery-main {
   width: 100%;
   max-width: 1536px;
-  height: clamp(240px, 65vw, 720px);
-  max-height: 720px;
+  aspect-ratio: 3 / 2; /* 1536x1024 */
+  max-height: 1024px;
+  margin-inline: auto;
   border-radius: clamp(0.5rem, 1vw, 0.75rem);
   overflow: hidden;
   background: hsl(var(--b2));
   border: 1px solid hsl(var(--b3));
+}
+
+.gallery-main image-carrusel {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-main swiper-container,
+.gallery-main swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-main swiper-slide img {
+  object-fit: contain;
 }
 
 .gallery-thumbs {
