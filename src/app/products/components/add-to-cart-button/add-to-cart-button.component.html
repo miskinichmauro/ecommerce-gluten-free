@@ -1,0 +1,14 @@
+<button
+  type="button"
+  [class]="buttonClasses()"
+  (click)="addToCart()"
+  [disabled]="loading() || disabled()"
+>
+  @if (loading()) {
+    Agregando...
+  } @else if (success()) {
+    Agregado
+  } @else {
+    Agregar al carrito
+  }
+</button>

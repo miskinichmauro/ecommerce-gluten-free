@@ -76,7 +76,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     const product = this.product();
     const images = this.mapProductImageIds(product);
     const tags = this.extractTagNames(product?.tags);
-    const categoryId = (product as any)?.category?.id ?? '';
+    const categoryId = (product as any)?.category.id ?? '';
 
     this.productForm.reset({
       title: product?.title ?? '',

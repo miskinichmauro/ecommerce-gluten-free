@@ -19,6 +19,6 @@ export interface Product {
   deleteAt:      null;
   images?:       Array<string | Record<string, any>>;
   imageIds?:     string[];
-  category?:     Category;
+  category:      Category;
   user:          User;
 }

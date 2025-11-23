@@ -26,19 +26,10 @@
       <p class="font-bold text-sm sm:text-base md:text-lg">
         {{ product().price | guaranies }}
       </p>
-      <button
-        (click)="addToCart()"
-        type="button"
-        class="card-actions flex justify-center items-center btn btn-primary btn-sm sm:btn-md mt-2 relative min-w-[150px]"
-      >
-        @if (loading()) {
-          Agregando...
-        } @else if (success()) {
-          Agregado
-        } @else {
-          Agregar al carrito
-        }
-      </button>
+      <add-to-cart-button
+        [product]="product()"
+        buttonClass="card-actions btn-sm sm:btn-md mt-2 relative"
+      />
     </div>
   </div>
 </div>

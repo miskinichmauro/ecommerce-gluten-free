@@ -5,7 +5,7 @@
 }
 
 @if (!loading() && product()) {
-  <section class="product-details-card">
+  <section class="product-details-card text-base-content">
     <div class="product-grid">
       <div class="image-wrap">
         <image-carrusel #carousel [images]="productImageUrls()" (slideChange)="onSlideChange($event)" />
@@ -28,12 +28,12 @@
 
       <div class="info-wrap">
         <header class="space-y-2">
-          <h1 class="text-3xl font-bold leading-tight text-slate-900">{{ product()?.title }}</h1>
+          <h1 class="text-3xl font-bold leading-tight text-base-content">{{ product()?.title }}</h1>
         </header>
 
         <div class="section">
           <h3 class="section-title">Descripción</h3>
-          <p class="text-slate-700 leading-relaxed">
+          <p class="leading-relaxed body-text">
             {{ product()?.description || 'Sin descripción disponible.' }}
           </p>
         </div>
@@ -41,7 +41,7 @@
         <div class="section meta">
           <div>
             <h3 class="section-title">Categoría</h3>
-            <p class="text-slate-800 font-medium">
+            <p class="font-medium">
               {{ categoryName() || 'Sin categoría' }}
             </p>
           </div>
@@ -53,7 +53,7 @@
                   <span class="tag-chip">{{ toTagName(tag) }}</span>
                 }
               } @else {
-                <span class="text-slate-500 text-sm">Sin tags</span>
+                <span class="text-sm text-subtle">Sin tags</span>
               }
             </div>
           </div>
@@ -67,11 +67,14 @@
               <input type="number" [value]="quantity()" min="1" [max]="product()?.stock || undefined" readonly />
               <button type="button" (click)="increment()">+</button>
             </div>
-            <button class="btn-add" type="button" (click)="addToCart()">
-              Agregar al carrito
-            </button>
+            <add-to-cart-button
+              [product]="product()!"
+              [quantity]="quantity()"
+              [disabled]="(product()?.stock || 0) <= 0"
+              buttonClass="btn-md w-full md:w-auto"
+            />
           </div>
-          <p class="text-xs text-slate-500" *ngIf="product()?.stock !== undefined">Stock: {{ product()?.stock }}</p>
+          <p class="text-xs text-subtle" *ngIf="product()?.stock !== undefined">Stock: {{ product()?.stock }}</p>
         </div>
       </div>
     </div>
@@ -79,5 +82,5 @@
 }
 
 @if (!loading() && !product()) {
-  <p class="text-center text-slate-500 mt-10">No se encontró el producto.</p>
+  <p class="text-center text-subtle mt-10">No se encontró el producto.</p>
 }

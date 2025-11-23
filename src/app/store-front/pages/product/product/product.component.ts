@@ -7,18 +7,17 @@ import { ProductService } from 'src/app/products/services/products.service';
 import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { ImageCarruselComponent } from "src/app/shared/components/image-carrusel/image-carrusel.component";
 import { environment } from 'src/environments/environment';
-import { CartService } from 'src/app/carts/services/cart.service';
+import { AddToCartButtonComponent } from 'src/app/products/components/add-to-cart-button/add-to-cart-button.component';
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, LoadingComponent, ImageCarruselComponent],
+  imports: [CommonModule, LoadingComponent, ImageCarruselComponent, AddToCartButtonComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
 export class ProductComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
-  private readonly cartService = inject(CartService);
   private readonly baseUrl = environment.baseUrl;
 
   productslug = this.activatedRoute.snapshot.params['slug'];
@@ -97,6 +96,7 @@ export class ProductComponent implements OnInit {
 
   categoryName(): string {
     const cat = this.product()?.category as unknown;
+    console.log(this.product());
     if (!cat) return '';
     if (typeof cat === 'string') return cat;
     if (typeof cat === 'object' && 'name' in cat && typeof (cat as any).name === 'string') {
@@ -116,11 +116,5 @@ export class ProductComponent implements OnInit {
 
   decrement() {
     this.quantity.update((q) => Math.max(1, q - 1));
-  }
-
-  addToCart() {
-    const prod = this.product();
-    if (!prod) return;
-    this.cartService.addItem(prod, this.quantity()).subscribe();
   }
 }

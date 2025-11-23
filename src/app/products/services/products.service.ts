@@ -5,6 +5,7 @@ import { Observable, of, tap, map, finalize } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '@shared/services/toast.service';
 import { User } from '@store-front/users/interfaces/user.interfase';
+import { Category } from 'src/app/categories/interfaces/category.interface';
 
 const baseUrlProducts = `${environment.baseUrl}/products`;
 
@@ -20,6 +21,7 @@ const emptyProduct: Product = {
   deleteAt: null,
   images: [],
   imageIds: [],
+  category: { id: '', name: '' } as Category,
   user: {} as User
 }
 
