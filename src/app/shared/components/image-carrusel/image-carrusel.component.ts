@@ -36,8 +36,11 @@ export class ImageCarruselComponent implements AfterViewInit, OnChanges {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (!swiperEl) return;
 
-    this.applyConfig(swiperEl);
+    const { enableAutoplay } = this.applyConfig(swiperEl);
     swiperEl.initialize();
+    if (enableAutoplay) {
+      swiperEl.swiper?.autoplay?.start();
+    }
     this.addSlideListener(swiperEl);
   }
 
@@ -53,14 +56,15 @@ export class ImageCarruselComponent implements AfterViewInit, OnChanges {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (!swiperEl) return;
 
-    this.applyConfig(swiperEl);
+    const { enableAutoplay } = this.applyConfig(swiperEl);
 
     if (!swiperEl.swiper) {
       swiperEl.initialize();
+      if (enableAutoplay) {
+        swiperEl.swiper?.autoplay?.start();
+      }
     } else {
       swiperEl.swiper.update();
-      const imgs = this.images();
-      const enableAutoplay = this.autoplay() && imgs && imgs.length > 1;
       if (enableAutoplay) {
         swiperEl.swiper.autoplay?.start();
       } else {
@@ -95,6 +99,8 @@ export class ImageCarruselComponent implements AfterViewInit, OnChanges {
     swiperEl.loopAdditionalSlides = 1;
     swiperEl.slidesPerView = this.slidesPerView;
     swiperEl.loop = enableLoop;
+
+    return { enableAutoplay };
   }
 
   private addSlideListener(swiperEl: any) {
