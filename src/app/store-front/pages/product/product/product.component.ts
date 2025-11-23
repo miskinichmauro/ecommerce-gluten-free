@@ -8,6 +8,8 @@ import { LoadingComponent } from "src/app/shared/components/loading/loading.comp
 import { environment } from 'src/environments/environment';
 import { AddToCartButtonComponent } from 'src/app/products/components/add-to-cart-button/add-to-cart-button.component';
 import { ImageGalleryComponent, GalleryImage } from 'src/app/shared/components/image-gallery/image-gallery.component';
+import { Category } from 'src/app/categories/interfaces/category.interface';
+import { Tag } from 'src/app/tags/interfaces/tag.interface';
 
 @Component({
   selector: 'app-product',
@@ -20,7 +22,7 @@ export class ProductComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly baseUrl = environment.baseUrl;
 
-  productslug = this.activatedRoute.snapshot.params['slug'];
+  productSlug = this.activatedRoute.snapshot.params['slug'];
 
   product = signal<Product | null>(null);
   loading = signal<boolean>(true);
@@ -38,7 +40,7 @@ export class ProductComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productslug));
+      const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productSlug));
       this.product.set(data);
     } catch (err) {
       this.error.set('Error al cargar el producto');
@@ -84,7 +86,7 @@ export class ProductComponent implements OnInit {
     return `${this.baseUrl}/files/product/${value}`;
   }
 
-  toTagName(tag: unknown): string {
+  toTagName(tag: any): string {
     if (!tag) return '';
     if (typeof tag === 'string') return tag;
     if (typeof tag === 'object' && 'name' in tag && typeof (tag as any).name === 'string') {
@@ -94,7 +96,7 @@ export class ProductComponent implements OnInit {
   }
 
   categoryName(): string {
-    const cat = this.product()?.category as unknown;
+    const cat = this.product()?.category as Category;
     if (!cat) return '';
     if (typeof cat === 'string') return cat;
     if (typeof cat === 'object' && 'name' in cat && typeof (cat as any).name === 'string') {
