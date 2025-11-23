@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Product } from 'src/app/products/interfaces/product';
@@ -49,7 +49,7 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  productImageUrls(): string[] {
+  productImageUrls = computed(() => {
     const product = this.product();
     if (!product) return [];
 
@@ -60,7 +60,15 @@ export class ProductComponent implements OnInit {
       .map((img) => this.mapToImageUrl(img));
 
     return urls.length ? urls : ['assets/images/default-image.jpg'];
-  }
+  });
+
+  galleryImages = computed<GalleryImage[]>(() => {
+    return this.productImageUrls().map((src, idx) => ({
+      src,
+      identifier: `${idx}-${src}`,
+      alt: this.product()?.title ?? `Imagen ${idx + 1}`,
+    }));
+  });
 
   private resolveImageValue(value: unknown): string | null {
     if (!value) return null;
@@ -112,13 +120,5 @@ export class ProductComponent implements OnInit {
 
   decrement() {
     this.quantity.update((q) => Math.max(1, q - 1));
-  }
-
-  productGalleryImages(): GalleryImage[] {
-    return this.productImageUrls().map((src, idx) => ({
-      src,
-      identifier: `${idx}-${src}`,
-      alt: this.product()?.title ?? `Imagen ${idx + 1}`,
-    }));
   }
 }

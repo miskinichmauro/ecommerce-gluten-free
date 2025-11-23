@@ -9,7 +9,7 @@
     <div class="product-grid">
       <div class="image-wrap">
         <image-gallery
-          [images]="productGalleryImages()"
+          [images]="galleryImages()"
           [removable]="false"
           [autoplay]="false"
           [effect]="'slide'"
@@ -53,9 +53,16 @@
           <h3 class="section-title">Agregar al carrito</h3>
           <div class="add-row">
             <div class="qty">
-              <button type="button" (click)="decrement()">-</button>
-              <input type="number" [value]="quantity()" min="1" [max]="product()?.stock || undefined" readonly />
-              <button type="button" (click)="increment()">+</button>
+              <button class="qty-btn" type="button" (click)="decrement()">-</button>
+              <input
+                class="qty-input"
+                type="number"
+                [value]="quantity()"
+                min="1"
+                [max]="product()?.stock || undefined"
+                readonly
+              />
+              <button class="qty-btn" type="button" (click)="increment()">+</button>
             </div>
             <add-to-cart-button
               [product]="product()!"
