@@ -7,7 +7,7 @@
       <li>
         <button
           class="filter-item cursor-pointer"
-          [class.active]="selectedCategory() === 'all'"
+          [class.active]="pendingCategory() === 'all'"
           type="button"
           (click)="selectCategory('all')"
         >
@@ -18,7 +18,7 @@
         <li>
           <button
             class="filter-item cursor-pointer"
-            [class.active]="selectedCategory() === cat.id"
+            [class.active]="pendingCategory() === cat.id"
             type="button"
             (click)="selectCategory(cat.id)"
           >
@@ -45,8 +45,8 @@
         @for (tag of tags(); track tag.id) {
           <button
             type="button"
-            class="filter-tag cursor-pointer"
-            [class.active]="pendingTags().has(tag.id)"
+            class="filter-tag btn btn-sm rounded-md min-h-9 px-4"
+            [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-300 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-300 text-base-content'"
             (click)="toggleTag(tag.id)"
           >
             {{ tag.name }}
@@ -57,8 +57,8 @@
         <button
           type="button"
           class="btn btn-sm flex-1"
-          [disabled]="!hasPendingTagChanges()"
-          (click)="applyTags()"
+          [disabled]="!hasPendingChanges()"
+          (click)="applyFilters()"
         >
           Aplicar
         </button>

@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal, Signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { ProductCardComponent } from "src/app/products/components/product-card/product-card.component";
@@ -15,7 +16,7 @@ import { Tag } from 'src/app/tags/interfaces/tag.interface';
 
 @Component({
   selector: 'app-products',
-  imports: [ProductCardComponent, PaginationComponent, LoadingComponent, ReactiveFormsModule],
+  imports: [CommonModule, ProductCardComponent, PaginationComponent, LoadingComponent, ReactiveFormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -37,9 +38,11 @@ export class ProductsComponent {
   categories = signal<Category[]>([]);
   tags = signal<Tag[]>([]);
   selectedCategory = signal<string>('all');
+  pendingCategory = signal<string>('all');
   selectedTags = signal<Set<string>>(new Set());
   pendingTags = signal<Set<string>>(new Set());
-  hasPendingTagChanges = computed(() => {
+  hasPendingChanges = computed(() => {
+    if (this.selectedCategory() !== this.pendingCategory()) return true;
     const applied = this.selectedTags();
     const pending = this.pendingTags();
     if (applied.size !== pending.size) return true;
@@ -70,6 +73,7 @@ export class ProductsComponent {
       }
 
       this.selectedCategory.set(categoryId);
+      this.pendingCategory.set(categoryId);
       const tagSet = new Set(tagIds);
       this.selectedTags.set(tagSet);
       this.pendingTags.set(new Set(tagSet));
@@ -77,6 +81,7 @@ export class ProductsComponent {
       const perPage = this.productPerPage();
       const offset = (this.paginationService.currentPage() - 1) * perPage;
       this.loadProducts({ query: q, offset, limit: perPage, categoryId: this.categoryIdForRequest(), tagIds: this.tagIdsForRequest() });
+      this.loadTagsForCategory(this.pendingCategoryForRequest());
     });
 
     this.searchControl.valueChanges
@@ -112,13 +117,10 @@ export class ProductsComponent {
   }
 
   selectCategory(id: string) {
-    const nextCategory = this.selectedCategory() === id ? 'all' : id;
-    this.selectedCategory.set(nextCategory);
-    this.selectedTags.set(new Set()); // reset tags when category changes
+    const nextCategory = this.pendingCategory() === id ? 'all' : id;
+    this.pendingCategory.set(nextCategory);
     this.pendingTags.set(new Set());
-    this.loadTagsForCategory(this.categoryIdForRequest());
-    this.paginationService.setCurrentPage(1);
-    this.updateQueryParams();
+    this.loadTagsForCategory(this.pendingCategoryForRequest());
   }
 
   resetTags() {
@@ -134,7 +136,8 @@ export class ProductsComponent {
     this.pendingTags.set(current);
   }
 
-  applyTags() {
+  applyFilters() {
+    this.selectedCategory.set(this.pendingCategory());
     this.selectedTags.set(new Set(this.pendingTags()));
     this.paginationService.setCurrentPage(1);
     this.updateQueryParams();
@@ -172,6 +175,10 @@ export class ProductsComponent {
 
   private categoryIdForRequest(): string | undefined {
     return this.selectedCategory() === 'all' ? undefined : this.selectedCategory();
+  }
+
+  private pendingCategoryForRequest(): string | undefined {
+    return this.pendingCategory() === 'all' ? undefined : this.pendingCategory();
   }
 
   private tagIdsForRequest(): string[] | undefined {

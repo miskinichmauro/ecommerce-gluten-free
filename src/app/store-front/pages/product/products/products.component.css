@@ -37,17 +37,4 @@
   font-weight: 600;
 }
 
-.filter-tag {
-  background: #eef2f6;
-  border-radius: 16px;
-  padding: 6px 10px;
-  font-size: 12px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.filter-tag.active,
-.filter-tag:hover {
-  background: var(--fallback-b2, rgba(229, 231, 235, 0.8));
-  color: var(--fallback-bc, #1f2937);
-  font-weight: 600;
-}
+/* estilos de tags manejados via clases tailwind en el template */

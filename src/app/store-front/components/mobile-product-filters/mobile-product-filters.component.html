@@ -7,7 +7,7 @@
       <button
         type="button"
         class="filter-item cursor-pointer"
-        [class.active]="selectedCategory() === 'all'"
+        [class.active]="pendingCategory() === 'all'"
         (click)="selectCategory('all')"
       >
         Todos
@@ -18,7 +18,7 @@
         <button
           type="button"
           class="filter-item cursor-pointer"
-          [class.active]="selectedCategory() === cat.id"
+          [class.active]="pendingCategory() === cat.id"
           (click)="selectCategory(cat.id)"
         >
           {{ cat.name }}
@@ -34,8 +34,8 @@
     @for (tag of tags(); track tag.id) {
       <button
         type="button"
-        class="filter-tag cursor-pointer"
-        [class.active]="pendingTags().has(tag.id)"
+        class="filter-tag btn btn-sm rounded-md min-h-9 px-4"
+        [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-300 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-300 text-base-content'"
         (click)="toggleTag(tag.id)"
       >
         {{ tag.name }}
@@ -46,7 +46,7 @@
     <button class="btn btn-sm btn-outline flex-1" type="button" (click)="resetTags()" [disabled]="!pendingTags().size && !selectedTags().size">
       Limpiar
     </button>
-    <button class="btn btn-sm btn-primary flex-1" type="button" (click)="applyTags()" [disabled]="!hasPendingTagChanges()">
+    <button class="btn btn-sm btn-primary flex-1" type="button" (click)="applyFilters()" [disabled]="!hasPendingChanges()">
       Aplicar
     </button>
   </div>
