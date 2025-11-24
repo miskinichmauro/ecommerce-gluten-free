@@ -1,13 +1,17 @@
 <h1 class="text-3xl font-bold mb-2 mt-6">Productos</h1>
 
 <div class="products-layout grid grid-cols-1 lg:grid-cols-[18%_1fr] gap-4 lg:gap-6 items-start">
-  <aside class="filter-card hidden lg:block">
-    <h3 class="text-lg font-semibold mb-3">Categorias</h3>
-    <ul class="flex flex-col gap-1 max-h-[60vh] overflow-auto pr-1">
+  <aside class="hidden lg:block rounded-xl border border-base-200 bg-base-100/60 p-3 shadow-sm backdrop-blur-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="text-lg font-semibold text-base-content">Categorias</h3>
+    </div>
+
+    <ul class="flex flex-col gap-2 max-h-[60vh] overflow-auto pr-1">
       <li>
         <button
-          class="filter-item cursor-pointer"
-          [class.active]="pendingCategory() === 'all'"
+          class="w-full text-left p-2 rounded-md cursor-pointer text-base-content transition-colors duration-200 hover:bg-base-200 hover:text-base-content"
+          [class.bg-base-200]="pendingCategory() === 'all'"
+          [class.font-semibold]="pendingCategory() === 'all'"
           type="button"
           (click)="selectCategory('all')"
         >
@@ -17,8 +21,9 @@
       @for (cat of categories(); track cat.id) {
         <li>
           <button
-            class="filter-item cursor-pointer"
-            [class.active]="pendingCategory() === cat.id"
+            class="w-full text-left p-2 rounded-md cursor-pointer text-base-content transition-colors duration-200 hover:bg-base-200 hover:text-base-content"
+            [class.bg-base-200]="pendingCategory() === cat.id"
+            [class.font-semibold]="pendingCategory() === cat.id"
             type="button"
             (click)="selectCategory(cat.id)"
           >
@@ -28,9 +33,9 @@
       }
     </ul>
 
-    <div class="mt-6">
-      <div class="flex items-center justify-between mb-3">
-        <h4 class="font-semibold">Tags</h4>
+    <div class="mt-6 space-y-2">
+      <div class="flex items-center justify-between">
+        <h4 class="font-semibold text-base-content">Tags</h4>
         <button
           class="text-primary text-xs cursor-pointer"
           type="button"
@@ -46,14 +51,14 @@
           <button
             type="button"
             class="filter-tag btn btn-sm rounded-md min-h-9 px-4"
-            [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-300 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-300 text-base-content'"
+            [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-200 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-200 text-base-content'"
             (click)="toggleTag(tag.id)"
           >
             {{ tag.name }}
           </button>
         }
       </div>
-      <div class="flex gap-2 mt-3">
+      <div class="flex gap-2">
         <button
           type="button"
           class="btn btn-sm flex-1"
