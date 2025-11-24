@@ -35,7 +35,7 @@
       <button
         type="button"
         class="filter-tag btn btn-sm rounded-md min-h-9 px-4"
-        [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-300 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-300 text-base-content'"
+        [ngClass]="pendingTags().has(tag.id) ? 'btn-outline border-base-200 bg-base-200 text-base-content font-semibold' : 'btn-outline border-base-200 text-base-content'"
         (click)="toggleTag(tag.id)"
       >
         {{ tag.name }}
