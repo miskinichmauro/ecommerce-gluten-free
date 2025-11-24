@@ -34,8 +34,8 @@
         <button
           class="text-primary text-xs cursor-pointer"
           type="button"
-          [disabled]="!selectedTags().size"
-          [class.opacity-50]="!selectedTags().size"
+          [disabled]="!selectedTags().size && !pendingTags().size"
+          [class.opacity-50]="!selectedTags().size && !pendingTags().size"
           (click)="resetTags()"
         >
           Limpiar
@@ -46,12 +46,22 @@
           <button
             type="button"
             class="filter-tag cursor-pointer"
-            [class.active]="selectedTags().has(tag.id)"
+            [class.active]="pendingTags().has(tag.id)"
             (click)="toggleTag(tag.id)"
           >
             {{ tag.name }}
           </button>
         }
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button
+          type="button"
+          class="btn btn-sm flex-1"
+          [disabled]="!hasPendingTagChanges()"
+          (click)="applyTags()"
+        >
+          Aplicar
+        </button>
       </div>
     </div>
   </aside>

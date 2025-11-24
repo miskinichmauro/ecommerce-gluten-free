@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, Signal } from '@angular/core';
+import { Component, effect, inject, signal, Signal, computed } from '@angular/core';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { ProductCardComponent } from "src/app/products/components/product-card/product-card.component";
@@ -38,6 +38,16 @@ export class ProductsComponent {
   tags = signal<Tag[]>([]);
   selectedCategory = signal<string>('all');
   selectedTags = signal<Set<string>>(new Set());
+  pendingTags = signal<Set<string>>(new Set());
+  hasPendingTagChanges = computed(() => {
+    const applied = this.selectedTags();
+    const pending = this.pendingTags();
+    if (applied.size !== pending.size) return true;
+    for (const tag of pending) {
+      if (!applied.has(tag)) return true;
+    }
+    return false;
+  });
 
   constructor() {
     const { productResponse, loading, error, loadProducts } = useProductsLoader();
@@ -60,7 +70,9 @@ export class ProductsComponent {
       }
 
       this.selectedCategory.set(categoryId);
-      this.selectedTags.set(new Set(tagIds));
+      const tagSet = new Set(tagIds);
+      this.selectedTags.set(tagSet);
+      this.pendingTags.set(new Set(tagSet));
 
       const perPage = this.productPerPage();
       const offset = (this.paginationService.currentPage() - 1) * perPage;
@@ -103,6 +115,7 @@ export class ProductsComponent {
     const nextCategory = this.selectedCategory() === id ? 'all' : id;
     this.selectedCategory.set(nextCategory);
     this.selectedTags.set(new Set()); // reset tags when category changes
+    this.pendingTags.set(new Set());
     this.loadTagsForCategory(this.categoryIdForRequest());
     this.paginationService.setCurrentPage(1);
     this.updateQueryParams();
@@ -110,22 +123,26 @@ export class ProductsComponent {
 
   resetTags() {
     this.selectedTags.set(new Set());
+    this.pendingTags.set(new Set());
     this.paginationService.setCurrentPage(1);
     this.updateQueryParams();
   }
 
   toggleTag(id: string) {
-    const current = new Set(this.selectedTags());
+    const current = new Set(this.pendingTags());
     if (current.has(id)) current.delete(id); else current.add(id);
-    this.selectedTags.set(current);
+    this.pendingTags.set(current);
+  }
+
+  applyTags() {
+    this.selectedTags.set(new Set(this.pendingTags()));
     this.paginationService.setCurrentPage(1);
     this.updateQueryParams();
   }
 
   updateQueryParams() {
     const tags = Array.from(this.selectedTags());
-    this.router.navigate([], {
-      relativeTo: this.route,
+    this.router.navigate(['/products'], {
       queryParams: {
         q: this.lastQuery || null,
         categoryId: this.selectedCategory() === 'all' ? null : this.selectedCategory(),
@@ -149,6 +166,7 @@ export class ProductsComponent {
     this.tagService.getAll(categoryId).subscribe((tags) => {
       this.tags.set(tags);
       this.selectedTags.set(new Set());
+      this.pendingTags.set(new Set());
     });
   }
 

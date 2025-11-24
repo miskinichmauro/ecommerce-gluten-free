@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CategoryService } from 'src/app/categories/services/category.service';
 import { TagService } from 'src/app/tags/services/tag.service';
 import { Category } from 'src/app/categories/interfaces/category.interface';
@@ -23,6 +23,16 @@ export class MobileProductFiltersComponent implements OnInit {
   tags = signal<Tag[]>([]);
   selectedCategory = signal<string>('all');
   selectedTags = signal<Set<string>>(new Set());
+  pendingTags = signal<Set<string>>(new Set());
+  hasPendingTagChanges = computed(() => {
+    const applied = this.selectedTags();
+    const pending = this.pendingTags();
+    if (applied.size !== pending.size) return true;
+    for (const tag of pending) {
+      if (!applied.has(tag)) return true;
+    }
+    return false;
+  });
 
   ngOnInit() {
     this.categoryService.getAll().subscribe((cats) => this.categories.set(cats));
@@ -33,7 +43,9 @@ export class MobileProductFiltersComponent implements OnInit {
       const tagIds = tagIdsParam ? tagIdsParam.split(',').filter(Boolean) : [];
 
       this.selectedCategory.set(categoryId);
-      this.selectedTags.set(new Set(tagIds));
+      const tagSet = new Set(tagIds);
+      this.selectedTags.set(tagSet);
+      this.pendingTags.set(new Set(tagSet));
       this.loadTags(categoryId === 'all' ? undefined : categoryId);
     });
   }
@@ -41,21 +53,27 @@ export class MobileProductFiltersComponent implements OnInit {
   selectCategory(id: string) {
     this.selectedCategory.set(id);
     this.selectedTags.set(new Set());
+    this.pendingTags.set(new Set());
     this.loadTags(id === 'all' ? undefined : id);
     this.updateQueryParams(true);
   }
 
   toggleTag(id: string) {
-    const next = new Set(this.selectedTags());
+    const next = new Set(this.pendingTags());
     if (next.has(id)) next.delete(id); else next.add(id);
-    this.selectedTags.set(next);
-    this.updateQueryParams();
+    this.pendingTags.set(next);
   }
 
   resetTags() {
-    if (!this.selectedTags().size) return;
+    if (!this.selectedTags().size && !this.pendingTags().size) return;
     this.selectedTags.set(new Set());
+    this.pendingTags.set(new Set());
     this.updateQueryParams();
+  }
+
+  applyTags() {
+    this.selectedTags.set(new Set(this.pendingTags()));
+    this.updateQueryParams(true);
   }
 
   private loadTags(categoryId?: string) {
@@ -64,8 +82,7 @@ export class MobileProductFiltersComponent implements OnInit {
 
   private updateQueryParams(closeSidebar = false) {
     const tags = Array.from(this.selectedTags());
-    this.router.navigate([], {
-      relativeTo: this.route,
+    this.router.navigate(['/products'], {
       queryParams: {
         categoryId: this.selectedCategory() === 'all' ? null : this.selectedCategory(),
         tagIds: tags.length ? tags.join(',') : null,
