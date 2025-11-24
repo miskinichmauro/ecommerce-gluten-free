@@ -43,7 +43,7 @@
     }
   </div>
   <div class="flex gap-2 mt-3">
-    <button class="btn btn-sm btn-ghost flex-1" type="button" (click)="resetTags()" [disabled]="!pendingTags().size && !selectedTags().size">
+    <button class="btn btn-sm btn-outline flex-1" type="button" (click)="resetTags()" [disabled]="!pendingTags().size && !selectedTags().size">
       Limpiar
     </button>
     <button class="btn btn-sm btn-primary flex-1" type="button" (click)="applyTags()" [disabled]="!hasPendingTagChanges()">
