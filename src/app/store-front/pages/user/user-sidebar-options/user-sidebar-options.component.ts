@@ -17,7 +17,7 @@ export class UserOptionsComponent {
   menuItems: MenuItem[] = [
     { label: 'Mi perfil', routerLink: '/user/profile' },
     { label: 'Mis direcciones', routerLink: '/user/directions' },
-    { label: 'Mis métodos de facturación', routerLink: '/user/billing' },
+    { label: 'Mis datos de facturación', routerLink: '/user/billing' },
     { label: 'Mis pedidos', routerLink: '/user/recipes' },
     { label: 'Panel administrativo', routerLink: '/admin', adminOnly: true },
   ];

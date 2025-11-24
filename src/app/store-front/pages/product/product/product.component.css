@@ -11,8 +11,7 @@
 
 .product-appear {
   animation: productFadeIn 700ms cubic-bezier(0.2, 0.8, 0.35, 1) forwards;
-  will-change: transform, opacity;
-  transform: translateZ(0);
+  will-change: opacity;
 }
 
 @keyframes productFadeIn {
@@ -111,16 +110,25 @@
 }
 
 .add-cart .add-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   gap: 0.75rem;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  width: 100%;
 }
 
 .add-cart-bottom {
   margin-top: auto;
   align-self: flex-end;
+}
+
+.add-cart .add-row > add-to-cart-button {
+  justify-self: end;
+  flex-shrink: 0;
+}
+
+.add-cart .add-row .quantity-group {
+  flex-shrink: 0;
 }
 
 .add-cart input[type="number"] {
