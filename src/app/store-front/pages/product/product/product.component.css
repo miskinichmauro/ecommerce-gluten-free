@@ -109,26 +109,9 @@
   border: 1px solid hsl(var(--b3));
 }
 
-.add-cart .add-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.75rem;
-  align-items: center;
-  width: 100%;
-}
-
 .add-cart-bottom {
   margin-top: auto;
   align-self: flex-end;
-}
-
-.add-cart .add-row > add-to-cart-button {
-  justify-self: end;
-  flex-shrink: 0;
-}
-
-.add-cart .add-row .quantity-group {
-  flex-shrink: 0;
 }
 
 .add-cart input[type="number"] {
