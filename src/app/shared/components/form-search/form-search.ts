@@ -4,7 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Product } from '@products/interfaces/product';
 import { ProductService } from '@products/services/products.service';
 import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
-import { debounceTime, distinctUntilChanged, switchMap, of, filter } from 'rxjs';
+import { debounceTime, switchMap, of, filter, tap, map, take } from 'rxjs';
 import { XCircle } from "../x-circle/x-circle";
 
 @Component({
@@ -21,6 +21,7 @@ export class FormSearch {
   suggestions: Product[] = [];
   private static nextInputId = 0;
   inputId = `searchControl-${FormSearch.nextInputId++}`;
+  private suggestionCache = new Map<string, Product[]>();
 
   activeIndex = -1;
 
@@ -28,24 +29,24 @@ export class FormSearch {
   @Output() dismissed = new EventEmitter<void>();
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('suggestContainer') suggestContainer!: ElementRef;
 
   constructor() {
 
     this.searchControl.valueChanges
       .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
+        debounceTime(80),
         switchMap((text) => {
           const term = (text ?? '').trim();
           if (term.length < 1) {
             this.closeSuggestions();
-            return of({ products: [] });
+            return of<Product[]>([]);
           }
-          return this.productService.searchProducts({ query: term, limit: 5 });
+          return this.fetchSuggestions(term);
         })
       )
-      .subscribe((res: any) => {
-        this.suggestions = res?.products ?? [];
+      .subscribe((products: Product[]) => {
+        this.suggestions = products;
         this.activeIndex = -1;
       });
 
@@ -61,7 +62,6 @@ export class FormSearch {
       });
   }
 
-  @ViewChild('suggestContainer') suggestContainer!: ElementRef;
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
     if (!this.suggestContainer) return;
@@ -93,15 +93,15 @@ export class FormSearch {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (!this.suggestions.length) return;
-
     switch (event.key) {
       case 'ArrowDown':
+        if (!this.suggestions.length) return;
         event.preventDefault();
         this.activeIndex = (this.activeIndex + 1) % this.suggestions.length;
         break;
 
       case 'ArrowUp':
+        if (!this.suggestions.length) return;
         event.preventDefault();
         this.activeIndex = (this.activeIndex - 1 + this.suggestions.length) % this.suggestions.length;
         break;
@@ -145,5 +145,28 @@ export class FormSearch {
 
   hasSearchValue() {
     return !!(this.searchControl.value ?? '').length;
+  }
+
+  onFocusInput() {
+    const term = (this.searchControl.value ?? '').trim();
+    if (!term.length) return;
+
+    this.fetchSuggestions(term)
+      .pipe(take(1))
+      .subscribe((products) => {
+        this.suggestions = products;
+        this.activeIndex = -1;
+      });
+  }
+
+  private fetchSuggestions(term: string) {
+    const key = term.toLowerCase();
+    const cached = this.suggestionCache.get(key);
+    if (cached) return of(cached);
+
+    return this.productService.searchProducts({ query: term, limit: 5 }).pipe(
+      map((res: any) => res?.products ?? []),
+      tap((products) => this.suggestionCache.set(key, products))
+    );
   }
 }

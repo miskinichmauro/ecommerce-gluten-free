@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, Signal, computed } from '@angular/core';
+import { Component, inject, signal, Signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationService } from 'src/app/shared/components/pagination/pagination.service';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
@@ -96,19 +96,19 @@ export class ProductsComponent {
         });
 
         this.paginationService.resetPage();
-        this.loadProducts({ query: qValue, offset: 0, limit: this.productPerPage(), categoryId: this.categoryIdForRequest(), tagIds: this.tagIdsForRequest() });
       });
-
-    effect(() => {
-      const perPage = this.productPerPage();
-      const offset = (this.paginationService.currentPage() - 1) * perPage;
-      this.loadProducts({ query: this.lastQuery, offset, limit: perPage, categoryId: this.categoryIdForRequest(), tagIds: this.tagIdsForRequest() });
-    });
   }
 
   updateProductsPerPage(value: number) {
     this.productPerPage.set(value);
     this.paginationService.setCurrentPage(1);
+    this.loadProducts({
+      query: this.lastQuery,
+      offset: 0,
+      limit: this.productPerPage(),
+      categoryId: this.categoryIdForRequest(),
+      tagIds: this.tagIdsForRequest(),
+    });
   }
 
   async loadFilters() {
@@ -152,16 +152,6 @@ export class ProductsComponent {
         tagIds: tags.length ? tags.join(',') : null,
       },
       queryParamsHandling: 'merge',
-    });
-
-    const perPage = this.productPerPage();
-    const offset = (this.paginationService.currentPage() - 1) * perPage;
-    this.loadProducts({
-      query: this.lastQuery,
-      offset,
-      limit: perPage,
-      categoryId: this.categoryIdForRequest(),
-      tagIds: this.tagIdsForRequest(),
     });
   }
 

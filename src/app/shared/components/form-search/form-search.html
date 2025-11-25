@@ -11,6 +11,7 @@
         aria-label="Buscar productos"
         (keydown.escape)="onEscapePressed()"
         (keydown)="onKeyDown($event)"
+        (focus)="onFocusInput()"
       />
 
       <span class="inline-flex lg:hidden">
