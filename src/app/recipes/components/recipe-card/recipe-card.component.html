@@ -1,10 +1,19 @@
-<div class="card bg-base-100 max-w-md md:max-w-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full">
-  <div class="card-body items-center text-center">
-    <h3 class="card-title text-xl text-primary mb-2">
-      {{ recipe().title }}
-    </h3>
-    <p class="text-sm opacity-80">
-      {{ recipe().text }}
-    </p>
-  </div>
-</div>
+<article class="card">
+  <header class="card__header">
+    <h3 class="card__title">{{ recipe().title }}</h3>
+    @if (recipe().matchCount) {
+      <span class="card__badge">{{ recipe().matchCount }} ingredientes coinciden</span>
+    }
+  </header>
+  <p class="card__text">
+    {{ recipe().text || recipe().description || 'Receta sin descripción.' }}
+  </p>
+
+  @if (ingredients().length) {
+    <div class="card__ingredients">
+      @for (name of ingredients(); track name) {
+        <span class="card__chip">{{ name }}</span>
+      }
+    </div>
+  }
+</article>

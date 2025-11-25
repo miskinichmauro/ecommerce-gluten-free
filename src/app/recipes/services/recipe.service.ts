@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { finalize, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -6,6 +6,15 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { ToastService } from '@shared/services/toast.service';
 
 const baseUrlRecipes = `${environment.baseUrl}/recipes`;
+
+export interface RecipeSearchResponse {
+  count: number;
+  pages: number;
+  recipes: Array<Recipe & {
+    matchCount?: number;
+    recipeIngredients?: Array<{ ingredient?: { name?: string } }>;
+  }>;
+}
 
 const emptyRecipe: Recipe = {
   id: 'new',
@@ -78,5 +87,20 @@ export class RecipeService {
 
   insertOrUpdateCache(recipe: Recipe) {
     this.recipesCache.set(recipe.id, recipe);
+  }
+
+  searchByIngredients(ingredients: string[], options?: { limit?: number; offset?: number }): Observable<RecipeSearchResponse> {
+    const cleaned = (ingredients ?? []).map((i) => i.trim()).filter((i) => !!i);
+    const params = new HttpParams({
+      fromObject: {
+        ingredients: cleaned.join(','),
+        limit: String(options?.limit ?? 10),
+        offset: String(options?.offset ?? 0),
+      },
+    });
+    return this.http.get<RecipeSearchResponse>(`${baseUrlRecipes}/search`, {
+      params,
+      responseType: 'json',
+    });
   }
 }

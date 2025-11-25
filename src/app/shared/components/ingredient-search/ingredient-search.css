@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+:host {
+  display: block;
+}
+
+.suggestion {
+  cursor: pointer;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: hsl(var(--bc));
+}
+
+.suggestion:hover {
+  background: hsl(var(--b2));
+}
+
+.suggestion--active {
+  background: hsl(var(--b3) / 0.5);
+  color: hsl(var(--bc));
+}

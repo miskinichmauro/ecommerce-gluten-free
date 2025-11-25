@@ -10,7 +10,11 @@
   </div>
 
   <div class="navbar-center hidden sm:flex">
-    <form-search (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
+    @if (isRecipePage()) {
+      <ingredient-search />
+    } @else {
+      <form-search (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
+    }
   </div>
 
   <div class="navbar-end">
@@ -25,7 +29,11 @@
 
   <div class="fixed top-0 inset-x-0 z-50 bg-base-100 shadow-md -translate-y-full transition-transform duration-200 peer-checked:translate-y-0">
     <div class="p-4">
-      <form-search #mobileSearch (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
+      @if (isRecipePage()) {
+        <ingredient-search #mobileIngredientSearch />
+      } @else {
+        <form-search #mobileSearch (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
+      }
     </div>
   </div>
 </div>
