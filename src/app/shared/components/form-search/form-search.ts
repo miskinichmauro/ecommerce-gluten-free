@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Output, inject, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Output, inject, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import { Product } from '@products/interfaces/product';
@@ -16,6 +16,7 @@ import { XCircle } from "../x-circle/x-circle";
 export class FormSearch {
   private router = inject(Router);
   private productService = inject(ProductService);
+  private cdr = inject(ChangeDetectorRef);
 
   searchControl = new FormControl('');
   suggestions: Product[] = [];
@@ -48,6 +49,7 @@ export class FormSearch {
       .subscribe((products: Product[]) => {
         this.suggestions = products;
         this.activeIndex = -1;
+        this.cdr.markForCheck();
       });
 
     this.router.events
@@ -73,6 +75,7 @@ export class FormSearch {
   closeSuggestions() {
     this.suggestions = [];
     this.activeIndex = -1;
+    this.cdr.markForCheck();
   }
 
   onEscapePressed() {
@@ -156,6 +159,7 @@ export class FormSearch {
       .subscribe((products) => {
         this.suggestions = products;
         this.activeIndex = -1;
+        this.cdr.markForCheck();
       });
   }
 
