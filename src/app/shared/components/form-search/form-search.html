@@ -14,9 +14,11 @@
         (focus)="onFocusInput()"
       />
 
-      <span class="inline-flex lg:hidden">
-        <x-circle (click)="clearSearchOrClose()"/>
-      </span>
+      @if (hasSearchValue()) {
+        <span class="inline-flex lg:hidden">
+          <x-circle (click)="clearSearchOrClose()"/>
+        </span>
+      }
       @if (hasSearchValue()) {
         <span class="hidden lg:inline-flex">
           <x-circle (click)="clearSearchOrClose()"/>
