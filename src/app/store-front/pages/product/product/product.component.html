@@ -12,7 +12,8 @@
           [images]="galleryImages()"
           [removable]="false"
           [autoplay]="false"
-          [effect]="'slide'"
+          [loop]="false"
+          [effect]="'fade'"
         />
       </div>
 
@@ -51,7 +52,7 @@
 
         <div class="section add-cart add-cart-bottom w-full">
           <div class="add-row flex items-center gap-3 w-full justify-center">
-            <div class="quantity-group inline-flex items-center border border-base-200 bg-base-200/60 rounded-md overflow-hidden flex-shrink-0">
+            <div class="quantity-group inline-flex items-center border border-base-200 bg-base-200/60 rounded-md overflow-hidden shrink-0">
               <button
                 type="button"
                 (click)="decrement()"
@@ -76,7 +77,7 @@
               </button>
             </div>
             <add-to-cart-button
-              class="flex-shrink-0"
+              class="shrink-0"
               [product]="product()!"
               [quantity]="quantity()"
               [disabled]="(product()?.stock || 0) <= 0"

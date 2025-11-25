@@ -47,7 +47,9 @@ export class ImageCarruselComponent implements AfterViewInit, OnChanges {
   goTo(index: number) {
     const swiperEl = this.swiperRef?.nativeElement as any;
     if (swiperEl?.swiper) {
-      swiperEl.swiper.slideToLoop(index);
+      const useLoop = swiperEl.swiper.params?.loop;
+      const slideFn = useLoop ? swiperEl.swiper.slideToLoop.bind(swiperEl.swiper) : swiperEl.swiper.slideTo.bind(swiperEl.swiper);
+      slideFn(index);
       this.slideChange.emit(index);
     }
   }
