@@ -35,6 +35,7 @@ export class ProductCarruselComponent implements AfterViewInit {
 
     if (enableCarousel) {
       swiperEl.navigation = true;
+      swiperEl.rewind = true;
       swiperEl.centeredSlides = true;
       swiperEl.centeredSlidesBounds = true;
       swiperEl.loop = items.length > 2;
