@@ -97,8 +97,8 @@ export class ImageCarruselComponent implements AfterViewInit, OnChanges {
     swiperEl.effect = this.effect();
     swiperEl.fadeEffect = this.effect() === 'fade' ? { crossFade: true } : undefined;
     swiperEl.spaceBetween = this.spaceBetween;
-    swiperEl.rewind = false;
-    swiperEl.loopAdditionalSlides = 1;
+    swiperEl.rewind = !enableLoop;
+    swiperEl.loopAdditionalSlides = enableLoop ? 1 : 0;
     swiperEl.slidesPerView = this.slidesPerView;
     swiperEl.loop = enableLoop;
 
