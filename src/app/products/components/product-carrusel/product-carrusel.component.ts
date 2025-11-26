@@ -16,6 +16,7 @@ export class ProductCarruselComponent implements AfterViewInit {
   private initialized = false;
   private listenersAttached = false;
   private lastIndex = 0;
+  private indexListenerAttached = false;
 
   ngAfterViewInit() {
     this.configureSwiper();
@@ -54,9 +55,12 @@ export class ProductCarruselComponent implements AfterViewInit {
       if (instance) {
         instance.params.allowTouchMove = true;
         instance.allowTouchMove = true;
-        instance.params.autoplay = instance.params.autoplay || {};
-        instance.params.autoplay.pauseOnMouseEnter = true;
-        instance.params.autoplay.disableOnInteraction = false;
+        instance.params.autoplay = {
+          ...(instance.params.autoplay || {}),
+          delay: 4500,
+          pauseOnMouseEnter: true,
+          disableOnInteraction: false
+        };
         this.attachHoverHandlers(swiperEl);
       }
     } else {
@@ -84,6 +88,8 @@ export class ProductCarruselComponent implements AfterViewInit {
       if (enableCarousel) {
         this.lastIndex = currentIndex;
         swiperEl.swiper?.slideTo?.(this.lastIndex, 0);
+        this.attachIndexListener(swiperEl);
+        swiperEl.swiper?.autoplay?.stop?.();
         swiperEl.swiper?.autoplay?.start?.();
       } else {
         this.lastIndex = 0;
@@ -94,12 +100,12 @@ export class ProductCarruselComponent implements AfterViewInit {
       if (enableCarousel) {
         // Asegurar que el autoplay arranque desde el primer slide real
         this.resetToFirstSlide(swiperEl);
+        this.attachIndexListener(swiperEl);
+        swiperEl.swiper?.autoplay?.stop?.();
         swiperEl.swiper?.autoplay?.start?.();
       }
       this.initialized = true;
     }
-
-    this.wasCarouselEnabled = enableCarousel;
   }
 
   private attachHoverHandlers(swiperEl: any) {
@@ -125,5 +131,14 @@ export class ProductCarruselComponent implements AfterViewInit {
     this.lastIndex = 0;
     swiperEl.swiper?.slideTo?.(0, 0);
     swiperEl.swiper?.updateSlides?.();
+  }
+
+  private attachIndexListener(swiperEl: any) {
+    if (this.indexListenerAttached) return;
+    swiperEl.addEventListener('slidechange', () => {
+      const idx = swiperEl.swiper?.realIndex ?? swiperEl.swiper?.activeIndex ?? 0;
+      this.lastIndex = idx;
+    });
+    this.indexListenerAttached = true;
   }
 }
