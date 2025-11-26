@@ -8,7 +8,19 @@
   object-fit: cover;
 }
 
-/* Mantener corte 1920 x 450 sin importar el tamaño de la imagen */
 .promo-aspect {
+  position: relative;
   aspect-ratio: 1920 / 450;
+}
+
+.promo-aspect::before {
+  content: '';
+  display: block;
+  padding-top: 23.4375%;
+}
+
+@supports (aspect-ratio: 1 / 1) {
+  .promo-aspect::before {
+    display: none;
+  }
 }

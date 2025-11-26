@@ -68,6 +68,7 @@
 
 .thumb.active {
   border-color: hsl(var(--p));
+  box-shadow: 0 0 0 3px hsla(var(--p) / 0.2);
   box-shadow: 0 0 0 3px color-mix(in srgb, hsl(var(--p)) 20%, transparent);
 }
 
@@ -89,5 +90,19 @@
   align-items: center;
   justify-content: center;
   background: hsl(var(--b1));
+  box-shadow: 0 6px 14px hsla(var(--bc) / 0.12);
   box-shadow: 0 6px 14px color-mix(in srgb, hsl(var(--bc)) 12%, transparent);
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  .gallery-main {
+    position: relative;
+    padding-top: 66.666%;
+    height: auto;
+  }
+
+  .gallery-main image-carrusel {
+    position: absolute;
+    inset: 0;
+  }
 }

@@ -12,3 +12,40 @@ swiper-container::part(container),
 swiper-container::part(wrapper) {
   overflow: visible !important;
 }
+
+.min-h-\[75vh\] {
+  min-height: 75vh;
+  min-height: 75svh;
+  min-height: 75dvh;
+}
+
+.max-h-\[75vh\] {
+  max-height: 75vh;
+  max-height: 75svh;
+  max-height: 75dvh;
+}
+
+.min-h-\[50vh\] {
+  min-height: 50vh;
+  min-height: 50svh;
+  min-height: 50dvh;
+}
+
+.max-h-\[60vh\] {
+  max-height: 60vh;
+  max-height: 60svh;
+  max-height: 60dvh;
+}
+
+.backdrop-blur,
+.backdrop-blur-sm {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+@supports not ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+  .backdrop-blur,
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.72) !important;
+  }
+}
