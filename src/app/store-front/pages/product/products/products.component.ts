@@ -42,6 +42,7 @@ export class ProductsComponent {
   selectedTags = signal<Set<string>>(new Set());
   pendingTags = signal<Set<string>>(new Set());
   sortOption = signal<string>('relevance');
+  viewProducts = signal<any[]>([]);
   hasPendingChanges = computed(() => {
     if (this.selectedCategory() !== this.pendingCategory()) return true;
     const applied = this.selectedTags();
@@ -85,7 +86,7 @@ export class ProductsComponent {
 
       const perPage = this.productPerPage();
       const offset = (this.paginationService.currentPage() - 1) * perPage;
-      this.loadProducts({
+      this.runLoad({
         query: q,
         offset,
         limit: perPage,
@@ -114,7 +115,7 @@ export class ProductsComponent {
   updateProductsPerPage(value: number) {
     this.productPerPage.set(value);
     this.paginationService.setCurrentPage(1);
-    this.loadProducts({
+    this.runLoad({
       query: this.lastQuery,
       offset: 0,
       limit: this.productPerPage(),
@@ -205,14 +206,6 @@ export class ProductsComponent {
     this.sortOption.set(value);
     this.paginationService.setCurrentPage(1);
     this.updateQueryParams();
-    this.loadProducts({
-      query: this.lastQuery,
-      offset: 0,
-      limit: this.productPerPage(),
-      categoryId: this.categoryIdForRequest(),
-      tagIds: this.tagIdsForRequest(),
-      ...this.sortParams(),
-    });
   }
 
   private sortParams(): { sortBy?: 'price' | 'title' | 'stock' | 'slug' | 'isFeatured'; sortOrder?: 'ASC' | 'DESC' } {
@@ -231,5 +224,15 @@ export class ProductsComponent {
       default:
         return {};
     }
+  }
+
+  private async runLoad(params: ProductOptions) {
+    await this.loadProducts(params);
+    const products = this.productResponse()?.products ?? [];
+    const keyed = products.map((p, idx) => ({
+      ...p,
+      __viewKey: `${this.sortOption()}-${this.paginationService.currentPage()}-${Date.now()}-${idx}-${p.id}`
+    }));
+    this.viewProducts.set(keyed);
   }
 }
