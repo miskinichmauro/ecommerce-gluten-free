@@ -59,6 +59,15 @@ export class MobileProductFiltersComponent implements OnInit {
     const nextCategory = this.pendingCategory() === id ? 'all' : id;
     this.pendingCategory.set(nextCategory);
     this.pendingTags.set(new Set());
+
+    if (nextCategory === 'all') {
+      this.selectedCategory.set('all');
+      this.selectedTags.set(new Set());
+      this.updateQueryParams(true);
+      this.loadTags(undefined);
+      return;
+    }
+
     this.loadTags(nextCategory === 'all' ? undefined : nextCategory);
   }
 
