@@ -6,9 +6,6 @@
       Total de recetas
       <span class="font-bold">{{ total() }}</span>
     </span>
-    @if (loading() || searching()) {
-      <loading class="inline-flex items-center text-primary [&_.loading]:w-5 [&_.loading]:h-5" />
-    }
   </div>
 
   @if (queryIngredients().length) {

@@ -66,3 +66,16 @@
   font-size: 0.82rem;
   color: hsl(var(--bc));
 }
+
+.card__ingredients-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.card__ingredients-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: hsl(var(--bc));
+  margin: 0;
+}
