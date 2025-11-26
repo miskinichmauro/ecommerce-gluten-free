@@ -17,8 +17,8 @@
         @for (ing of queryIngredients(); track ing) {
           <button type="button" class="chip-pill" (click)="removeIngredient(ing)">
             <span class="truncate">{{ ing }}</span>
-            <span class="chip-pill__close inline-flex items-center justify-center">
-              <x-circle class="w-4 h-4" />
+            <span class="inline-flex items-center justify-center shrink-0">
+              <x-circle />
             </span>
           </button>
         }

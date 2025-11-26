@@ -23,16 +23,6 @@
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.chip-pill:hover {
-  background: hsl(var(--b3) / 0.4);
-  border-color: hsl(var(--b3));
-}
-
-.chip-pill__close {
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
 .chip-small {
   display: inline-flex;
   align-items: center;
