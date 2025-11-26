@@ -16,7 +16,6 @@ export class ProductCarruselComponent implements AfterViewInit {
   private initialized = false;
   private listenersAttached = false;
   private lastIndex = 0;
-  private wasCarouselEnabled = false;
 
   ngAfterViewInit() {
     this.configureSwiper();
@@ -123,6 +122,7 @@ export class ProductCarruselComponent implements AfterViewInit {
   }
 
   private resetToFirstSlide(swiperEl: any) {
+    this.lastIndex = 0;
     swiperEl.swiper?.slideTo?.(0, 0);
     swiperEl.swiper?.updateSlides?.();
   }
