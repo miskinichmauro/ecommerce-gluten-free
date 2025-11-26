@@ -11,7 +11,7 @@
 </div>
 
 @if ((cartItems$ | async)?.length! > 0) {
-  <div class="navbar cart-bar bg-base-100 shadow-sm border-t fixed bottom-0 left-0 right-0 px-6 justify-between">
+  <div class="navbar cart-bar bg-base-100 border-t border-base-300 fixed bottom-0 left-0 right-0 px-6 justify-between">
     <div class="text-lg font-semibold">
       Total: {{ (total$ | async)! | guaranies }}
     </div>

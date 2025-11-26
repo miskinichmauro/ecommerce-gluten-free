@@ -15,7 +15,7 @@
       <p class="card__ingredients-title">Ingredientes</p>
       <div class="card__ingredients">
         @for (name of ingredients(); track name) {
-          <span class="card__chip">{{ name }}</span>
+          <span class="card__chip" [class.card__chip--match]="isIngredientSearched(name)">{{ name }}</span>
         }
       </div>
     </div>

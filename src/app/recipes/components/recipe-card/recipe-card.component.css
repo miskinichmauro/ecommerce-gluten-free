@@ -67,6 +67,12 @@
   color: hsl(var(--bc));
 }
 
+.card__chip--match {
+  font-weight: 700;
+  background: hsl(var(--p) / 0.12);
+  border-color: hsl(var(--p) / 0.45);
+}
+
 .card__ingredients-wrap {
   display: flex;
   flex-direction: column;
