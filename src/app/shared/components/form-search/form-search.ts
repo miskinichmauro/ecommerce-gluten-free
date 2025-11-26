@@ -130,16 +130,14 @@ export class FormSearch {
   performSearch(q: string) {
     this.closeSuggestions();
     this.router.navigate(['/products'], { queryParams: { q } });
-    // Clear input without triggering another search
     this.searchControl.setValue('', { emitEvent: false });
-    // Notify parent (navbar) to close mobile search if open
+    this.blurInput();
     this.searched.emit();
   }
 
   selectSuggestion(product: Product) {
     this.closeSuggestions();
     this.router.navigate(['/product', product.slug]);
-    // Also clear and notify to close mobile overlay
     this.searchControl.setValue('', { emitEvent: false });
     this.searched.emit();
   }
@@ -163,6 +161,10 @@ export class FormSearch {
         this.activeIndex = -1;
         this.cdr.markForCheck();
       });
+  }
+
+  private blurInput() {
+    this.searchInput?.nativeElement?.blur();
   }
 
   private fetchSuggestions(term: string) {
