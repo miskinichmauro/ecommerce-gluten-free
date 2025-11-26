@@ -86,6 +86,8 @@ export class FormSearch {
 
   clearSearchOrClose() {
     if ((this.searchControl.value ?? '').length === 0) {
+      this.closeSuggestions();
+      this.searchControl.setValue('', { emitEvent: false });
       this.dismissed.emit();
       return;
     }

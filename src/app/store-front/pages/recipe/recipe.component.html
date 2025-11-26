@@ -1,22 +1,35 @@
 <h1 class="text-3xl font-bold mb-2 mt-6">Recetas</h1>
 
 <section class="recipes-layout">
-  <div class="inline-flex items-center gap-2 text-base-content">
-    Total de recetas
-    <span class="font-bold">{{ total() }}</span>
+  <div class="inline-flex items-center gap-3 text-base-content">
+    <span class="inline-flex items-center gap-2">
+      Total de recetas
+      <span class="font-bold">{{ total() }}</span>
+    </span>
     @if (loading() || searching()) {
-      <span class="loading loading-spinner loading-sm text-primary"></span>
+      <loading class="inline-flex items-center text-primary [&_.loading]:w-5 [&_.loading]:h-5" />
     }
   </div>
 
   @if (queryIngredients().length) {
-    <div class="chips chips--header">
-      @for (ing of queryIngredients(); track ing) {
-        <button type="button" class="chip-pill" (click)="removeIngredient(ing)">
-          <span class="truncate">{{ ing }}</span>
-          <span class="chip-pill__close">x</span>
-        </button>
-      }
+    <div class="chips chips--header flex items-center gap-2 flex-wrap">
+      <div class="flex gap-2 flex-wrap">
+        @for (ing of queryIngredients(); track ing) {
+          <button type="button" class="chip-pill" (click)="removeIngredient(ing)">
+            <span class="truncate">{{ ing }}</span>
+            <span class="chip-pill__close inline-flex items-center justify-center">
+              <x-circle class="w-4 h-4" />
+            </span>
+          </button>
+        }
+      </div>
+      <button
+        type="button"
+        class="btn btn-sm btn-outline"
+        (click)="clearIngredients()"
+      >
+        Limpiar
+      </button>
     </div>
   }
 

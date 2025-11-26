@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, map, of, switchMap, tap } from 'rxjs';
 import { RecipeService, RecipeSearchResponse } from 'src/app/recipes/services/recipe.service';
+import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { XCircle } from '../x-circle/x-circle';
 import { IngredientSearchStateService } from '@shared/services/ingredient-search-state.service';
 
@@ -42,13 +43,10 @@ export class IngredientSearch {
 
   constructor() {
     // Sync with shared state (navbar/page)
-    effect(
-      () => {
-        const ings = this.state.ingredients();
-        this.selectedIngredients.set(ings ?? []);
-      },
-      { allowSignalWrites: true }
-    );
+    effect(() => {
+      const ings = this.state.ingredients();
+      this.selectedIngredients.set(ings ?? []);
+    });
 
     this.searchControl.valueChanges
       .pipe(
@@ -73,19 +71,13 @@ export class IngredientSearch {
 
   onFocusInput() {
     const term = (this.searchControl.value ?? '').trim();
-    const pool = this.suggestionPool();
-    const base = pool.slice(0, 8);
-    if (!term.length) {
-      this.suggestions.set(base);
-      this.activeIndex.set(base.length ? 0 : -1);
-      this.cdr.markForCheck();
-      return;
-    }
     this.buildSuggestions(term)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((items) => {
-        this.suggestions.set(items.length ? items : base);
-        this.activeIndex.set(items.length ? 0 : -1);
+        const base = this.suggestionPool().slice(0, 8);
+        const next = items.length ? items : base;
+        this.suggestions.set(next);
+        this.activeIndex.set(next.length ? 0 : -1);
         this.cdr.markForCheck();
       });
   }
@@ -172,6 +164,12 @@ export class IngredientSearch {
   private buildSuggestions(term: string) {
     const value = term.trim();
     if (!value) {
+      if (!this.suggestionPool().length) {
+        return this.recipeService.getAll().pipe(
+          tap((recipes) => this.updateSuggestionPool(recipes as Recipe[])),
+          map(() => this.suggestionPool().slice(0, 8))
+        );
+      }
       return of(this.suggestionPool().slice(0, 8));
     }
 
@@ -227,14 +225,23 @@ export class IngredientSearch {
       });
   }
 
-  private updateSuggestionPool(res: RecipeSearchResponse) {
+  private updateSuggestionPool(res: RecipeSearchResponse | Recipe[]) {
     const set = new Set<string>(this.suggestionPool());
-    res.recipes?.forEach((recipe) => {
+    const recipes = Array.isArray(res) ? res : res.recipes ?? [];
+    recipes.forEach((recipe) => {
+      let added = false;
       recipe.recipeIngredients?.forEach((ri) => {
         const name = ri?.ingredient?.name?.trim();
-        if (name) set.add(name);
+        if (name) {
+          set.add(name);
+          added = true;
+        }
       });
+      if (!added && recipe.title) {
+        set.add(recipe.title.trim());
+      }
     });
     this.suggestionPool.set(Array.from(set));
   }
+
 }

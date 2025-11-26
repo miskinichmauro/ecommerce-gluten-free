@@ -4,11 +4,12 @@ import { LoadingComponent } from 'src/app/shared/components/loading/loading.comp
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { RecipeCardComponent } from 'src/app/recipes/components/recipe-card/recipe-card.component';
+import { XCircle } from 'src/app/shared/components/x-circle/x-circle';
 import { IngredientSearchStateService } from '@shared/services/ingredient-search-state.service';
 
 @Component({
   selector: 'app-recipe',
-  imports: [LoadingComponent, RecipeCardComponent],
+  imports: [LoadingComponent, RecipeCardComponent, XCircle],
   templateUrl: './recipe.component.html',
   styleUrls: ['./recipe.component.css', './recipe.chips.css'],
 })
@@ -25,9 +26,7 @@ export class RecipeComponent implements OnInit {
   total = signal<number>(0);
   queryIngredients = signal<string[]>([]);
 
-  ngOnInit(): void {
-    this.getRecipes();
-
+  constructor() {
     effect(() => {
       const res = this.ingredientState.results();
       if (res) {
@@ -68,6 +67,10 @@ export class RecipeComponent implements OnInit {
     });
   }
 
+  ngOnInit(): void {
+    this.getRecipes();
+  }
+
   async getRecipes() {
     this.loading.set(true);
     this.error.set(null);
@@ -101,6 +104,17 @@ export class RecipeComponent implements OnInit {
     }
 
     this.fetchByIngredients(next);
+  }
+
+  clearIngredients() {
+    this.ingredientState.setIngredients([]);
+    this.ingredientState.setResults(null);
+    this.queryIngredients.set([]);
+    this.recipes.set(this.allRecipes());
+    this.total.set(this.allRecipes().length);
+    this.searching.set(false);
+    this.loading.set(false);
+    this.cdr.markForCheck();
   }
 
   private async fetchByIngredients(ingredients: string[]) {
