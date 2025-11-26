@@ -43,11 +43,14 @@ export class IngredientSearch {
   dropdownOpen = computed(() => this.suggestions().length > 0);
 
   constructor() {
-    // Sync with shared state (navbar/page)
     effect(() => {
       const ings = this.state.ingredients();
       this.selectedIngredients.set(ings ?? []);
     });
+
+    this.recipeService.getAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((recipes) => this.updateSuggestionPool(recipes as Recipe[]));
 
     this.searchControl.valueChanges
       .pipe(
@@ -245,5 +248,4 @@ export class IngredientSearch {
     });
     this.suggestionPool.set(Array.from(set));
   }
-
 }
