@@ -18,3 +18,14 @@
   margin-left: 0.5rem;
   padding-left: 0.25rem;
 }
+
+.sidebar-items-panel {
+  overscroll-behavior: contain;
+}
+
+.sidebar-items-panel nav {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  max-height: calc(100vh - 3rem);
+}

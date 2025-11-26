@@ -1,3 +1,14 @@
 :host {
   display: block;
 }
+
+.sidebar-panel {
+  overscroll-behavior: contain;
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
