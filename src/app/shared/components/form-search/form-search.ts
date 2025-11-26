@@ -79,6 +79,7 @@ export class FormSearch {
   }
 
   closeSuggestions() {
+    this.suppressSuggestions = true;
     this.suggestions = [];
     this.activeIndex = -1;
     this.cdr.markForCheck();
