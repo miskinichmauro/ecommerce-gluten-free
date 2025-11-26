@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, input, signal, effect } from '@angular/core';
+import { Component, HostListener, inject, input, signal } from '@angular/core';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
 import { XCircle } from "../x-circle/x-circle";
@@ -31,15 +31,6 @@ export class SidebarItemsComponent {
       const onProducts = e.urlAfterRedirects.startsWith('/products');
       this.isOnProducts.set(onProducts);
       if (!onProducts) this.showProductFilters.set(false);
-    });
-
-    effect(() => {
-      const open = this.configurationService.sidebarItemsStatus();
-      if (open === 'open') {
-        this.lockBodyScroll();
-      } else {
-        this.unlockBodyScroll();
-      }
     });
   }
 
@@ -95,17 +86,5 @@ export class SidebarItemsComponent {
     } else {
       this.router.navigate([item.routerLink]);
     }
-  }
-
-  private lockBodyScroll() {
-    if (typeof document === 'undefined') return;
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-  }
-
-  private unlockBodyScroll() {
-    if (typeof document === 'undefined') return;
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
   }
 }

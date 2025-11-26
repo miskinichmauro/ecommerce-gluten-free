@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, effect } from '@angular/core';
+import { Component, computed, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -37,17 +37,6 @@ export class SidebarPageComponent {
     }
   });
 
-  constructor() {
-    effect(() => {
-      const status = this.open();
-      if (status === 'open') {
-        this.lockBodyScroll();
-      } else {
-        this.unlockBodyScroll();
-      }
-    });
-  }
-
   close() {
     this.configurationService.closeSidebar();
   }
@@ -58,17 +47,4 @@ export class SidebarPageComponent {
       this.close();
     }
   }
-
-  private lockBodyScroll() {
-    if (typeof document === 'undefined') return;
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-  }
-
-  private unlockBodyScroll() {
-    if (typeof document === 'undefined') return;
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-  }
 }
-
