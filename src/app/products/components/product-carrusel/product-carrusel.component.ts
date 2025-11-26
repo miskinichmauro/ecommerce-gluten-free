@@ -15,6 +15,8 @@ export class ProductCarruselComponent implements AfterViewInit {
   @ViewChild('swiper') swiperRef!: ElementRef<any>;
   private initialized = false;
   private listenersAttached = false;
+  private lastIndex = 0;
+  private wasCarouselEnabled = false;
 
   ngAfterViewInit() {
     this.configureSwiper();
@@ -32,6 +34,7 @@ export class ProductCarruselComponent implements AfterViewInit {
     const items = this.products() ?? [];
     const enableCarousel = items.length > 1;
     const instance = swiperEl.swiper as any | undefined;
+    const currentIndex = instance?.realIndex ?? this.lastIndex ?? 0;
 
     if (enableCarousel) {
       swiperEl.navigation = true;
@@ -55,7 +58,6 @@ export class ProductCarruselComponent implements AfterViewInit {
         instance.params.autoplay = instance.params.autoplay || {};
         instance.params.autoplay.pauseOnMouseEnter = true;
         instance.params.autoplay.disableOnInteraction = false;
-        this.resetToFirstSlide(swiperEl);
         this.attachHoverHandlers(swiperEl);
       }
     } else {
@@ -81,9 +83,11 @@ export class ProductCarruselComponent implements AfterViewInit {
     if (this.initialized) {
       swiperEl.updateSwiper?.();
       if (enableCarousel) {
-        this.resetToFirstSlide(swiperEl);
+        this.lastIndex = currentIndex;
+        swiperEl.swiper?.slideTo?.(this.lastIndex, 0);
         swiperEl.swiper?.autoplay?.start?.();
       } else {
+        this.lastIndex = 0;
         swiperEl.swiper?.autoplay?.stop?.();
       }
     } else {
@@ -95,6 +99,8 @@ export class ProductCarruselComponent implements AfterViewInit {
       }
       this.initialized = true;
     }
+
+    this.wasCarouselEnabled = enableCarousel;
   }
 
   private attachHoverHandlers(swiperEl: any) {
