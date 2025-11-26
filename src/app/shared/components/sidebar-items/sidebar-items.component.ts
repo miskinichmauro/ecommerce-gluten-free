@@ -27,6 +27,8 @@ export class SidebarItemsComponent implements OnDestroy {
   private bodyPositionBackup: string | null = null;
   private bodyTopBackup: string | null = null;
   private bodyWidthBackup: string | null = null;
+  private htmlOverflowBackup: string | null = null;
+  private htmlPositionBackup: string | null = null;
   private scrollY = 0;
 
   constructor() {
@@ -108,13 +110,18 @@ export class SidebarItemsComponent implements OnDestroy {
 
   private lockBodyScroll() {
     const bodyStyle = document.body.style;
+    const htmlStyle = document.documentElement.style;
     if (this.bodyOverflowBackup === null) {
       this.bodyOverflowBackup = bodyStyle.overflow || '';
       this.bodyPositionBackup = bodyStyle.position || '';
       this.bodyTopBackup = bodyStyle.top || '';
       this.bodyWidthBackup = bodyStyle.width || '';
+      this.htmlOverflowBackup = htmlStyle.overflow || '';
+      this.htmlPositionBackup = htmlStyle.position || '';
     }
     this.scrollY = window.scrollY || window.pageYOffset || 0;
+    htmlStyle.overflow = 'hidden';
+    htmlStyle.position = 'fixed';
     bodyStyle.position = 'fixed';
     bodyStyle.top = `-${this.scrollY}px`;
     bodyStyle.width = '100%';
@@ -123,7 +130,10 @@ export class SidebarItemsComponent implements OnDestroy {
 
   private unlockBodyScroll(force = false) {
     const bodyStyle = document.body.style;
+    const htmlStyle = document.documentElement.style;
     if (this.bodyOverflowBackup !== null || force) {
+      htmlStyle.overflow = this.htmlOverflowBackup ?? '';
+      htmlStyle.position = this.htmlPositionBackup ?? '';
       bodyStyle.overflow = this.bodyOverflowBackup ?? '';
       bodyStyle.position = this.bodyPositionBackup ?? '';
       bodyStyle.top = this.bodyTopBackup ?? '';
@@ -133,6 +143,8 @@ export class SidebarItemsComponent implements OnDestroy {
       this.bodyPositionBackup = null;
       this.bodyTopBackup = null;
       this.bodyWidthBackup = null;
+      this.htmlOverflowBackup = null;
+      this.htmlPositionBackup = null;
     }
   }
 }

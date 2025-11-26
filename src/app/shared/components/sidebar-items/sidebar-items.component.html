@@ -1,5 +1,5 @@
 <div
-  class="sidebar-shell fixed inset-0 bg-base-100 z-50 transform transition-transform duration-500 -translate-x-full"
+  class="sidebar-shell fixed inset-0 bg-base-100 z-50 transform transition-transform duration-500 -translate-x-full flex flex-col"
   [class.translate-x-0]="isOpen()"
 >
   <div class="flex items-center justify-between px-4 h-14 border-b border-base-300 shrink-0">
@@ -9,46 +9,48 @@
     </button>
   </div>
 
-  <nav class="flex flex-col gap-2 px-4 overflow-y-auto pb-6 h-[calc(100%-3.5rem)] touch-pan-y overscroll-contain">
-    @for (item of menuItems(); track $index) {
-      @if (!item.adminOnly || authService.isAdmin()) {
-      @if (item.routerLink === '/products') {
-        <button
-          class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200 flex items-center gap-2"
-          type="button"
-          (click)="handleProductClick()"
-        >
-          <span>Productos</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-3.5 h-3.5 text-slate-500 transition-transform duration-300"
-            [class.rotate-90]="showProductFilters()"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
+  <div class="sidebar-content flex-1 overflow-y-auto px-4 pb-6">
+    <nav class="flex flex-col gap-2">
+      @for (item of menuItems(); track $index) {
+        @if (!item.adminOnly || authService.isAdmin()) {
+        @if (item.routerLink === '/products') {
+          <button
+            class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200 flex items-center gap-2"
+            type="button"
+            (click)="handleProductClick()"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+            <span>Productos</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-3.5 h-3.5 text-slate-500 transition-transform duration-300"
+              [class.rotate-90]="showProductFilters()"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
 
-        <div
-          class="submenu-container"
-          [class.open]="showProductFilters()"
-        >
-          <div class="submenu-inner">
-            <mobile-product-filters class="block lg:hidden mt-2" />
+          <div
+            class="submenu-container"
+            [class.open]="showProductFilters()"
+          >
+            <div class="submenu-inner">
+              <mobile-product-filters class="block lg:hidden mt-2" />
+            </div>
           </div>
-        </div>
-      } @else {
-        <a
-          class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200"
-          (click)="handleMenuClick(item)"
-        >
-          {{ item.label }}
-        </a>
+        } @else {
+          <a
+            class="p-2 cursor-pointer rounded-md text-base-content hover:bg-base-200 transition-colors duration-200"
+            (click)="handleMenuClick(item)"
+          >
+            {{ item.label }}
+          </a>
+        }
+        }
       }
-      }
-    }
-  </nav>
+    </nav>
+  </div>
 </div>
