@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, input, signal } from '@angular/core';
+import { Component, HostListener, OnDestroy, effect, inject, input, signal } from '@angular/core';
 import { MenuItem } from 'src/app/store-front/components/interfaces/menu-item.interface';
 import { ConfigurationService } from '../../services/configuration.service';
 import { XCircle } from "../x-circle/x-circle";
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './sidebar-items.component.html',
   styleUrl: './sidebar-items.component.css',
 })
-export class SidebarItemsComponent {
+export class SidebarItemsComponent implements OnDestroy {
   menuItems = input.required<MenuItem[]>();
 
   configurationService = inject(ConfigurationService);
@@ -23,6 +23,11 @@ export class SidebarItemsComponent {
   showProductFilters = signal(false);
   isOnProducts = signal(false);
   isMobile = signal(false);
+  private bodyOverflowBackup: string | null = null;
+  private bodyPositionBackup: string | null = null;
+  private bodyTopBackup: string | null = null;
+  private bodyWidthBackup: string | null = null;
+  private scrollY = 0;
 
   constructor() {
     this.isOnProducts.set(this.router.url.startsWith('/products'));
@@ -32,6 +37,19 @@ export class SidebarItemsComponent {
       this.isOnProducts.set(onProducts);
       if (!onProducts) this.showProductFilters.set(false);
     });
+
+    effect(() => {
+      const open = this.configurationService.sidebarItemsStatus() === 'open';
+      if (open) {
+        this.lockBodyScroll();
+      } else {
+        this.unlockBodyScroll();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.unlockBodyScroll(true);
   }
 
   isOpen() : boolean {
@@ -85,6 +103,36 @@ export class SidebarItemsComponent {
       this.router.navigateByUrl(item.routerLink);
     } else {
       this.router.navigate([item.routerLink]);
+    }
+  }
+
+  private lockBodyScroll() {
+    const bodyStyle = document.body.style;
+    if (this.bodyOverflowBackup === null) {
+      this.bodyOverflowBackup = bodyStyle.overflow || '';
+      this.bodyPositionBackup = bodyStyle.position || '';
+      this.bodyTopBackup = bodyStyle.top || '';
+      this.bodyWidthBackup = bodyStyle.width || '';
+    }
+    this.scrollY = window.scrollY || window.pageYOffset || 0;
+    bodyStyle.position = 'fixed';
+    bodyStyle.top = `-${this.scrollY}px`;
+    bodyStyle.width = '100%';
+    bodyStyle.overflow = 'hidden';
+  }
+
+  private unlockBodyScroll(force = false) {
+    const bodyStyle = document.body.style;
+    if (this.bodyOverflowBackup !== null || force) {
+      bodyStyle.overflow = this.bodyOverflowBackup ?? '';
+      bodyStyle.position = this.bodyPositionBackup ?? '';
+      bodyStyle.top = this.bodyTopBackup ?? '';
+      bodyStyle.width = this.bodyWidthBackup ?? '';
+      window.scrollTo(0, this.scrollY);
+      this.bodyOverflowBackup = null;
+      this.bodyPositionBackup = null;
+      this.bodyTopBackup = null;
+      this.bodyWidthBackup = null;
     }
   }
 }

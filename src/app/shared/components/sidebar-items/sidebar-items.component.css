@@ -2,6 +2,20 @@
   display: block;
 }
 
+.sidebar-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.sidebar-shell nav {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
 .submenu-container {
   overflow: hidden;
   max-height: 0;

@@ -1,14 +1,15 @@
 <div
-  class="fixed inset-0 bg-base-100 z-50 transform transition-transform duration-500 flex flex-col -translate-x-full"
+  class="sidebar-shell fixed inset-0 bg-base-100 z-50 transform transition-transform duration-500 -translate-x-full"
   [class.translate-x-0]="isOpen()"
 >
-  <div class="flex justify-end">
+  <div class="flex items-center justify-between px-4 h-14 border-b border-base-300 shrink-0">
+    <span class="text-base font-semibold">Menú</span>
     <button (click)="configurationService.toggleSidebarItemsStatus('closed')" class="p-2">
       <x-circle />
     </button>
   </div>
 
-  <nav class="flex flex-col gap-2 px-4">
+  <nav class="flex flex-col gap-2 px-4 overflow-y-auto pb-6 h-[calc(100%-3.5rem)] touch-pan-y overscroll-contain">
     @for (item of menuItems(); track $index) {
       @if (!item.adminOnly || authService.isAdmin()) {
       @if (item.routerLink === '/products') {
