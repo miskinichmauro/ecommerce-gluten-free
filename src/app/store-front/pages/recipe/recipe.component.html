@@ -12,8 +12,8 @@
   </div>
 
   @if (queryIngredients().length) {
-    <div class="chips chips--header flex items-center gap-2 flex-wrap">
-      <div class="flex gap-2 flex-wrap">
+    <div class="chips chips--header flex flex-wrap items-center gap-3">
+      <div class="flex gap-2 flex-wrap flex-1">
         @for (ing of queryIngredients(); track ing) {
           <button type="button" class="chip-pill" (click)="removeIngredient(ing)">
             <span class="truncate">{{ ing }}</span>
@@ -25,7 +25,7 @@
       </div>
       <button
         type="button"
-        class="btn btn-sm btn-outline"
+        class="ml-auto text-primary text-sm font-semibold underline cursor-pointer"
         (click)="clearIngredients()"
       >
         Limpiar

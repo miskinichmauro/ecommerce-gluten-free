@@ -6,10 +6,11 @@
     }
   </header>
   <p class="card__text">
-    {{ recipe().text || recipe().description || 'Receta sin descripción.' }}
+    {{ recipe().text || recipe().description || 'Receta sin descripci��n.' }}
   </p>
 
   @if (ingredients().length) {
+    <div class="h-px bg-base-200/60" aria-hidden="true"></div>
     <div class="card__ingredients">
       @for (name of ingredients(); track name) {
         <span class="card__chip">{{ name }}</span>

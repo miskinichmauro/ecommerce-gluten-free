@@ -11,7 +11,7 @@
 
   <div class="navbar-center hidden sm:flex">
     @if (isRecipePage()) {
-      <ingredient-search />
+      <ingredient-search (submitted)="onSearchSubmitted()" />
     } @else {
       <form-search (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
     }
@@ -30,7 +30,7 @@
   <div class="fixed top-0 inset-x-0 z-50 bg-base-100 shadow-md -translate-y-full transition-transform duration-200 peer-checked:translate-y-0">
     <div class="p-4">
       @if (isRecipePage()) {
-        <ingredient-search #mobileIngredientSearch />
+        <ingredient-search #mobileIngredientSearch (submitted)="onSearchSubmitted()" />
       } @else {
         <form-search #mobileSearch (searched)="onSearchSubmitted()" (dismissed)="onSearchDismissed()" />
       }

@@ -35,6 +35,7 @@ export class IngredientSearch {
 
   @Output() resultsChange = new EventEmitter<RecipeSearchResponse>();
   @Output() ingredientsChange = new EventEmitter<string[]>();
+  @Output() submitted = new EventEmitter<void>();
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('suggestContainer') suggestContainer!: ElementRef;
@@ -123,6 +124,7 @@ export class IngredientSearch {
     this.state.setIngredients(this.selectedIngredients());
     this.resetInput();
     this.closeSuggestions();
+    this.submitted.emit();
     this.fetchRecipes();
   }
 
