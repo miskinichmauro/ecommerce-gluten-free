@@ -32,6 +32,7 @@ export class ProductComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.resetScrollTop();
     this.loadProduct();
   }
 
@@ -42,6 +43,7 @@ export class ProductComponent implements OnInit {
     try {
       const data = await firstValueFrom(this.productService.getProductByIdSlug(this.productSlug));
       this.product.set(data);
+      this.resetScrollTop();
     } catch (err) {
       this.error.set('Error al cargar el producto');
     } finally {
@@ -132,5 +134,10 @@ export class ProductComponent implements OnInit {
       value = maxStock;
     }
     this.quantity.set(value);
+  }
+
+  private resetScrollTop() {
+    if (typeof window === 'undefined') return;
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }));
   }
 }
