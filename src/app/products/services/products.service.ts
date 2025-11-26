@@ -41,12 +41,14 @@ export class ProductService {
       isFeatured = false,
       categoryId,
       tagIds,
-      query
+      query,
+      sortBy,
+      sortOrder
     } = options;
 
     const cacheKey = isFeatured
       ? 'isFeatured'
-      : `${limit}-${offset}-${categoryId ?? 'all'}-${(tagIds ?? []).join(',')}-${query ?? ''}`;
+      : `${limit}-${offset}-${categoryId ?? 'all'}-${(tagIds ?? []).join(',')}-${query ?? ''}-${sortBy ?? 'none'}-${sortOrder ?? 'none'}`;
 
     if (this.productsCache.has(cacheKey)) {
       return of(this.productsCache.get(cacheKey)!);
@@ -57,6 +59,8 @@ export class ProductService {
     if (categoryId) params['categoryId'] = categoryId;
     if (tagIds && tagIds.length) params['tagIds'] = tagIds;
     if (query) params['query'] = query;
+    if (sortBy) params['sortBy'] = sortBy;
+    if (sortOrder) params['sortOrder'] = sortOrder;
 
     const response = this.http
       .get<ProductResponse>(baseUrlProducts, {
@@ -76,12 +80,16 @@ export class ProductService {
       categoryId,
       tagIds,
       isFeatured,
+      sortBy,
+      sortOrder,
     } = options;
 
     const params: Record<string, any> = { query, limit, offset };
     if (categoryId) params['categoryId'] = categoryId;
     if (tagIds && tagIds.length) params['tagIds'] = tagIds;
     if (isFeatured !== undefined) params['isFeatured'] = isFeatured;
+    if (sortBy) params['sortBy'] = sortBy;
+    if (sortOrder) params['sortOrder'] = sortOrder;
 
     return this.http.get<ProductResponse>(`${baseUrlProducts}/search`, { params, responseType: 'json' });
   }

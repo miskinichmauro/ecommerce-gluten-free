@@ -41,6 +41,7 @@ export class ProductsComponent {
   pendingCategory = signal<string>('all');
   selectedTags = signal<Set<string>>(new Set());
   pendingTags = signal<Set<string>>(new Set());
+  sortOption = signal<string>('relevance');
   hasPendingChanges = computed(() => {
     if (this.selectedCategory() !== this.pendingCategory()) return true;
     const applied = this.selectedTags();
@@ -67,6 +68,7 @@ export class ProductsComponent {
       const categoryId = params.get('categoryId') ?? 'all';
       const tagIdsParam = params.get('tagIds') ?? '';
       const tagIds = tagIdsParam ? tagIdsParam.split(',').filter(Boolean) : [];
+      const sort = params.get('sort') ?? 'relevance';
 
       if (this.searchControl.value !== q) {
         this.searchControl.setValue(q, { emitEvent: false });
@@ -77,10 +79,18 @@ export class ProductsComponent {
       const tagSet = new Set(tagIds);
       this.selectedTags.set(tagSet);
       this.pendingTags.set(new Set(tagSet));
+      this.sortOption.set(sort);
 
       const perPage = this.productPerPage();
       const offset = (this.paginationService.currentPage() - 1) * perPage;
-      this.loadProducts({ query: q, offset, limit: perPage, categoryId: this.categoryIdForRequest(), tagIds: this.tagIdsForRequest() });
+      this.loadProducts({
+        query: q,
+        offset,
+        limit: perPage,
+        categoryId: this.categoryIdForRequest(),
+        tagIds: this.tagIdsForRequest(),
+        ...this.sortParams()
+      });
       this.loadTagsForCategory(this.pendingCategoryForRequest(), { resetSelection: false });
     });
 
@@ -108,6 +118,7 @@ export class ProductsComponent {
       limit: this.productPerPage(),
       categoryId: this.categoryIdForRequest(),
       tagIds: this.tagIdsForRequest(),
+      ...this.sortParams(),
     });
   }
 
@@ -154,6 +165,7 @@ export class ProductsComponent {
         q: this.lastQuery || null,
         categoryId: this.selectedCategory() === 'all' ? null : this.selectedCategory(),
         tagIds: tags.length ? tags.join(',') : null,
+        sort: this.sortOption() === 'relevance' ? null : this.sortOption(),
       },
       queryParamsHandling: 'merge',
     });
@@ -185,5 +197,37 @@ export class ProductsComponent {
 
   private isDesktop(): boolean {
     return typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
+  }
+
+  onSortChange(value: string) {
+    this.sortOption.set(value);
+    this.paginationService.setCurrentPage(1);
+    this.updateQueryParams();
+    this.loadProducts({
+      query: this.lastQuery,
+      offset: 0,
+      limit: this.productPerPage(),
+      categoryId: this.categoryIdForRequest(),
+      tagIds: this.tagIdsForRequest(),
+      ...this.sortParams(),
+    });
+  }
+
+  private sortParams(): { sortBy?: 'price' | 'title' | 'createdAt'; sortOrder?: 'ASC' | 'DESC' } {
+    const sort = this.sortOption();
+    switch (sort) {
+      case 'price-asc':
+        return { sortBy: 'price', sortOrder: 'ASC' };
+      case 'price-desc':
+        return { sortBy: 'price', sortOrder: 'DESC' };
+      case 'title-asc':
+        return { sortBy: 'title', sortOrder: 'ASC' };
+      case 'title-desc':
+        return { sortBy: 'title', sortOrder: 'DESC' };
+      case 'newest':
+        return { sortBy: 'createdAt', sortOrder: 'DESC' };
+      default:
+        return {};
+    }
   }
 }

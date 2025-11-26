@@ -80,20 +80,37 @@
         </span>
       </span>
 
-      <div class="flex items-center justify-end gap-2">
-        <label class="opacity-70">Mostrar</label>
-        <span class="inline-flex items-center gap-2">
+      <div class="flex flex-wrap items-center justify-end gap-3">
+        <div class="flex items-center gap-2">
+          <label class="opacity-70">Ordenar</label>
           <select
-            class="select select-bordered select-sm w-16 focus-within:outline-none"
-            (change)="updateProductsPerPage(+selectPerPage.value)"
-            #selectPerPage
+            class="select select-bordered select-sm w-40 focus-within:outline-none cursor-pointer"
+            (change)="onSortChange(sortSelect.value)"
+            #sortSelect
           >
-            <option [selected]="productPerPage() === 8" value="8">8</option>
-            <option [selected]="productPerPage() === 20" value="20">20</option>
-            <option [selected]="productPerPage() === 50" value="50">50</option>
-            <option [selected]="productPerPage() === 100" value="100">100</option>
+            <option [selected]="sortOption() === 'relevance'" value="relevance">Relevancia</option>
+            <option [selected]="sortOption() === 'price-asc'" value="price-asc">Precio: menor a mayor</option>
+            <option [selected]="sortOption() === 'price-desc'" value="price-desc">Precio: mayor a menor</option>
+            <option [selected]="sortOption() === 'title-asc'" value="title-asc">Nombre A-Z</option>
+            <option [selected]="sortOption() === 'title-desc'" value="title-desc">Nombre Z-A</option>
+            <option [selected]="sortOption() === 'newest'" value="newest">Novedades</option>
           </select>
-        </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="opacity-70">Mostrar</label>
+          <span class="inline-flex items-center gap-2">
+            <select
+              class="select select-bordered select-sm w-16 focus-within:outline-none cursor-pointer"
+              (change)="updateProductsPerPage(+selectPerPage.value)"
+              #selectPerPage
+            >
+              <option [selected]="productPerPage() === 8" value="8">8</option>
+              <option [selected]="productPerPage() === 20" value="20">20</option>
+              <option [selected]="productPerPage() === 50" value="50">50</option>
+              <option [selected]="productPerPage() === 100" value="100">100</option>
+            </select>
+          </span>
+        </div>
       </div>
     </div>
 

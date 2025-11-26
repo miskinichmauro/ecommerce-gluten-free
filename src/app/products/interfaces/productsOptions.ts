@@ -5,4 +5,6 @@ interface ProductOptions {
   query?: string;
   categoryId?: string;
   tagIds?: string[];
+  sortBy?: 'price' | 'title' | 'createdAt';
+  sortOrder?: 'ASC' | 'DESC';
 }
