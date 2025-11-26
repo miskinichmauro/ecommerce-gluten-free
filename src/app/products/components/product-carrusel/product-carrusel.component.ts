@@ -38,7 +38,8 @@ export class ProductCarruselComponent implements AfterViewInit {
       swiperEl.rewind = true;
       swiperEl.centeredSlides = true;
       swiperEl.centeredSlidesBounds = true;
-      swiperEl.loop = items.length > 2;
+      swiperEl.loop = false;
+      swiperEl.initialSlide = 0;
       swiperEl.allowTouchMove = true;
       swiperEl.autoplay = { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true };
       swiperEl.speed = 800;
@@ -54,6 +55,7 @@ export class ProductCarruselComponent implements AfterViewInit {
         instance.params.autoplay = instance.params.autoplay || {};
         instance.params.autoplay.pauseOnMouseEnter = true;
         instance.params.autoplay.disableOnInteraction = false;
+        this.resetToFirstSlide(swiperEl);
         this.attachHoverHandlers(swiperEl);
       }
     } else {
@@ -79,13 +81,18 @@ export class ProductCarruselComponent implements AfterViewInit {
     if (this.initialized) {
       swiperEl.updateSwiper?.();
       if (enableCarousel) {
-        swiperEl.swiper?.slideToLoop?.(0);
+        this.resetToFirstSlide(swiperEl);
         swiperEl.swiper?.autoplay?.start?.();
       } else {
         swiperEl.swiper?.autoplay?.stop?.();
       }
     } else {
       swiperEl.initialize();
+      if (enableCarousel) {
+        // Asegurar que el autoplay arranque desde el primer slide real
+        this.resetToFirstSlide(swiperEl);
+        swiperEl.swiper?.autoplay?.start?.();
+      }
       this.initialized = true;
     }
   }
@@ -107,5 +114,10 @@ export class ProductCarruselComponent implements AfterViewInit {
   private detachHoverHandlers(swiperEl: any) {
     // Not removing listeners to keep logic simple; autoplay is stopped when carousel is disabled.
     swiperEl.swiper?.autoplay?.stop?.();
+  }
+
+  private resetToFirstSlide(swiperEl: any) {
+    swiperEl.swiper?.slideTo?.(0, 0);
+    swiperEl.swiper?.updateSlides?.();
   }
 }
