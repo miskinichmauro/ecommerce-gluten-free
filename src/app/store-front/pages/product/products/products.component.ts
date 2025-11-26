@@ -68,7 +68,9 @@ export class ProductsComponent {
       const categoryId = params.get('categoryId') ?? 'all';
       const tagIdsParam = params.get('tagIds') ?? '';
       const tagIds = tagIdsParam ? tagIdsParam.split(',').filter(Boolean) : [];
-      const sort = params.get('sort') ?? 'relevance';
+      const allowedSorts = ['relevance','price-asc','price-desc','title-asc','title-desc','featured'];
+      const sortParam = params.get('sort') ?? 'relevance';
+      const sort = allowedSorts.includes(sortParam) ? sortParam : 'relevance';
 
       if (this.searchControl.value !== q) {
         this.searchControl.setValue(q, { emitEvent: false });
@@ -213,7 +215,7 @@ export class ProductsComponent {
     });
   }
 
-  private sortParams(): { sortBy?: 'price' | 'title' | 'createdAt'; sortOrder?: 'ASC' | 'DESC' } {
+  private sortParams(): { sortBy?: 'price' | 'title' | 'stock' | 'slug' | 'isFeatured'; sortOrder?: 'ASC' | 'DESC' } {
     const sort = this.sortOption();
     switch (sort) {
       case 'price-asc':
@@ -224,8 +226,8 @@ export class ProductsComponent {
         return { sortBy: 'title', sortOrder: 'ASC' };
       case 'title-desc':
         return { sortBy: 'title', sortOrder: 'DESC' };
-      case 'newest':
-        return { sortBy: 'createdAt', sortOrder: 'DESC' };
+      case 'featured':
+        return { sortBy: 'isFeatured', sortOrder: 'DESC' };
       default:
         return {};
     }
