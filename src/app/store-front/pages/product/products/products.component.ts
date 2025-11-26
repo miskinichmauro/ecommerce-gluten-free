@@ -81,7 +81,7 @@ export class ProductsComponent {
       const perPage = this.productPerPage();
       const offset = (this.paginationService.currentPage() - 1) * perPage;
       this.loadProducts({ query: q, offset, limit: perPage, categoryId: this.categoryIdForRequest(), tagIds: this.tagIdsForRequest() });
-      this.loadTagsForCategory(this.pendingCategoryForRequest());
+      this.loadTagsForCategory(this.pendingCategoryForRequest(), { resetSelection: false });
     });
 
     this.searchControl.valueChanges
@@ -113,14 +113,18 @@ export class ProductsComponent {
 
   async loadFilters() {
     this.categoryService.getAll().subscribe((categories) => this.categories.set(categories));
-    this.loadTagsForCategory(this.categoryIdForRequest());
+    this.loadTagsForCategory(this.categoryIdForRequest(), { resetSelection: false });
   }
 
   selectCategory(id: string) {
     const nextCategory = this.pendingCategory() === id ? 'all' : id;
     this.pendingCategory.set(nextCategory);
     this.pendingTags.set(new Set());
-    this.loadTagsForCategory(this.pendingCategoryForRequest());
+    this.loadTagsForCategory(this.pendingCategoryForRequest(), { resetSelection: true });
+
+    if (this.isDesktop()) {
+      this.applyFilters();
+    }
   }
 
   resetTags() {
@@ -155,11 +159,14 @@ export class ProductsComponent {
     });
   }
 
-  private loadTagsForCategory(categoryId?: string | undefined) {
+  private loadTagsForCategory(categoryId?: string | undefined, options: { resetSelection?: boolean } = {}) {
+    const { resetSelection = true } = options;
     this.tagService.getAll(categoryId).subscribe((tags) => {
       this.tags.set(tags);
-      this.selectedTags.set(new Set());
-      this.pendingTags.set(new Set());
+      if (resetSelection) {
+        this.selectedTags.set(new Set());
+        this.pendingTags.set(new Set());
+      }
     });
   }
 
@@ -174,5 +181,9 @@ export class ProductsComponent {
   private tagIdsForRequest(): string[] | undefined {
     const tags = Array.from(this.selectedTags());
     return tags.length ? tags : undefined;
+  }
+
+  private isDesktop(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
   }
 }
