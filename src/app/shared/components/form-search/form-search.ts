@@ -23,6 +23,7 @@ export class FormSearch {
   private static nextInputId = 0;
   inputId = `searchControl-${FormSearch.nextInputId++}`;
   private suggestionCache = new Map<string, Product[]>();
+  private suppressSuggestions = false;
 
   activeIndex = -1;
 
@@ -36,6 +37,10 @@ export class FormSearch {
 
     this.searchControl.valueChanges
       .pipe(
+        tap(() => {
+          // Al escribir nuevamente se reactivan las sugerencias
+          this.suppressSuggestions = false;
+        }),
         debounceTime(80),
         switchMap((text) => {
           const term = (text ?? '').trim();
@@ -47,6 +52,7 @@ export class FormSearch {
         })
       )
       .subscribe((products: Product[]) => {
+        if (this.suppressSuggestions) return;
         this.suggestions = products;
         this.activeIndex = -1;
         this.cdr.markForCheck();
@@ -128,6 +134,7 @@ export class FormSearch {
   }
 
   performSearch(q: string) {
+    this.suppressSuggestions = true;
     this.closeSuggestions();
     this.router.navigate(['/products'], { queryParams: { q } });
     this.searchControl.setValue('', { emitEvent: false });
@@ -136,6 +143,7 @@ export class FormSearch {
   }
 
   selectSuggestion(product: Product) {
+    this.suppressSuggestions = true;
     this.closeSuggestions();
     this.router.navigate(['/product', product.slug]);
     this.searchControl.setValue('', { emitEvent: false });
@@ -157,6 +165,7 @@ export class FormSearch {
     this.fetchSuggestions(term)
       .pipe(take(1))
       .subscribe((products) => {
+        if (this.suppressSuggestions) return;
         this.suggestions = products;
         this.activeIndex = -1;
         this.cdr.markForCheck();
