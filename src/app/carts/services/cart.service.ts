@@ -146,17 +146,40 @@ export class CartService {
   }
 
   private normalizeCartItems(source: CartItemsSource | null | undefined): CartItem[] {
-    if (!source) return [];
-    if (Array.isArray(source)) return source;
-    const candidates = source as Record<string, unknown>;
-    const possibleKeys = ['items', 'cartItems', 'data', 'cart', 'results'];
-    for (const key of possibleKeys) {
-      const value = candidates[key];
-      if (Array.isArray(value)) {
-        return value as CartItem[];
+    const rawItems: CartItemsSource | undefined = (() => {
+      if (!source) return [];
+      if (Array.isArray(source)) return source;
+      const candidates = source as Record<string, unknown>;
+      const possibleKeys = ['items', 'cartItems', 'data', 'cart', 'results'];
+      for (const key of possibleKeys) {
+        const value = candidates[key];
+        if (Array.isArray(value)) {
+          return value as CartItem[];
+        }
       }
-    }
-    return [];
+      return [];
+    })();
+
+    if (!Array.isArray(rawItems)) return [];
+
+    return rawItems.map((item) => {
+      const product = (item as any).product as any;
+      const productId = (item as any).productId ?? product?.id ?? item.id;
+      const resolveNumber = (value: any): number => {
+        if (typeof value === 'number') return value;
+        const parsed = Number(value);
+        return isNaN(parsed) ? 0 : parsed;
+      };
+      const unitPrice = resolveNumber((item as any).unitPrice ?? product?.price);
+      const normalizedProduct = product ? { ...product, price: resolveNumber(product?.price ?? unitPrice) } : undefined;
+
+      return {
+        ...item,
+        productId,
+        product: normalizedProduct,
+        quantity: resolveNumber((item as any).quantity ?? 1),
+      } as CartItem;
+    });
   }
 
   private resetCart(): void {

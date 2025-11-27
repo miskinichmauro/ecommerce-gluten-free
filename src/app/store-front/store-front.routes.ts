@@ -8,6 +8,8 @@ import { ContactComponent } from "./pages/contact/contact.component";
 import { TermsConditions } from "@store-front/pages/terms-conditions/terms-conditions";
 import { PrivacyPolicies } from "@store-front/pages/privacy-policies/privacy-policies";
 import { IsAuthenticated } from "@auth/guards/is-authenticated.guard";
+import { CartComponent } from "./pages/cart/cart/cart.component";
+import { CheckoutComponent } from "./pages/checkout/checkout.component";
 
 export const storeFrontRoutes: Routes = [
   {
@@ -31,7 +33,7 @@ export const storeFrontRoutes: Routes = [
         component: ProductComponent
       },
       {
-        path: 'recipe',
+        path: 'recipes',
         title: 'Recetas',
         component: RecipeComponent
       },
@@ -49,6 +51,18 @@ export const storeFrontRoutes: Routes = [
         path: 'privacy-policies',
         title: 'Política de privacidad',
         component: PrivacyPolicies
+      },
+
+      {
+        path: 'cart',
+        title: 'Carrito',
+        component: CartComponent
+      },
+      {
+        path: 'checkout',
+        title: 'Checkout',
+        component: CheckoutComponent,
+        canMatch: [IsAuthenticated]
       },
 
       /** User **/

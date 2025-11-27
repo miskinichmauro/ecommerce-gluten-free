@@ -1,6 +1,6 @@
 <div class="flex flex-col h-full">
   @if ((cartItems$ | async)?.length! > 0) {
-    <div class="flex-1">
+    <div class="flex-1 pb-28">
       <cart-items [cartItems]="(cartItems$ | async)!"></cart-items>
     </div>
   } @else {
@@ -15,11 +15,19 @@
     <div class="text-lg font-semibold">
       Total: {{ (total$ | async)! | guaranies }}
     </div>
-    <button
-      (click)="clearCart()"
-      class="btn btn-warning btn-sm ml-auto"
-    >
-      Vaciar carrito
-    </button>
+    <div class="flex items-center gap-2 ml-auto">
+      <button
+        (click)="clearCart()"
+        class="btn btn-warning btn-sm"
+      >
+        Vaciar carrito
+      </button>
+      <button
+        class="btn btn-primary btn-sm"
+        (click)="goToCart()"
+      >
+        Ir al carrito
+      </button>
+    </div>
   </div>
 }

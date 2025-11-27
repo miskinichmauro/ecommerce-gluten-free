@@ -1,1 +1,52 @@
-<p>cart works!</p>,
+<section class="max-w-6xl mx-auto px-4 py-10 space-y-8">
+  <h1 class="text-3xl font-bold mb-2 mt-6">Carrito de compras</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 items-start">
+    <div class="bg-base-100 border border-base-300/50 rounded-2xl shadow-sm p-4 md:p-6">
+      @if (cartItems$ | async; as cartItems) {
+        @if (cartItems.length > 0) {
+          <cart-items [cartItems]="cartItems"></cart-items>
+        } @else {
+          <div class="flex flex-col items-center justify-center text-center py-12 space-y-4">
+            <p class="text-lg font-semibold">Tu carrito está vacío</p>
+            <p class="text-base-content/70 max-w-md">
+              Aún no agregaste productos. Explora nuestro catálogo y comienza tu compra.
+            </p>
+            <a routerLink="/products" class="btn btn-primary">Ver productos</a>
+          </div>
+        }
+      }
+    </div>
+
+    <aside class="bg-base-100 border border-base-300/60 rounded-2xl shadow-md p-4 md:p-6 h-fit lg:sticky lg:top-24 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Resumen</h2>
+      </div>
+
+      <div class="space-y-3">
+        <div class="flex items-center justify-between text-base">
+          <span class="text-base-content/70">Subtotal</span>
+          <span class="font-semibold">{{ (subtotal$ | async) ?? 0 | guaranies }}</span>
+        </div>
+        <div class="flex items-center justify-between text-base">
+          <span class="text-base-content/70">Envío</span>
+          <span class="font-semibold">{{ (shipping$ | async) ?? 0 | guaranies }}</span>
+        </div>
+        <div class="divider my-2"></div>
+        <div class="flex items-center justify-between text-lg font-bold">
+          <span>Total</span>
+          <span>{{ (total$ | async) ?? 0 | guaranies }}</span>
+        </div>
+      </div>
+
+      <button
+        class="btn btn-primary w-full mt-4"
+        type="button"
+        (click)="goToBuy()"
+        [disabled]="((cartItems$ | async)?.length ?? 0) === 0"
+      >
+        Ir a comprar
+      </button>
+    </aside>
+  </div>
+</section>

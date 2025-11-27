@@ -8,6 +8,17 @@ import { BillingProfileDto, OrderDto, UserAddressDto, UserProfileDto } from '../
 const accountBase = `${environment.baseUrl}/account`;
 const ordersBase = `${environment.baseUrl}/orders`;
 
+interface CheckoutPayload {
+  shippingAddressId: string;
+  billingProfileId?: string;
+  notes?: string;
+}
+
+export interface CheckoutResponse {
+  id: string;
+  orderNumber?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private readonly http = inject(HttpClient);
@@ -87,5 +98,13 @@ export class AccountService {
 
   getOrder(id: string): Observable<OrderDto> {
     return this.http.get<OrderDto>(`${ordersBase}/${id}`);
+  }
+
+  checkoutOrder(payload: CheckoutPayload): Observable<CheckoutResponse> {
+    this.toast.activateLoading();
+    return this.http.post<CheckoutResponse>(`${ordersBase}/checkout`, payload).pipe(
+      tap(() => this.toast.activateSuccess()),
+      finalize(() => this.toast.deactivateLoading())
+    );
   }
 }
