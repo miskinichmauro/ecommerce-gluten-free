@@ -4,10 +4,11 @@ import { FrontMenuComponent } from "../../components/front-menu/front-menu.compo
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
 import { Footer } from "@shared/components/footer/footer";
 import { SidebarPageComponent } from "@shared/components/sidebar-page/sidebar-page.component";
+import { ToastComponent } from '@shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-store-front-layout',
-  imports: [RouterOutlet, FrontMenuComponent, SidebarPageComponent, Footer],
+  imports: [RouterOutlet, FrontMenuComponent, SidebarPageComponent, Footer, ToastComponent],
   templateUrl: './store-front-layout.component.html',
 })
 export class StoreFrontLayoutComponent {

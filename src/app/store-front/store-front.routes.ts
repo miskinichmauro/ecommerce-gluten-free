@@ -7,6 +7,7 @@ import { RecipeComponent } from "./pages/recipe/recipe.component";
 import { ContactComponent } from "./pages/contact/contact.component";
 import { TermsConditions } from "@store-front/pages/terms-conditions/terms-conditions";
 import { PrivacyPolicies } from "@store-front/pages/privacy-policies/privacy-policies";
+import { IsAuthenticated } from "@auth/guards/is-authenticated.guard";
 
 export const storeFrontRoutes: Routes = [
   {
@@ -53,6 +54,7 @@ export const storeFrontRoutes: Routes = [
       /** User **/
       {
         path: 'user',
+        canMatch: [IsAuthenticated],
         loadChildren: () => import('./pages/user/user-routes')
       },
 

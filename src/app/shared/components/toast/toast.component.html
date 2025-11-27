@@ -1,9 +1,11 @@
 <div class="relative">
-  @if (loading()) {
-    <loading class="fixed bottom-4 right-4" />
-  }
+  <div class="fixed {{ positionClass }} flex items-center justify-center w-16 h-16">
+    @if (loading()) {
+      <loading class="w-16 h-16 flex items-center justify-center" />
+    }
 
-  @if (success()) {
-    <success class="fixed bottom-4 right-4" />
-  }
+    @if (success()) {
+      <success class="w-16 h-16 flex items-center justify-center" />
+    }
+  </div>
 </div>

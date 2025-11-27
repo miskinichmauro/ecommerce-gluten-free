@@ -1,0 +1,90 @@
+<section class="space-y-4">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-bold">{{ editingId ? 'Editar dirección' : 'Nueva dirección' }}</h2>
+      <p class="text-sm text-base-content/70">Completa los datos de envío.</p>
+    </div>
+  </div>
+
+  <form
+    class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-base-200/60 rounded-lg p-5"
+    [formGroup]="form"
+    (ngSubmit)="save()"
+  >
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">Etiqueta</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('label') }"
+        formControlName="label"
+        placeholder="Casa / Oficina"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">Teléfono</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('phone') }"
+        formControlName="phone"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">Nombre completo</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('fullName') }"
+        formControlName="fullName"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">Departamento</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('state') }"
+        formControlName="state"
+      />
+    </div>
+
+    <div class="md:col-span-2 flex flex-col gap-2">
+      <span class="font-semibold">Calle y número</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('street') }"
+        formControlName="street"
+        placeholder="Calle y número"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">Ciudad</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('city') }"
+        formControlName="city"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-semibold">País</span>
+      <input
+        class="input input-bordered border border-base-300 focus:outline-none focus:ring-[1px] focus:ring-base-300 focus:border-base-400"
+        [ngClass]="{ 'border-error focus:border-error': isInvalid('country') }"
+        formControlName="country"
+      />
+    </div>
+
+    <label class="md:col-span-2 flex items-center gap-2 pt-1">
+      <input type="checkbox" class="checkbox checkbox-primary" formControlName="isDefault" />
+      <span class="font-semibold">Usar como dirección principal</span>
+    </label>
+
+    <div class="md:col-span-2 flex justify-end">
+      <button class="btn btn-primary min-w-36" type="submit" [disabled]="form.invalid || !hasChanges() || submitting()">
+        Guardar
+      </button>
+    </div>
+  </form>
+</section>

@@ -1,54 +1,73 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AccountService } from '@store-front/users/services/account.service';
+import { UserAddressDto } from '@store-front/users/interfaces/account.interfaces';
 
 @Component({
-  selector: 'app-user-profile',
+  selector: 'app-user-directions-new',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './user-profile.html',
-  styleUrl: './user-profile.css',
+  templateUrl: './user-directions-new.html',
+  styleUrl: './user-directions-new.css',
 })
-export class UserProfile implements OnInit {
+export class UserDirectionsNew implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly accountService = inject(AccountService);
+  private readonly router = inject(Router);
 
+  editingId: string | null = null;
   submitting = signal<boolean>(false);
 
   form = this.fb.nonNullable.group({
-    fullName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
+    label: ['', [Validators.required]],
+    fullName: ['', [Validators.required]],
     phone: ['', [Validators.required]],
+    street: ['', [Validators.required]],
+    city: ['', [Validators.required]],
+    state: ['', [Validators.required]],
+    country: ['Paraguay', [Validators.required]],
+    isDefault: [false],
   });
   private initialValue = this.form.getRawValue();
 
-  ngOnInit() {
-    this.fetchProfile();
+  ngOnInit(): void {
+    const url = new URL(window.location.href);
+    const editId = url.searchParams.get('edit');
+    if (editId) {
+      this.editingId = editId;
+      this.prefill(editId);
+    }
   }
 
-  fetchProfile() {
+  prefill(id: string) {
     this.submitting.set(true);
-    this.accountService.getProfile().subscribe({
-      next: (profile) => {
-        this.form.patchValue({
-          fullName: profile.fullName ?? '',
-          email: profile.email ?? '',
-          phone: profile.phone ?? '',
-        });
-        this.updateInitialValue();
+    this.accountService.getAddresses().subscribe({
+      next: (res) => {
+        const match = (res ?? []).find((a) => a.id === id);
+        if (match) {
+          this.form.patchValue(match as Partial<UserAddressDto>);
+          this.updateInitialValue();
+        }
       },
-      error: () => this.submitting.set(false),
       complete: () => this.submitting.set(false),
+      error: () => this.submitting.set(false),
     });
   }
 
   save() {
     if (this.form.invalid) return;
     this.submitting.set(true);
-    this.accountService.updateProfile(this.form.getRawValue()).subscribe({
+    const data = this.form.getRawValue();
+    const req$ = this.editingId
+      ? this.accountService.updateAddress(this.editingId, data)
+      : this.accountService.createAddress(data);
+
+    req$.subscribe({
       next: () => {
         this.updateInitialValue();
         this.submitting.set(false);
+        this.router.navigate(['/user/directions']);
       },
       error: () => this.submitting.set(false),
     });
