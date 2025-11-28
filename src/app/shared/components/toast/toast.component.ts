@@ -15,6 +15,7 @@ export class ToastComponent implements OnInit, OnDestroy {
 
   loading = this.toastService.loading;
   success = this.toastService.success;
+  error = this.toastService.error;
 
   @Input() positionClass = 'bottom-4 right-4';
   @Input() overFooterClass = 'bottom-24 right-6';

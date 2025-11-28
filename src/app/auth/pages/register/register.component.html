@@ -1,39 +1,78 @@
-<form
-  class="gap-2"
-  [formGroup]="registerForm"
-  (ngSubmit)="onSubmit()"
->
-  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full p-6 relative">
-    <button type="button" class="inline-flex items-center justify-center p-2 rounded-full transition-colors duration-200 hover:bg-base-300 text-slate-700 absolute top-4 left-6 bg-base-200 cursor-pointer shadow" (click)="goBack()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-        <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
-      </svg>
-    </button>
+@if (loading()) {
+  <loading />
+}
 
-    <div class="flex flex-col gap-4 mt-10">
-      <label class="label" for="fullName">Nombre completo</label>
-      <input type="fullName" class="input w-full" placeholder="Nombre completo" formControlName="fullName"/>
+@if (success()) {
+  <success />
+}
 
-      <label class="label" for="email">Email</label>
-      <input type="email" class="input w-full" placeholder="Email" formControlName="email"/>
+@if (!loading() && !success() && !hasError()) {
+  <form
+    class="gap-2"
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full p-6 relative">
+      <button type="button" class="inline-flex items-center justify-center p-2 rounded-full transition-colors duration-200 hover:bg-base-300 text-slate-700 absolute top-4 left-6 bg-base-200 cursor-pointer shadow" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+          <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+        </svg>
+      </button>
+
+      <div class="flex flex-col gap-4 mt-10">
+        <label class="label" for="fullName">Nombre completo</label>
+        <input type="fullName" class="input w-full" placeholder="Nombre completo" formControlName="fullName"/>
+
+        <label class="label" for="email">Email</label>
+        <input type="email" class="input w-full" placeholder="Email" formControlName="email"/>
 
       <label class="label" for="password">Password</label>
-      <input type="password" class="input w-full" placeholder="Password" formControlName="password"/>
-
-      <label class="label" for="confirmPassword">Confirmar password</label>
-      <input type="password" class="input w-full" placeholder="Repite tu password" formControlName="confirmPassword"/>
-
-      <button class="btn btn-neutral w-full">Login</button>
-
-      @if (registerForm.hasError('passwordMismatch') && registerForm.touched) {
+      <div class="relative">
+        <input
+          [type]="passwordVisible() ? 'text' : 'password'"
+          class="input w-full pr-12"
+          placeholder="Password"
+          formControlName="password"
+        />
+        <password-toggle
+          [visible]="passwordVisible()"
+          (toggleVisibility)="togglePasswordVisibility()"
+        />
+      </div>
+      @if (registerForm.get('password')?.hasError('weakPassword') && registerForm.get('password')?.touched) {
         <div class="text-error text-sm mt-1">
-          Las contraseñas no coinciden
+          La contrase&ntilde;a debe tener al menos una letra may&uacute;scula, una min&uacute;scula y un n&uacute;mero.
         </div>
       }
-    </div>
-  </fieldset>
-</form>
 
-@if (error()) {
-  <p class="text-red-500">{{ error() }}</p>
+      <label class="label" for="confirmPassword">Confirmar password</label>
+      <div class="relative">
+        <input
+          [type]="confirmPasswordVisible() ? 'text' : 'password'"
+          class="input w-full pr-12"
+          placeholder="Repite tu password"
+          formControlName="confirmPassword"
+        />
+        <password-toggle
+          [visible]="confirmPasswordVisible()"
+          (toggleVisibility)="toggleConfirmPasswordVisibility()"
+        />
+      </div>
+
+        <button class="btn btn-neutral w-full">Login</button>
+
+        @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+          <div class="text-error text-sm mt-1">
+            Las contrase&ntilde;as no coinciden
+          </div>
+        }
+      </div>
+    </fieldset>
+  </form>
+}
+
+@if (hasError()) {
+  <div class="text-error text-sm mt-1">
+    {{ hasError() }}
+  </div>
 }

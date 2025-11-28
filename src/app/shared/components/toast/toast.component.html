@@ -1,13 +1,18 @@
 <div class="relative">
   <div
-    class="fixed flex items-center justify-center w-16 h-16"
+    class="fixed flex items-center justify-center"
     [ngClass]="footerVisible() ? overFooterClass : positionClass"
   >
-    @if (loading()) {
+    @if (error()) {
+      <div class="flex items-start gap-3 px-4 py-3 rounded-xl shadow-lg bg-error text-error-content max-w-sm w-72">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01m9.49 0-9.5-16-9.5 16h19Z" />
+        </svg>
+        <span class="text-sm leading-snug">{{ error() }}</span>
+      </div>
+    } @else if (loading()) {
       <loading class="w-16 h-16 flex items-center justify-center" />
-    }
-
-    @if (success()) {
+    } @else if (success()) {
       <success class="w-16 h-16 flex items-center justify-center" />
     }
   </div>

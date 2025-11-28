@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from "@angular/router";
 import { FrontMenuComponent } from "../../components/front-menu/front-menu.component";
 import { ConfigurationService } from 'src/app/shared/services/configuration.service';
@@ -9,7 +10,7 @@ import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-store-front-layout',
-  imports: [RouterOutlet, FrontMenuComponent, SidebarPageComponent, Footer, ToastComponent],
+  imports: [CommonModule, RouterOutlet, FrontMenuComponent, SidebarPageComponent, Footer, ToastComponent],
   templateUrl: './store-front-layout.component.html',
 })
 export class StoreFrontLayoutComponent {

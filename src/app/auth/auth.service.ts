@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from './interfaces/auth-response.interfase';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { User } from '@store-front/users/interfaces/user.interfase';
 
@@ -44,7 +44,7 @@ export class AuthService {
     })
     .pipe(
       map(res => this.handleLoginSuccess(res)),
-      catchError(() => this.handleLoginError())
+      catchError((err) => this.handleLoginError(err))
     );
   }
 
@@ -56,8 +56,7 @@ export class AuthService {
     })
     .pipe(
       map(res => this.handleLoginSuccess(res)),
-      catchError((res) => {
-        return this.handleLoginError()})
+      catchError((err) => this.handleLoginError(err))
     );
   }
 
@@ -70,7 +69,7 @@ export class AuthService {
     return this.http.get<AuthResponse>(`${baseUrlAuth}/check-status`, {})
     .pipe(
       map(res => this.handleLoginSuccess(res)),
-      catchError(() => this.handleLoginError())
+      catchError((err) => this.handleLoginError(err))
     );
   }
 
@@ -95,8 +94,8 @@ export class AuthService {
     return true;
   }
 
-  private handleLoginError() {
+  private handleLoginError(err: unknown) {
     this.logout();
-    return of(false);
+    return throwError(() => err);
   }
 }

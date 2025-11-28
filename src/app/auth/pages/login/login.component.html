@@ -6,20 +6,36 @@
   <success />
 }
 
-@if (!loading() && !success() && !hasError()) {
+@if (!loading() && !success()) {
   <form
     class="gap-2"
     [formGroup]="loginForm"
     (ngSubmit)="onSubmit()"
   >
     <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full p-6">
+      @if (hasError()) {
+        <div class="text-error text-sm mb-3">
+          {{ hasError() }}
+        </div>
+      }
 
       <div class="flex flex-col gap-4">
         <label class="label" for="email">Email</label>
         <input type="email" class="input w-full" placeholder="Email" formControlName="email"/>
 
         <label class="label" for="password">Password</label>
-        <input type="password" class="input w-full" placeholder="Password" formControlName="password"/>
+        <div class="relative">
+          <input
+            [type]="passwordVisible() ? 'text' : 'password'"
+            class="input w-full pr-12"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <password-toggle
+            [visible]="passwordVisible()"
+            (toggleVisibility)="togglePasswordVisibility()"
+          />
+        </div>
 
         <div class="w-full flex justify-end">
           <button type="button" class="text-primary hover:underline cursor-pointer" (click)="openRegister()">
@@ -35,9 +51,4 @@
   </form>
 }
 
-@if (hasError()) {
-  <div class="text-error text-sm mt-1">
-    {{ hasError() }}
-  </div>
-}
 
