@@ -1,10 +1,10 @@
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full" [class.clearing]="clearing()">
   @if ((cartItems$ | async)?.length! > 0) {
-    <div class="flex-1 pb-28">
-      <cart-items [cartItems]="(cartItems$ | async)!"></cart-items>
+    <div class="flex-1 overflow-y-auto pr-3 max-h-[calc(100vh-180px)]">
+      <cart-items [cartItems]="(cartItems$ | async)!" [clearing]="clearing()"></cart-items>
     </div>
   } @else {
-    <div class="flex-1 flex items-center justify-center text-gray-500 min-h-[75vh]">
+    <div class="flex-1 flex items-center justify-center text-gray-500 min-h-[50vh]">
       Tu carrito está vacío
     </div>
   }

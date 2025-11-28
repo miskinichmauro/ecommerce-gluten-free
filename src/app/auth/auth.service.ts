@@ -82,6 +82,10 @@ export class AuthService {
     localStorage.removeItem('access_token');
   }
 
+  isAuthenticated(): boolean {
+    return this.authStatus() === 'authenticated';
+  }
+
   private handleLoginSuccess(res: AuthResponse) {
     this._user.set(res.user);
     this._token.set(res.access_token);

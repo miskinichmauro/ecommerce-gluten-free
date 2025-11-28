@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-const baseUrl = environment.baseUrl;
+const baseUrl = environment.baseUrl.replace(/\/$/, '');
 const FALLBACK_IMAGE = 'assets/images/default-image.jpg';
 
 type ImageLike = string | { url?: string; secureUrl?: string; path?: string; id?: string; name?: string; fileName?: string; filename?: string };
@@ -16,8 +16,8 @@ export class ProductImagePipe implements PipeTransform {
       return FALLBACK_IMAGE;
     }
 
-    const raw = Array.isArray(value) ? value[0] : value;
-    const resolved = this.resolveImageValue(raw);
+    const candidates = Array.isArray(value) ? value : [value];
+    const resolved = this.resolveFirst(candidates);
 
     if (!resolved) {
       return FALLBACK_IMAGE;
@@ -27,11 +27,28 @@ export class ProductImagePipe implements PipeTransform {
       return resolved;
     }
 
-    if (/^https?:\/\//.test(resolved)) {
+    if (/^(https?:)?\/\//.test(resolved) || resolved.startsWith('data:') || resolved.startsWith('blob:')) {
       return resolved;
     }
 
-    return `${baseUrl}/files/product/${resolved}`;
+    if (resolved.startsWith('/')) {
+      return `${baseUrl}${resolved}`;
+    }
+
+    const encoded = encodeURIComponent(resolved);
+    return `${baseUrl}/files/products/${encoded}`;
+  }
+
+  private resolveFirst(values: ImageLike[]): string | null {
+    for (const value of values) {
+      const candidate = this.resolveImageValue(value);
+      if (candidate !== null && candidate !== undefined) {
+        const str = typeof candidate === 'string' ? candidate : String(candidate);
+        const trimmed = str.trim();
+        if (trimmed) return trimmed;
+      }
+    }
+    return null;
   }
 
   private resolveImageValue(value: ImageLike | null | undefined): string | null {

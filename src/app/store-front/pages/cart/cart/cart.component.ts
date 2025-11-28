@@ -40,7 +40,7 @@ export class CartComponent implements OnInit {
   }
 
   goToBuy() {
-    const isAuthenticated = this.authService.authStatus() === 'authenticated';
+    const isAuthenticated = this.authService.isAuthenticated();
     if (!isAuthenticated) {
       this.configurationService.openSidebar('auth');
       return;

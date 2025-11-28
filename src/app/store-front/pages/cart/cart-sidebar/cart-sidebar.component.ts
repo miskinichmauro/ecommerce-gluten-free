@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -13,13 +13,14 @@ import { ConfigurationService } from '@shared/services/configuration.service';
   standalone: true,
   imports: [CommonModule, CartItemsComponent, AsyncPipe, GuaraniesPipe],
   templateUrl: './cart-sidebar.component.html',
-  styleUrl: './cart-sidebar.component.css',
+  styleUrls: [],
 })
 export class CartSidebarComponent implements OnInit {
   cartService = inject(CartService);
   private readonly configurationService = inject(ConfigurationService);
   private readonly router = inject(Router);
   cartItems$ = this.cartService.cart$;
+  clearing = signal(false);
 
   ngOnInit(): void {
     this.cartService.loadCart().subscribe();
@@ -30,7 +31,11 @@ export class CartSidebarComponent implements OnInit {
   );
 
   clearCart() {
-    this.cartService.clearCart().subscribe();
+    this.clearing.set(true);
+    const animationMs = 250;
+    this.cartService.clearCart({ delayMs: animationMs }).subscribe({
+      complete: () => setTimeout(() => this.clearing.set(false), animationMs)
+    });
   }
 
   goToCart() {

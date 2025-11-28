@@ -20,7 +20,7 @@ export class NavUserOptionsComponent {
 
   openUserOptions(event?: Event) {
     this.blurTarget(event);
-    if (this.authService.authStatus() === 'authenticated') {
+    if (this.authService.isAuthenticated()) {
       this.configurationService.openSidebar('userOptions');
     } else {
       this.configurationService.openSidebar('auth');

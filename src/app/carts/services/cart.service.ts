@@ -30,8 +30,7 @@ export class CartService {
       this.cartSubject.next(items);
       return of(items);
     }
-    const isAuthenticated = this.auth.authStatus() === 'authenticated';
-    const source$ = isAuthenticated
+    const source$ = this.auth.isAuthenticated()
       ? this.http.get<CartItemsSource>(baseUrlCart)
       : of(this.getCartFromLocalStorage());
     return source$.pipe(
@@ -40,22 +39,28 @@ export class CartService {
     );
   }
 
-  addItem(product: Product, quantity = 1): Observable<CartItem | void> {
-    const cartItem: CartItem = {
-      id: product.id,
+  addItem(product: Product, quantity = 1, options?: { showToast?: boolean }): Observable<CartItem | void> {
+    const showToast = options?.showToast ?? true;
+    const cartItem: CartItem = this.normalizeItem(
+      {
+        id: product.id,
+        product,
+        productId: product.id,
+        quantity,
+      },
       product,
-      productId: product.id,
-      quantity,
-    };
-    const isAuthenticated = this.auth.authStatus() === 'authenticated';
-    if (isAuthenticated) {
-      this.toast.activateLoading();
+      quantity
+    );
+    if (this.auth.isAuthenticated()) {
+      if (showToast) this.toast.activateLoading();
       return this.http.post<CartItem>(`${baseUrlCart}/items`, { productId: product.id, quantity }).pipe(
         tap(item => {
-          this.updateCacheAndEmit([...this.cartSubject.value, item]);
-          this.toast.activateSuccess();
+          const normalized = this.normalizeItem(item, product, quantity);
+          const without = this.cartSubject.value.filter(i => i.id !== normalized.id);
+          this.updateCacheAndEmit([...without, normalized]);
+          if (showToast) this.toast.activateSuccess();
         }),
-        finalize(() => this.toast.deactivateLoading())
+        finalize(() => showToast && this.toast.deactivateLoading())
       );
     } else {
       const localCart = this.getCartFromLocalStorage();
@@ -72,12 +77,12 @@ export class CartService {
   }
 
   updateItem(id: string, quantity: number): Observable<CartItem | void> {
-    const isAuthenticated = this.auth.authStatus() === 'authenticated';
-    if (isAuthenticated) {
+    if (this.auth.isAuthenticated()) {
       this.toast.activateLoading();
       return this.http.patch<CartItem>(`${baseUrlCart}/items/${id}`, { quantity }).pipe(
         tap(item => {
-          this.cartCache.set(item.id, item);
+          const normalized = this.normalizeItem(item, this.cartCache.get(id)?.product, quantity);
+          this.cartCache.set(item.id, normalized);
           this.updateCacheAndEmit(Array.from(this.cartCache.values()));
           this.toast.activateSuccess();
         }),
@@ -94,8 +99,7 @@ export class CartService {
   }
 
   removeItem(id: string): Observable<void> {
-    const isAuthenticated = this.auth.authStatus() === 'authenticated';
-    if (isAuthenticated) {
+    if (this.auth.isAuthenticated()) {
       this.toast.activateLoading();
       return this.http.delete<void>(`${baseUrlCart}/items/${id}`).pipe(
         tap(() => {
@@ -118,13 +122,28 @@ export class CartService {
     return items.reduce((acc, item) => acc + (item.product?.price ?? 0) * item.quantity, 0);
   }
 
-  clearCart(): Observable<void> {
-    const isAuthenticated = this.auth.authStatus() === 'authenticated';
-    if (isAuthenticated) {
-      return this.http.delete<void>(baseUrlCart).pipe(tap(() => this.resetCart()));
-    } else {
-      localStorage.removeItem('guestCart');
+  clearCart(options?: { delayMs?: number }): Observable<void> {
+    const delayMs = options?.delayMs ?? 0;
+
+    const resetAction = () => {
       this.resetCart();
+      if (!this.auth.isAuthenticated()) {
+        localStorage.removeItem('guestCart');
+      }
+    };
+
+    if (delayMs > 0) {
+      setTimeout(resetAction, delayMs);
+    } else {
+      resetAction();
+    }
+
+    if (this.auth.isAuthenticated()) {
+      return this.http.delete<void>(baseUrlCart).pipe(
+        tap(() => {}),
+        finalize(() => {})
+      );
+    } else {
       return of();
     }
   }
@@ -163,23 +182,28 @@ export class CartService {
     if (!Array.isArray(rawItems)) return [];
 
     return rawItems.map((item) => {
-      const product = (item as any).product as any;
-      const productId = (item as any).productId ?? product?.id ?? item.id;
-      const resolveNumber = (value: any): number => {
-        if (typeof value === 'number') return value;
-        const parsed = Number(value);
-        return isNaN(parsed) ? 0 : parsed;
-      };
-      const unitPrice = resolveNumber((item as any).unitPrice ?? product?.price);
-      const normalizedProduct = product ? { ...product, price: resolveNumber(product?.price ?? unitPrice) } : undefined;
-
-      return {
-        ...item,
-        productId,
-        product: normalizedProduct,
-        quantity: resolveNumber((item as any).quantity ?? 1),
-      } as CartItem;
+      const existing = this.cartCache.get((item as any).id);
+      return this.normalizeItem(item, existing?.product, existing?.quantity);
     });
+  }
+
+  private normalizeItem(item: any, fallbackProduct?: Product, fallbackQuantity?: number): CartItem {
+    const product = item?.product ?? fallbackProduct;
+    const productId = item?.productId ?? product?.id ?? item?.id ?? '';
+    const quantityValue = item?.quantity ?? fallbackQuantity ?? 1;
+    const priceCandidate =
+      product?.price ??
+      item?.unitPrice ??
+      item?.price ??
+      (typeof fallbackProduct?.price === 'number' ? fallbackProduct.price : 0);
+    const price = typeof priceCandidate === 'number' ? priceCandidate : Number(priceCandidate) || 0;
+
+    return {
+      ...item,
+      productId,
+      product: product ? { ...product, price } : undefined,
+      quantity: typeof quantityValue === 'number' ? quantityValue : Number(quantityValue) || 1,
+    } as CartItem;
   }
 
   private resetCart(): void {

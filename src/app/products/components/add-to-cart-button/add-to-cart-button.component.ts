@@ -1,7 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { Product } from '../../interfaces/product';
 import { CartService } from 'src/app/carts/services/cart.service';
-import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'add-to-cart-button',
@@ -17,7 +16,6 @@ export class AddToCartButtonComponent {
   disabled = input<boolean>(false);
 
   private readonly cartService = inject(CartService);
-  private readonly toastService = inject(ToastService);
 
   loading = signal<boolean>(false);
   success = signal<boolean>(false);
@@ -34,19 +32,16 @@ export class AddToCartButtonComponent {
 
     const quantity = Math.max(1, Number(this.quantity()) || 1);
 
-    this.toastService.activateLoading();
     this.loading.set(true);
     this.success.set(false);
 
-    this.cartService.addItem(product, quantity).subscribe({
+    this.cartService.addItem(product, quantity, { showToast: false }).subscribe({
       next: () => {
-        this.toastService.activateSuccess();
         this.loading.set(false);
         this.success.set(true);
         setTimeout(() => this.success.set(false), 800);
       },
       error: () => {
-        this.toastService.deactivateLoading();
         this.loading.set(false);
       },
     });

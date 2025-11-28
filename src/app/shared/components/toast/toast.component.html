@@ -1,5 +1,8 @@
 <div class="relative">
-  <div class="fixed {{ positionClass }} flex items-center justify-center w-16 h-16">
+  <div
+    class="fixed flex items-center justify-center w-16 h-16"
+    [ngClass]="footerVisible() ? overFooterClass : positionClass"
+  >
     @if (loading()) {
       <loading class="w-16 h-16 flex items-center justify-center" />
     }
