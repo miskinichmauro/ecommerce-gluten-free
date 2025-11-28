@@ -15,13 +15,13 @@
       <div class="grid gap-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
-            <h3 class="font-semibold">Direccion de envio</h3>
+            <h3 class="font-semibold">Dirección de envío</h3>
             <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.fullName }}</p>
             <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.phone }}</p>
             <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.street }}, {{ orderData.shippingAddress?.city }}, {{ orderData.shippingAddress?.state }} - {{ orderData.shippingAddress?.country }}</p>
           </div>
           <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
-            <h3 class="font-semibold">Facturacion</h3>
+            <h3 class="font-semibold">Facturación</h3>
             <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.legalName }}</p>
             <p class="text-sm text-base-content/80">RUC: {{ orderData.billingProfile?.taxId }}</p>
             <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.email }} - {{ orderData.billingProfile?.phone }}</p>
