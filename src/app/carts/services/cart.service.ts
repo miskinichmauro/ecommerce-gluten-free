@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap, finalize, map } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, finalize, map, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '@shared/services/toast.service';
 import { CartItem } from 'src/app/carts/interfaces/cart-item';
@@ -24,8 +24,8 @@ export class CartService {
     this.loadCart().subscribe();
   }
 
-  loadCart(): Observable<CartItem[]> {
-    if (this.cartCache.size > 0) {
+  loadCart(force = false): Observable<CartItem[]> {
+    if (!force && this.cartCache.size > 0) {
       const items = Array.from(this.cartCache.values());
       this.cartSubject.next(items);
       return of(items);
@@ -52,12 +52,12 @@ export class CartService {
       quantity
     );
     if (this.auth.isAuthenticated()) {
+      // Optimistic append
+      this.updateCacheAndEmit([...this.cartSubject.value, cartItem]);
       if (showToast) this.toast.activateLoading();
       return this.http.post<CartItem>(`${baseUrlCart}/items`, { productId: product.id, quantity }).pipe(
-        tap(item => {
-          const normalized = this.normalizeItem(item, product, quantity);
-          const without = this.cartSubject.value.filter(i => i.id !== normalized.id);
-          this.updateCacheAndEmit([...without, normalized]);
+        tap(() => {
+          this.loadCart(true).subscribe();
           if (showToast) this.toast.activateSuccess();
         }),
         finalize(() => showToast && this.toast.deactivateLoading())
@@ -84,6 +84,7 @@ export class CartService {
           const normalized = this.normalizeItem(item, this.cartCache.get(id)?.product, quantity);
           this.cartCache.set(item.id, normalized);
           this.updateCacheAndEmit(Array.from(this.cartCache.values()));
+          this.loadCart(true).subscribe();
           this.toast.activateSuccess();
         }),
         finalize(() => this.toast.deactivateLoading())
@@ -101,10 +102,12 @@ export class CartService {
   removeItem(id: string): Observable<void> {
     if (this.auth.isAuthenticated()) {
       this.toast.activateLoading();
+      // Optimistic remove
+      this.cartCache.delete(id);
+      this.updateCacheAndEmit(Array.from(this.cartCache.values()));
       return this.http.delete<void>(`${baseUrlCart}/items/${id}`).pipe(
         tap(() => {
-          this.cartCache.delete(id);
-          this.updateCacheAndEmit(Array.from(this.cartCache.values()));
+          this.loadCart(true).subscribe();
           this.toast.activateSuccess();
         }),
         finalize(() => this.toast.deactivateLoading())
