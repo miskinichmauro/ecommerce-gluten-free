@@ -1,81 +1,81 @@
-<section class="space-y-4" *ngIf="!loading(); else loadingTpl">
-  @if (order(); as orderData) {
-    <div class="flex items-center justify-between gap-3">
-      <div>
-        <p class="text-sm text-base-content/70">{{ orderData.orderNumber || orderData.id }}</p>
-        <h1 class="text-2xl font-bold">{{ statusLabel(orderData.status) }}</h1>
-        <p class="text-xs text-base-content/70">{{ orderData.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-      </div>
-      <div class="text-right">
-        <p class="text-lg font-semibold">{{ (orderData.total ?? 0) | guaranies }}</p>
-      </div>
-    </div>
-
-    <div class="grid gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
-          <h3 class="font-semibold">Dirección de envío</h3>
-          <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.fullName }}</p>
-          <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.phone }}</p>
-          <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.street }}, {{ orderData.shippingAddress?.city }}, {{ orderData.shippingAddress?.state }} - {{ orderData.shippingAddress?.country }}</p>
+@if (!loading()) {
+  <section class="space-y-4">
+    @if (order(); as orderData) {
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-sm text-base-content/70">{{ orderData.orderNumber || orderData.id }}</p>
+          <h1 class="text-2xl font-bold">{{ statusLabel(orderData.status) }}</h1>
+          <p class="text-xs text-base-content/70">{{ orderData.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
         </div>
-        <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
-          <h3 class="font-semibold">Facturación</h3>
-          <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.legalName }}</p>
-          <p class="text-sm text-base-content/80">RUC: {{ orderData.billingProfile?.taxId }}</p>
-          <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.email }} · {{ orderData.billingProfile?.phone }}</p>
-          <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.addressLine1 }}, {{ orderData.billingProfile?.city }}, {{ orderData.billingProfile?.state }} - {{ orderData.billingProfile?.country }}</p>
+        <div class="text-right">
+          <p class="text-lg font-semibold">{{ (orderData.total ?? 0) | guaranies }}</p>
         </div>
       </div>
 
-      <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-3">
-        <h2 class="text-lg font-semibold">Productos</h2>
-        @if (orderData.items?.length) {
-          <div class="space-y-3">
-            @for (item of orderData.items; track $index) {
-              <div class="relative flex bg-base-100 shadow-sm rounded-lg border border-base-200 overflow-hidden">
-                <a class="w-40 md:w-48 shrink-0 block" [routerLink]="['/product', item.product?.id || item.product?.slug || '']">
-                  <img [src]="(item.product?.images ?? []) | productImage"
-                       alt="{{ item.product?.title || item.name }}"
-                       class="w-full h-28 md:h-32 object-cover" />
-                </a>
-                <div class="flex-1 p-3 flex flex-col gap-2">
-                  <div class="flex items-start gap-3">
-                    <div class="flex-1">
-                      <a class="font-semibold text-base leading-tight line-clamp-2 no-underline"
-                         [routerLink]="['/product', item.product?.id || item.product?.slug || '']">
-                        {{ item.product?.title || item.name || 'Producto' }}
-                      </a>
-                      <p class="text-sm text-base-content/70 line-clamp-2">
-                        {{ item.product?.description }}
+      <div class="grid gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
+            <h3 class="font-semibold">Direccion de envio</h3>
+            <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.fullName }}</p>
+            <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.phone }}</p>
+            <p class="text-sm text-base-content/80">{{ orderData.shippingAddress?.street }}, {{ orderData.shippingAddress?.city }}, {{ orderData.shippingAddress?.state }} - {{ orderData.shippingAddress?.country }}</p>
+          </div>
+          <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-1">
+            <h3 class="font-semibold">Facturacion</h3>
+            <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.legalName }}</p>
+            <p class="text-sm text-base-content/80">RUC: {{ orderData.billingProfile?.taxId }}</p>
+            <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.email }} - {{ orderData.billingProfile?.phone }}</p>
+            <p class="text-sm text-base-content/80">{{ orderData.billingProfile?.addressLine1 }}, {{ orderData.billingProfile?.city }}, {{ orderData.billingProfile?.state }} - {{ orderData.billingProfile?.country }}</p>
+          </div>
+        </div>
+
+        <div class="p-4 border border-base-300 rounded-xl bg-base-100 space-y-3">
+          <h2 class="text-lg font-semibold">Productos</h2>
+          @if (orderData.items?.length) {
+            <div class="space-y-3">
+              @for (item of orderData.items; track $index) {
+                <div class="relative flex bg-base-100 shadow-sm rounded-lg border border-base-200 overflow-hidden">
+                  <a class="w-40 md:w-48 shrink-0 block" [routerLink]="['/product', item.product?.id || item.product?.slug || '']">
+                    <img [src]="(item.product?.images ?? []) | productImage"
+                         alt="{{ item.product?.title || item.name }}"
+                         class="w-full h-28 md:h-32 object-cover" />
+                  </a>
+                  <div class="flex-1 p-3 flex flex-col gap-2">
+                    <div class="flex items-start gap-3">
+                      <div class="flex-1">
+                        <a class="font-semibold text-base leading-tight line-clamp-2 no-underline"
+                           [routerLink]="['/product', item.product?.id || item.product?.slug || '']">
+                          {{ item.product?.title || item.name || 'Producto' }}
+                        </a>
+                        <p class="text-sm text-base-content/70 line-clamp-2">
+                          {{ item.product?.description }}
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-end justify-between mt-auto">
+                      <p class="text-sm text-base-content/70">
+                        {{ item.quantity || 1 }} x {{ (item.unitPrice ?? item.price ?? 0) | guaranies }}
                       </p>
+                      <span class="font-semibold">{{ itemSubtotal(item) | guaranies }}</span>
                     </div>
                   </div>
-                  <div class="flex items-end justify-between mt-auto">
-                    <p class="text-sm text-base-content/70">
-                      {{ item.quantity || 1 }} x {{ (item.unitPrice ?? item.price ?? 0) | guaranies }}
-                    </p>
-                    <span class="font-semibold">{{ itemSubtotal(item) | guaranies }}</span>
-                  </div>
                 </div>
-              </div>
-            }
-          </div>
-        } @else {
-          <p class="text-sm text-base-content/70">No hay items en este pedido.</p>
-        }
+              }
+            </div>
+          } @else {
+            <p class="text-sm text-base-content/70">No hay items en este pedido.</p>
+          }
+        </div>
       </div>
-    </div>
 
-    <div class="pt-2 flex gap-2">
-      <a class="btn btn-outline btn-sm" routerLink="/user/orders">Volver a pedidos</a>
-      <a class="btn btn-primary btn-sm" routerLink="/products">Seguir comprando</a>
-    </div>
-  } @else {
-    <p>No se encontró el pedido.</p>
-  }
-</section>
-
-<ng-template #loadingTpl>
+      <div class="pt-2 flex gap-2">
+        <a class="btn btn-outline btn-sm" routerLink="/user/orders">Volver a pedidos</a>
+        <a class="btn btn-primary btn-sm" routerLink="/products">Seguir comprando</a>
+      </div>
+    } @else {
+      <p>No se encontro el pedido.</p>
+    }
+  </section>
+} @else {
   <p>Cargando pedido...</p>
-</ng-template>
+}
