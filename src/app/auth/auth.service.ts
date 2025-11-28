@@ -69,7 +69,10 @@ export class AuthService {
     return this.http.get<AuthResponse>(`${baseUrlAuth}/check-status`, {})
     .pipe(
       map(res => this.handleLoginSuccess(res)),
-      catchError((err) => this.handleLoginError(err))
+      catchError(() => {
+        this.logout();
+        return of(false);
+      })
     );
   }
 
