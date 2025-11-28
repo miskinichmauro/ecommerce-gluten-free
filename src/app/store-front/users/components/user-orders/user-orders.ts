@@ -6,16 +6,25 @@ import { OrderDto } from '@store-front/users/interfaces/account.interfaces';
 import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 
 @Component({
-  selector: 'app-user-recipes',
+  selector: 'app-user-orders',
+  standalone: true,
   imports: [CommonModule, RouterLink, GuaraniesPipe],
-  templateUrl: './user-recipes.html',
-  styleUrl: './user-recipes.css',
+  templateUrl: './user-orders.html',
+  styleUrl: './user-orders.css',
 })
-export class UserRecipes implements OnInit {
+export class UserOrders implements OnInit {
   private readonly accountService = inject(AccountService);
 
   orders = signal<OrderDto[]>([]);
   loading = signal<boolean>(true);
+  readonly statusMap: Record<string, string> = {
+    pending: 'Pendiente',
+    paid: 'Pagado',
+    shipped: 'Enviado',
+    delivered: 'Entregado',
+    cancelled: 'Cancelado',
+    refunded: 'Reembolsado',
+  };
 
   ngOnInit(): void {
     this.loadOrders();
@@ -28,5 +37,11 @@ export class UserRecipes implements OnInit {
       error: () => this.orders.set([]),
       complete: () => this.loading.set(false),
     });
+  }
+
+  statusLabel(status?: string): string {
+    if (!status) return 'Pendiente';
+    const key = status.toLowerCase();
+    return this.statusMap[key] ?? status;
   }
 }

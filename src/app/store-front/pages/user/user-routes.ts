@@ -5,7 +5,8 @@ import { UserDirections } from "@store-front/users/components/user-directions/us
 import { UserDirectionsNew } from "@store-front/users/components/user-directions-new/user-directions-new";
 import { UserBillingsNew } from "@store-front/users/components/user-billings-new/user-billings-new";
 import { UserProfile } from "@store-front/users/components/user-profile/user-profile";
-import { UserRecipes } from "@store-front/users/components/user-recipes/user-recipes";
+import { UserOrders } from "@store-front/users/components/user-orders/user-orders";
+import { UserOrderDetail } from "@store-front/users/components/user-order-detail/user-order-detail";
 
 export const userRoutes: Routes = [
   {
@@ -34,7 +35,11 @@ export const userRoutes: Routes = [
         },
         {
           path: 'orders',
-          component: UserRecipes
+          component: UserOrders
+        },
+        {
+          path: 'orders/:id',
+          component: UserOrderDetail
         },
         {
           path: '**',

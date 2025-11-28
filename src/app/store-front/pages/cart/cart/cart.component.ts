@@ -1,6 +1,6 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
 import { CartItemsComponent } from 'src/app/carts/cart-items/cart-items.component';
 import { CartService } from 'src/app/carts/services/cart.service';
@@ -11,7 +11,7 @@ import { ConfigurationService } from '@shared/services/configuration.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, CartItemsComponent, AsyncPipe, GuaraniesPipe],
+  imports: [CommonModule, CartItemsComponent, AsyncPipe, GuaraniesPipe, RouterLink],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
 })

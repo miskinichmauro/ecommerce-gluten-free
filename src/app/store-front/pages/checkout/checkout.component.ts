@@ -45,12 +45,14 @@ export class CheckoutComponent implements OnInit {
   }
 
   selectStep(step: number) {
+    if (this.orderResponse() && this.currentStep() === 4 && step < 4) return;
     if (step === 4 && !this.orderResponse()) return;
     this.currentStep.set(step);
   }
 
   nextStep() {
     const step = this.currentStep();
+    if (this.orderResponse() && step === 4) return;
     if (step === 3) {
       this.submitCheckout();
       return;
@@ -59,6 +61,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   prevStep() {
+    if (this.orderResponse() && this.currentStep() === 4) return;
     this.currentStep.update((step) => Math.max(step - 1, 1));
   }
 

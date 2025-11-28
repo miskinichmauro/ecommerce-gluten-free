@@ -10,6 +10,7 @@
         <button
           type="button"
           class="flex items-center gap-2 cursor-pointer"
+          [disabled]="orderResponse() && currentStep() === 4 && step.id < 4"
           (click)="selectStep(step.id)"
         >
           <span
@@ -221,7 +222,7 @@
       class="btn btn-outline"
       type="button"
       (click)="prevStep()"
-      [disabled]="currentStep() === 1"
+      [disabled]="currentStep() === 1 || (orderResponse() && currentStep() === 4)"
     >
       Anterior
     </button>
@@ -229,7 +230,7 @@
       class="btn btn-primary"
       type="button"
       (click)="nextStep()"
-      [disabled]="currentStep() === steps.length || (currentStep() === 3 && (submitting() || !selectedShippingId()))"
+      [disabled]="currentStep() === steps.length || (currentStep() === 3 && (submitting() || !selectedShippingId())) || (orderResponse() && currentStep() === 4)"
     >
       Siguiente
     </button>
