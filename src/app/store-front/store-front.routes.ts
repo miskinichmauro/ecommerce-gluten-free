@@ -10,6 +10,7 @@ import { PrivacyPolicies } from "@store-front/pages/privacy-policies/privacy-pol
 import { IsAuthenticated } from "@auth/guards/is-authenticated.guard";
 import { CartComponent } from "./pages/cart/cart/cart.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
+import { CheckoutGuard } from "./guards/checkout.guard";
 
 export const storeFrontRoutes: Routes = [
   {
@@ -62,7 +63,7 @@ export const storeFrontRoutes: Routes = [
         path: 'checkout',
         title: 'Checkout',
         component: CheckoutComponent,
-        canMatch: [IsAuthenticated]
+        canMatch: [CheckoutGuard]
       },
 
       /** User **/
