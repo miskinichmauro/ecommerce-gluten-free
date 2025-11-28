@@ -9,7 +9,7 @@
     <sidebar-page />
   </main>
 
-  <toast positionClass="bottom-24 right-6" />
+  <toast *ngIf="showToast()" positionClass="bottom-24 right-6" />
 
   <app-footer />
 </div>

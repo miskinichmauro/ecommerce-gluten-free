@@ -24,7 +24,7 @@
 
             <div class="flex items-center gap-1">
               <button
-                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-base-200"
+                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-base-200 cursor-pointer"
                 type="button"
                 (click)="toggleDefault(addr)"
                 aria-label="Marcar como principal"
@@ -40,7 +40,7 @@
                 }
               </button>
               <a
-                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-base-200"
+                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-base-200 cursor-pointer"
                 [routerLink]="['/user/directions', 'new']"
                 [queryParams]="{ edit: addr.id }"
                 aria-label="Editar"
@@ -50,7 +50,7 @@
                 </svg>
               </a>
               <button
-                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-error/10 text-error"
+                class="h-9 w-9 flex items-center justify-center rounded-md transition-colors hover:bg-error/10 text-error cursor-pointer"
                 type="button"
                 (click)="remove(addr)"
                 aria-label="Eliminar"

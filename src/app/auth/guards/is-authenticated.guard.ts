@@ -10,8 +10,7 @@ export const IsAuthenticated: CanMatchFn = async () => {
   const isAuthenticated = await firstValueFrom(authService.checkStatus());
 
   if (!isAuthenticated) {
-    router.navigateByUrl('/');
-    return false;
+    return router.createUrlTree(['/']);
   }
 
   return true;
