@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap, finalize, map, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, finalize, map, switchMap, forkJoin } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '@shared/services/toast.service';
 import { CartItem } from 'src/app/carts/interfaces/cart-item';
@@ -30,13 +30,28 @@ export class CartService {
       this.cartSubject.next(items);
       return of(items);
     }
-    const source$ = this.auth.isAuthenticated()
-      ? this.http.get<CartItemsSource>(baseUrlCart)
-      : of(this.getCartFromLocalStorage());
-    return source$.pipe(
-      map(items => this.normalizeCartItems(items)),
-      tap(items => this.updateCacheAndEmit(items))
-    );
+    if (this.auth.isAuthenticated()) {
+      const guestItems = this.getCartFromLocalStorage();
+      const hasGuest = guestItems.length > 0;
+
+      const loadServer$ = this.http.get<CartItemsSource>(baseUrlCart).pipe(
+        map(items => this.normalizeCartItems(items)),
+        tap(items => this.updateCacheAndEmit(items))
+      );
+
+      if (hasGuest) {
+        return this.syncGuestCartToServer(guestItems).pipe(
+          switchMap(() => loadServer$)
+        );
+      }
+
+      return loadServer$;
+    } else {
+      return of(this.getCartFromLocalStorage()).pipe(
+        map(items => this.normalizeCartItems(items)),
+        tap(items => this.updateCacheAndEmit(items))
+      );
+    }
   }
 
   addItem(product: Product, quantity = 1, options?: { showToast?: boolean }): Observable<CartItem | void> {
@@ -212,5 +227,25 @@ export class CartService {
   private resetCart(): void {
     this.cartCache.clear();
     this.cartSubject.next([]);
+  }
+
+  private syncGuestCartToServer(items: CartItem[]): Observable<unknown> {
+    const requests = items
+      .map(item => {
+        const productId = item.productId || item.id;
+        const quantity = item.quantity || 1;
+        if (!productId) return null;
+        return this.http.post<CartItem>(`${baseUrlCart}/items`, { productId, quantity });
+      })
+      .filter((req): req is Observable<CartItem> => !!req);
+
+    if (!requests.length) {
+      localStorage.removeItem('guestCart');
+      return of(null);
+    }
+
+    return forkJoin(requests).pipe(
+      tap(() => localStorage.removeItem('guestCart'))
+    );
   }
 }

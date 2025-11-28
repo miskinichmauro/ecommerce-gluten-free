@@ -131,6 +131,9 @@ export class CheckoutComponent implements OnInit {
       next: (res) => {
         this.orderResponse.set(res);
         this.currentStep.set(4);
+        try {
+          this.accountService.clearCart?.();
+        } catch {}
       },
       error: () => {},
       complete: () => this.submitting.set(false),

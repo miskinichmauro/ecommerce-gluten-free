@@ -7,6 +7,7 @@ import { BillingProfileDto, OrderDto, UserAddressDto, UserProfileDto } from '../
 
 const accountBase = `${environment.baseUrl}/account`;
 const ordersBase = `${environment.baseUrl}/orders`;
+const cartBase = `${environment.baseUrl}/cart`;
 
 interface CheckoutPayload {
   shippingAddressId: string;
@@ -106,5 +107,10 @@ export class AccountService {
       tap(() => this.toast.activateSuccess()),
       finalize(() => this.toast.deactivateLoading())
     );
+  }
+
+  clearCart() {
+    localStorage.removeItem('guestCart');
+    return this.http.delete<void>(cartBase).pipe(finalize(() => {})).subscribe({ complete: () => {} });
   }
 }

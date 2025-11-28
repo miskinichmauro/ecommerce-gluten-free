@@ -218,21 +218,23 @@
   </div>
 
   <div class="flex items-center justify-between">
-    <button
-      class="btn btn-outline"
-      type="button"
-      (click)="prevStep()"
-      [disabled]="currentStep() === 1 || (orderResponse() && currentStep() === 4)"
-    >
-      Anterior
-    </button>
-    <button
-      class="btn btn-primary"
-      type="button"
-      (click)="nextStep()"
-      [disabled]="currentStep() === steps.length || (currentStep() === 3 && (submitting() || !selectedShippingId())) || (orderResponse() && currentStep() === 4)"
-    >
-      Siguiente
-    </button>
+    @if (currentStep() < 4) {
+      <button
+        class="btn btn-outline"
+        type="button"
+        (click)="prevStep()"
+        [disabled]="currentStep() === 1 || (orderResponse() && currentStep() === 4)"
+      >
+        Anterior
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="nextStep()"
+        [disabled]="currentStep() === steps.length || (currentStep() === 3 && (submitting() || !selectedShippingId())) || (orderResponse() && currentStep() === 4)"
+      >
+        Siguiente
+      </button>
+    }
   </div>
 </section>
