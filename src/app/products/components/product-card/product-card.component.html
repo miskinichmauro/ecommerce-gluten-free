@@ -3,7 +3,7 @@
 >
   <figure class="w-full h-48 flex items-center justify-center bg-base-200 overflow-hidden">
     <img
-      [src]="(product().images ?? []) | productImage"
+      [src]="(product().images ?? []) | productImage:'medium'"
       alt="{{ product().title }}"
       [routerLink]="['/product', product().slug]"
       class="cursor-pointer w-full h-full object-cover object-center"

@@ -10,6 +10,7 @@ import { AddToCartButtonComponent } from 'src/app/products/components/add-to-car
 import { ImageGalleryComponent, GalleryImage } from 'src/app/shared/components/image-gallery/image-gallery.component';
 import { Category } from 'src/app/categories/interfaces/category.interface';
 import { Tag } from 'src/app/tags/interfaces/tag.interface';
+import { resolveProductImageValue } from '@shared/utils/product-image.utils';
 
 @Component({
   selector: 'app-product',
@@ -51,43 +52,44 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  productImageUrls = computed(() => {
+  galleryImages = computed<GalleryImage[]>(() => {
     const product = this.product();
     if (!product) return [];
 
     const source = Array.isArray(product.images) ? product.images : [];
-    const urls = source
-      .map((img) => this.resolveImageValue(img))
-      .filter((img): img is string => !!img)
-      .map((img) => this.mapToImageUrl(img));
+    const images = source
+      .map((img, idx) => {
+        const original = resolveProductImageValue(img, 'original');
+        if (!original) return null;
+        const small = resolveProductImageValue(img, 'small');
+        const base: GalleryImage = {
+          src: this.mapToImageUrl(original),
+          identifier: `${idx}-${original}`,
+          alt: product.title ?? `Imagen ${idx + 1}`,
+        };
 
-    return urls.length ? urls : ['assets/images/default-image.jpg'];
-  });
+        if (small) {
+          base.thumb = this.mapToImageUrl(small);
+        }
 
-  galleryImages = computed<GalleryImage[]>(() => {
-    return this.productImageUrls().map((src, idx) => ({
-      src,
-      identifier: `${idx}-${src}`,
-      alt: this.product()?.title ?? `Imagen ${idx + 1}`,
-    }));
-  });
+        return base;
+      })
+      .filter((img): img is GalleryImage => img !== null);
 
-  private resolveImageValue(value: unknown): string | null {
-    if (!value) return null;
-    if (typeof value === 'string') return value;
-    if (typeof value === 'object') {
-      const candidate =
-        (value as any).secureUrl ||
-        (value as any).url ||
-        (value as any).path ||
-        (value as any).fileName ||
-        (value as any).filename ||
-        (value as any).name ||
-        (value as any).id;
-      return typeof candidate === 'string' ? candidate : null;
+    if (images.length) {
+      return images;
     }
-    return null;
-  }
+
+    const fallback = 'assets/images/default-image.jpg';
+    return [
+      {
+        src: fallback,
+        identifier: 'fallback',
+        alt: product.title ?? 'Imagen',
+        thumb: fallback,
+      },
+    ];
+  });
 
   private mapToImageUrl(value: string): string {
     if (!value) return 'assets/images/default-image.jpg';

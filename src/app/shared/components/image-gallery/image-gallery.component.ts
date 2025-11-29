@@ -5,6 +5,7 @@ import { XCircle } from '../x-circle/x-circle';
 
 export interface GalleryImage {
   src: string;
+  thumb?: string;
   identifier?: string;
   alt?: string;
 }

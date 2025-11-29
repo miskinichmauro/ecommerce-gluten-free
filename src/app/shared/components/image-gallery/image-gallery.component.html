@@ -19,7 +19,7 @@
           [class.active]="currentIndex() === i"
           (click)="goTo(i)"
         >
-          <img [src]="img.src" [alt]="img.alt || ('Imagen ' + (i + 1))" />
+          <img [src]="img.thumb ?? img.src" [alt]="img.alt || ('Imagen ' + (i + 1))" />
 
           @if (removable()) {
             <span

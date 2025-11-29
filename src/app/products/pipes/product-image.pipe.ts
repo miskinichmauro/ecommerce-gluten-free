@@ -1,23 +1,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { ProductImageVariant, resolveProductImageValue } from '@shared/utils/product-image.utils';
 
 const baseUrl = environment.baseUrl.replace(/\/$/, '');
 const FALLBACK_IMAGE = 'assets/images/default-image.jpg';
 
-type ImageLike = string | { url?: string; secureUrl?: string; path?: string; id?: string; name?: string; fileName?: string; filename?: string };
+type ImageLike = unknown;
 
 @Pipe({
   name: 'productImage',
   standalone: true,
 })
 export class ProductImagePipe implements PipeTransform {
-  transform(value: ImageLike | ImageLike[] | null | undefined): string {
+  transform(
+    value: ImageLike | ImageLike[] | null | undefined,
+    variant: ProductImageVariant = 'original'
+  ): string {
     if (!value || (Array.isArray(value) && value.length === 0)) {
       return FALLBACK_IMAGE;
     }
 
     const candidates = Array.isArray(value) ? value : [value];
-    const resolved = this.resolveFirst(candidates);
+    const resolved = this.resolveFirst(candidates, variant);
 
     if (!resolved) {
       return FALLBACK_IMAGE;
@@ -39,9 +43,9 @@ export class ProductImagePipe implements PipeTransform {
     return `${baseUrl}/files/products/${encoded}`;
   }
 
-  private resolveFirst(values: ImageLike[]): string | null {
+  private resolveFirst(values: ImageLike[], variant: ProductImageVariant): string | null {
     for (const value of values) {
-      const candidate = this.resolveImageValue(value);
+      const candidate = resolveProductImageValue(value, variant);
       if (candidate !== null && candidate !== undefined) {
         const str = typeof candidate === 'string' ? candidate : String(candidate);
         const trimmed = str.trim();
@@ -49,23 +53,5 @@ export class ProductImagePipe implements PipeTransform {
       }
     }
     return null;
-  }
-
-  private resolveImageValue(value: ImageLike | null | undefined): string | null {
-    if (!value) return null;
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    return (
-      value.secureUrl ||
-      value.url ||
-      value.path ||
-      value.fileName ||
-      value.filename ||
-      value.name ||
-      value.id ||
-      null
-    );
   }
 }
