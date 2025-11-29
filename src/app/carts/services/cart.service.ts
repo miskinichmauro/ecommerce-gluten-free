@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, tap, finalize, map, switchMap, forkJoin } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from '@shared/services/toast.service';
@@ -22,6 +22,14 @@ export class CartService {
 
   constructor() {
     this.loadCart().subscribe();
+    let previousStatus: string | null = null;
+    effect(() => {
+      const status = this.auth.authStatus();
+      if (status === 'authenticated' && previousStatus !== status) {
+        this.loadCart(true).subscribe();
+      }
+      previousStatus = status;
+    });
   }
 
   loadCart(force = false): Observable<CartItem[]> {
