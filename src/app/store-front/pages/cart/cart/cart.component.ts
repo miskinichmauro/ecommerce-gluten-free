@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, OnInit, DestroyRef, effect, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
 import { CartItemsComponent } from 'src/app/carts/cart-items/cart-items.component';
@@ -20,7 +20,6 @@ export class CartComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly configurationService = inject(ConfigurationService);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly cartItems$ = this.cartService.cart$;
 
@@ -38,12 +37,6 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.cartService.loadCart().subscribe();
-    const stopEffect = effect(() => {
-      if (this.authService.checkStatusSignal()) {
-        this.cartService.loadCart(true).subscribe();
-      }
-    });
-    this.destroyRef.onDestroy(() => stopEffect.destroy());
   }
 
   goToBuy() {

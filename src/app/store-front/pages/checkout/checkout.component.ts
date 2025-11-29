@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountService, CheckoutResponse } from '@store-front/users/services/account.service';
 import { BillingProfileDto, UserAddressDto } from '@store-front/users/interfaces/account.interfaces';
-import { CartService } from 'src/app/carts/services/cart.service';
 
 type PaymentMethod = 'cod' | 'online';
 type CodOption = 'cash' | 'card';
@@ -19,7 +18,6 @@ type CodOption = 'cash' | 'card';
 export class CheckoutComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly accountService = inject(AccountService);
-  private readonly cartService = inject(CartService);
 
   readonly steps = [
     { id: 1, label: 'Entrega' },
@@ -133,9 +131,9 @@ export class CheckoutComponent implements OnInit {
       next: (res) => {
         this.orderResponse.set(res);
         this.currentStep.set(4);
-        this.cartService.clearCart().subscribe({
-          error: () => {},
-        });
+        try {
+          this.accountService.clearCart?.();
+        } catch {}
       },
       error: () => {},
       complete: () => this.submitting.set(false),
