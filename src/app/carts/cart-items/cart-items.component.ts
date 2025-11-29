@@ -15,6 +15,7 @@ import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
 export class CartItemsComponent {
   cartItems = input.required<CartItem[]>();
   clearing = input<boolean>(false);
+  variant = input<'page' | 'sidebar'>('page');
   private readonly cartService = inject(CartService);
   private readonly removingIds = new Set<string>();
   private readonly animationDelay = 250;

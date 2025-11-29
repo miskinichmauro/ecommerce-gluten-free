@@ -1,6 +1,10 @@
 @for (item of cartItems(); track item.id) {
-  <div class="relative flex bg-base-100 shadow-sm rounded-lg mb-4 min-h-40 w-full overflow-hidden cart-item-card"
-       [class.cart-item-removing]="isRemoving(item.id) || clearing()">
+  <div
+    class="relative flex bg-base-100 shadow-sm rounded-lg mb-4 min-h-40 w-full overflow-hidden cart-item-card"
+    [class.min-h-[14rem]]="variant() === 'page'"
+    [class.min-h-[11rem]]="variant() === 'sidebar'"
+    [class.cart-item-removing]="isRemoving(item.id) || clearing()"
+  >
     <figure class="w-28 md:w-32 h-full shrink-0">
       <img [src]="(item.product?.images ?? []) | productImage"
            alt="{{ item.product?.title }}"
@@ -15,11 +19,26 @@
             </svg>
           </button>
         </div>
-        <h2 class="card-title cursor-pointer min-h-10 sm:min-h-12 md:min-h-14 text-sm sm:text-base md:text-lg line-clamp-2" [routerLink]="['/product', item.productId]">
-          {{ item.product?.title | slice:0:70 }}
+        <h2
+          class="card-title cursor-pointer min-h-10 sm:min-h-12 md:min-h-14 text-sm sm:text-base md:text-lg"
+          [class.line-clamp-2]="variant() === 'sidebar'"
+          [routerLink]="['/product', item.productId]"
+        >
+          {{
+            variant() === 'sidebar'
+              ? (item.product?.title | slice:0:70)
+              : item.product?.title
+          }}
         </h2>
-        <p class="min-h-12 sm:min-h-16 md:min-h-18 text-xs sm:text-sm md:text-base text-base-content/70 mt-1 line-clamp-3">
-          {{ item.product?.description | slice:0:100 }}
+        <p
+          class="min-h-12 sm:min-h-16 md:min-h-18 text-xs sm:text-sm md:text-base text-base-content/70 mt-1"
+          [class.line-clamp-3]="variant() === 'sidebar'"
+        >
+          {{
+            variant() === 'sidebar'
+              ? (item.product?.description | slice:0:100)
+              : item.product?.description
+          }}
         </p>
       </div>
       <div class="flex justify-between items-center mt-2">
