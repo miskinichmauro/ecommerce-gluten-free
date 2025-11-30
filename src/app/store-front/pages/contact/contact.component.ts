@@ -1,13 +1,12 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ContactService } from 'src/app/contacts/services/contact.service';
-import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { ContactCardComponent } from "src/app/contacts/components/contact-card/contact-card.component";
 import { Contact } from 'src/app/contacts/interfaces/contact.interface';
 
 @Component({
   selector: 'app-contact',
-  imports: [LoadingComponent, ContactCardComponent],
+  imports: [ContactCardComponent],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css',
 })

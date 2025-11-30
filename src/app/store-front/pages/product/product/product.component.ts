@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Product } from 'src/app/products/interfaces/product';
 import { ProductService } from 'src/app/products/services/products.service';
-import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { environment } from 'src/environments/environment';
 import { AddToCartButtonComponent } from 'src/app/products/components/add-to-cart-button/add-to-cart-button.component';
 import { ImageGalleryComponent, GalleryImage } from 'src/app/shared/components/image-gallery/image-gallery.component';
@@ -14,7 +13,7 @@ import { resolveProductImageValue } from '@shared/utils/product-image.utils';
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, LoadingComponent, ImageGalleryComponent, AddToCartButtonComponent],
+  imports: [CommonModule, ImageGalleryComponent, AddToCartButtonComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })

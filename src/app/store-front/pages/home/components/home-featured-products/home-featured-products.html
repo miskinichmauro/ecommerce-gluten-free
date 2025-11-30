@@ -5,7 +5,11 @@
   </div>
 
   @if (loading()) {
-    <loading />
+    <div class="space-y-4 mt-3">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <div class="h-44 rounded-3xl bg-base-200/40 animate-pulse"></div>
+      }
+    </div>
   } @else if (productResponse()?.products?.length) {
     <product-carrusel [products]="productResponse()?.products ?? []" />
   } @else {

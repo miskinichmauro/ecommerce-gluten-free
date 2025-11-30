@@ -31,8 +31,15 @@
   }
 
   @if (loading()) {
-    <div class="min-h-[50vh]">
-      <loading />
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <article class="skeletor-card p-5 space-y-4">
+          <div class="skeletor-thumb"></div>
+          <div class="skeletor-line w-3/4"></div>
+          <div class="skeletor-line w-1/2"></div>
+          <div class="h-3 w-full skeletor"></div>
+        </article>
+      }
     </div>
   }
 

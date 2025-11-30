@@ -16,7 +16,14 @@
 
     <!-- Categorías destacadas -->
     <div class="mt-5 md:mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 justify-items-center">
-      @if (topCategories().length) {
+      @if (loading()) {
+        @for (placeholder of [1, 2, 3, 4]; track placeholder) {
+          <div class="w-full h-28 rounded-xl border border-white/10 bg-white/10 backdrop-blur">
+            <div class="h-4 w-3/4 mt-4 mx-auto rounded-full bg-white/30 skeletor"></div>
+            <div class="h-3 w-1/2 mt-2 mx-auto rounded-full bg-white/20 skeletor"></div>
+          </div>
+        }
+      } @else if (topCategories().length) {
         @for (cat of topCategories(); track cat.id) {
           <a routerLink="/products" [queryParams]="{ categoryId: cat.id }" class="top-cat">
             <div class="top-cat__card rounded-xl border border-white/10 bg-white/10 hover:bg-white/20 backdrop-blur p-3 transition-colors">

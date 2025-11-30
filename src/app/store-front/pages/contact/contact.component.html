@@ -2,8 +2,18 @@
 <h1 class="text-3xl font-bold mb-6 mt-6">Contactos</h1>
 
 @if (loading()) {
-  <div class="min-h-[50vh] gap-4">
-    <loading />
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    @for (placeholder of [1, 2, 3]; track placeholder) {
+      <div class="skeletor-card p-5 space-y-4">
+        <div class="skeletor-title"></div>
+        <div class="skeletor-line w-5/6"></div>
+        <div class="skeletor-line w-2/3"></div>
+        <div class="flex items-center gap-3">
+          <div class="skeletor-pill"></div>
+          <div class="skeletor-pill w-16"></div>
+        </div>
+      </div>
+    }
   </div>
 }
 

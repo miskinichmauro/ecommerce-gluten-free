@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { LoadingComponent } from 'src/app/shared/components/loading/loading.component';
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { RecipeCardComponent } from 'src/app/recipes/components/recipe-card/recipe-card.component';
@@ -9,7 +8,7 @@ import { IngredientSearchStateService } from '@shared/services/ingredient-search
 
 @Component({
   selector: 'app-recipe',
-  imports: [LoadingComponent, RecipeCardComponent, XCircle],
+  imports: [RecipeCardComponent, XCircle],
   templateUrl: './recipe.component.html',
   styleUrls: ['./recipe.component.css', './recipe.chips.css'],
 })

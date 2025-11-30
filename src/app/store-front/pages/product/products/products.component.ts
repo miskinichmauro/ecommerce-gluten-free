@@ -5,7 +5,6 @@ import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader'
 import { ProductCardComponent } from "src/app/products/components/product-card/product-card.component";
 import { PaginationComponent } from "src/app/shared/components/pagination/pagination.component";
 import { ProductResponse } from 'src/app/products/interfaces/product';
-import { LoadingComponent } from "src/app/shared/components/loading/loading.component";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +15,7 @@ import { Tag } from 'src/app/tags/interfaces/tag.interface';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ProductCardComponent, PaginationComponent, LoadingComponent, ReactiveFormsModule],
+  imports: [CommonModule, ProductCardComponent, PaginationComponent, ReactiveFormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })

@@ -49,3 +49,29 @@ swiper-container::part(wrapper) {
     background-color: rgba(255, 255, 255, 0.72) !important;
   }
 }
+
+@layer utilities {
+  .skeletor {
+    @apply animate-pulse bg-base-200/40;
+  }
+
+  .skeletor-card {
+    @apply skeletor rounded-2xl border border-base-200/30 shadow-sm;
+  }
+
+  .skeletor-line {
+    @apply skeletor rounded-full h-4 w-full;
+  }
+
+  .skeletor-title {
+    @apply skeletor rounded-full h-6 w-3/4;
+  }
+
+  .skeletor-pill {
+    @apply skeletor rounded-md h-9 w-24;
+  }
+
+  .skeletor-thumb {
+    @apply skeletor rounded-lg h-24 w-24;
+  }
+}

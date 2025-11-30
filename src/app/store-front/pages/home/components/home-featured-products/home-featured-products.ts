@@ -2,13 +2,12 @@ import { Component, effect, inject, Signal } from '@angular/core';
 import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader';
 import { ProductResponse } from 'src/app/products/interfaces/product';
 import { ProductCarruselComponent } from 'src/app/products/components/product-carrusel/product-carrusel.component';
-import { LoadingComponent } from 'src/app/shared/components/loading/loading.component';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'home-featured-products',
   standalone: true,
-  imports: [RouterLink, ProductCarruselComponent, LoadingComponent],
+  imports: [RouterLink, ProductCarruselComponent],
   templateUrl: './home-featured-products.html',
   styleUrl: './home-featured-products.css',
 })

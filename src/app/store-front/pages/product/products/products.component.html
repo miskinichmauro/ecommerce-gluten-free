@@ -115,8 +115,18 @@
     </div>
 
     @if (loading()) {
-      <div class="min-h-[50vh] gap-4">
-        <loading />
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 mt-6 gap-4 sm:gap-6 md:gap-8">
+        @for (placeholder of [1, 2, 3, 4, 5, 6, 7, 8]; track placeholder) {
+          <article class="skeletor-card p-3 space-y-3">
+            <div class="h-40 rounded-2xl bg-base-200/40"></div>
+            <div class="skeletor-line"></div>
+            <div class="skeletor-line w-2/3"></div>
+            <div class="flex items-center justify-between">
+              <div class="skeletor-line w-1/3"></div>
+              <div class="skeletor-pill w-16"></div>
+            </div>
+          </article>
+        }
       </div>
     }
 
