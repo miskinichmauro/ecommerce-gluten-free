@@ -4,11 +4,7 @@
   @if (loading()) {
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       @for (placeholder of [1, 2]; track placeholder) {
-        <div class="skeletor-card p-4 space-y-3">
-          <div class="skeletor-line w-2/3"></div>
-          <div class="skeletor-line w-full"></div>
-          <div class="skeletor-line w-1/2"></div>
-        </div>
+        <contact-skeleton />
       }
     </div>
   } @else if (contacts().length) {

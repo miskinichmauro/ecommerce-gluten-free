@@ -3,11 +3,12 @@ import { useProductsLoader } from 'src/app/shared/composables/useProductsLoader'
 import { ProductResponse } from 'src/app/products/interfaces/product';
 import { ProductCarruselComponent } from 'src/app/products/components/product-carrusel/product-carrusel.component';
 import { RouterLink } from '@angular/router';
+import { ProductCardSkeleton } from "@products/components/product-card-skeletor/product-card-skeleton";
 
 @Component({
   selector: 'home-featured-products',
   standalone: true,
-  imports: [RouterLink, ProductCarruselComponent],
+  imports: [RouterLink, ProductCarruselComponent, ProductCardSkeleton],
   templateUrl: './home-featured-products.html',
   styleUrl: './home-featured-products.css',
 })

@@ -8,12 +8,12 @@ import { environment } from 'src/environments/environment';
 import { AddToCartButtonComponent } from 'src/app/products/components/add-to-cart-button/add-to-cart-button.component';
 import { ImageGalleryComponent, GalleryImage } from 'src/app/shared/components/image-gallery/image-gallery.component';
 import { Category } from 'src/app/categories/interfaces/category.interface';
-import { Tag } from 'src/app/tags/interfaces/tag.interface';
 import { resolveProductImageValue } from '@shared/utils/product-image.utils';
+import { ProductSkeleton } from "@products/components/product-skeleton/product-skeleton";
 
 @Component({
   selector: 'app-product',
-  imports: [CommonModule, ImageGalleryComponent, AddToCartButtonComponent],
+  imports: [CommonModule, ImageGalleryComponent, AddToCartButtonComponent, ProductSkeleton],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })

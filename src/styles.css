@@ -52,26 +52,23 @@ swiper-container::part(wrapper) {
 
 @layer utilities {
   .skeletor {
-    @apply animate-pulse rounded-2xl overflow-hidden border border-base-200/40 shadow-lg shadow-base-200/40 bg-gradient-to-r from-base-200/80 via-base-200/60 to-base-200/80;
-  }
-
-  .skeletor-card {
-    @apply rounded-3xl border border-base-300/50 bg-base-100/70 shadow-lg shadow-base-200/30;
+    @apply animate-pulse rounded-xl bg-base-200/70;
   }
 
   .skeletor-line {
-    @apply rounded-full h-4 w-full bg-gradient-to-r from-base-200/80 via-base-200/60 to-base-200/80 shadow-inner shadow-base-200/30;
+    @apply h-3 w-full rounded-full bg-base-300/70;
   }
 
   .skeletor-title {
-    @apply rounded-full h-6 w-3/4 bg-gradient-to-r from-base-200/90 via-base-200/70 to-base-200/90 shadow-inner shadow-base-200/60;
+    @apply h-4 w-3/4 rounded-full bg-base-300/80;
   }
 
   .skeletor-pill {
-    @apply rounded-md h-9 w-24 bg-gradient-to-r from-base-200/90 via-base-200/60 to-base-200/90 shadow-inner shadow-base-200/40;
+    @apply h-8 w-24 rounded-md bg-base-300/80;
   }
 
   .skeletor-thumb {
-    @apply rounded-lg h-24 w-24 bg-gradient-to-r from-base-200/90 via-base-200/70 to-base-200/90 shadow-inner shadow-base-200/40;
+    @apply w-full h-full bg-base-300/70 rounded-lg;
   }
 }
+

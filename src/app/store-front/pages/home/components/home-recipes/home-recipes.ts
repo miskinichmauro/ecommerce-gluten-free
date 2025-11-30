@@ -2,11 +2,12 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { RecipeCardComponent } from 'src/app/recipes/components/recipe-card/recipe-card.component';
 import { RouterLink } from '@angular/router';
+import { RecipeSkeleton } from "@recipes/components/recipe-skeleton/recipe-skeleton";
 
 @Component({
   selector: 'home-recipes',
   standalone: true,
-  imports: [RouterLink, RecipeCardComponent],
+  imports: [RouterLink, RecipeCardComponent, RecipeSkeleton],
   templateUrl: './home-recipes.html',
   styleUrl: './home-recipes.css',
 })

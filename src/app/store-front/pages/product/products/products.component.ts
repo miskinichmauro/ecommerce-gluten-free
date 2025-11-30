@@ -12,10 +12,11 @@ import { CategoryService } from 'src/app/categories/services/category.service';
 import { TagService } from 'src/app/tags/services/tag.service';
 import { Category } from 'src/app/categories/interfaces/category.interface';
 import { Tag } from 'src/app/tags/interfaces/tag.interface';
+import { ProductCardSkeleton } from "@products/components/product-card-skeletor/product-card-skeleton";
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, ProductCardComponent, PaginationComponent, ReactiveFormsModule],
+  imports: [CommonModule, ProductCardComponent, PaginationComponent, ReactiveFormsModule, ProductCardSkeleton],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
