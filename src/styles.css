@@ -56,22 +56,22 @@ swiper-container::part(wrapper) {
   }
 
   .skeletor-card {
-    @apply skeletor rounded-2xl border border-base-200/30 shadow-sm;
+    @apply animate-pulse bg-base-200/40 rounded-2xl border border-base-200/30 shadow-sm;
   }
 
   .skeletor-line {
-    @apply skeletor rounded-full h-4 w-full;
+    @apply animate-pulse bg-base-200/40 rounded-full h-4 w-full;
   }
 
   .skeletor-title {
-    @apply skeletor rounded-full h-6 w-3/4;
+    @apply animate-pulse bg-base-200/40 rounded-full h-6 w-3/4;
   }
 
   .skeletor-pill {
-    @apply skeletor rounded-md h-9 w-24;
+    @apply animate-pulse bg-base-200/40 rounded-md h-9 w-24;
   }
 
   .skeletor-thumb {
-    @apply skeletor rounded-lg h-24 w-24;
+    @apply animate-pulse bg-base-200/40 rounded-lg h-24 w-24;
   }
 }
