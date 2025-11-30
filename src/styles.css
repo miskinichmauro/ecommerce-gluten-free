@@ -52,26 +52,26 @@ swiper-container::part(wrapper) {
 
 @layer utilities {
   .skeletor {
-    @apply animate-pulse bg-base-200/40;
+    @apply animate-pulse rounded-2xl overflow-hidden border border-base-200/40 shadow-lg shadow-base-200/40 bg-gradient-to-r from-base-200/80 via-base-200/60 to-base-200/80;
   }
 
   .skeletor-card {
-    @apply animate-pulse bg-base-200/40 rounded-2xl border border-base-200/30 shadow-sm;
+    @apply rounded-3xl border border-base-300/50 bg-base-100/70 shadow-lg shadow-base-200/30;
   }
 
   .skeletor-line {
-    @apply animate-pulse bg-base-200/40 rounded-full h-4 w-full;
+    @apply rounded-full h-4 w-full bg-gradient-to-r from-base-200/80 via-base-200/60 to-base-200/80 shadow-inner shadow-base-200/30;
   }
 
   .skeletor-title {
-    @apply animate-pulse bg-base-200/40 rounded-full h-6 w-3/4;
+    @apply rounded-full h-6 w-3/4 bg-gradient-to-r from-base-200/90 via-base-200/70 to-base-200/90 shadow-inner shadow-base-200/60;
   }
 
   .skeletor-pill {
-    @apply animate-pulse bg-base-200/40 rounded-md h-9 w-24;
+    @apply rounded-md h-9 w-24 bg-gradient-to-r from-base-200/90 via-base-200/60 to-base-200/90 shadow-inner shadow-base-200/40;
   }
 
   .skeletor-thumb {
-    @apply animate-pulse bg-base-200/40 rounded-lg h-24 w-24;
+    @apply rounded-lg h-24 w-24 bg-gradient-to-r from-base-200/90 via-base-200/70 to-base-200/90 shadow-inner shadow-base-200/40;
   }
 }

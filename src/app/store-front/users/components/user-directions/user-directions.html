@@ -2,23 +2,35 @@
   <div class="flex items-center justify-between gap-3">
     <div>
       <h2 class="text-xl font-bold">Mis direcciones</h2>
-      <p class="text-sm text-base-content/70">Revisa tus datos de envío.</p>
+      <p class="text-sm text-base-content/70">Revisa tus datos de envio.</p>
     </div>
     <a class="btn btn-primary btn-sm" routerLink="/user/directions/new">Agregar nuevo</a>
   </div>
 
   <div class="space-y-3">
     @if (loading()) {
-      <p>Cargando direcciones...</p>
+      <div class="grid gap-4">
+        @for (placeholder of [1, 2, 3]; track placeholder) {
+          <article class="skeletor-card p-5 space-y-4">
+            <div class="skeletor-title w-1/2"></div>
+            <div class="skeletor-line w-3/4"></div>
+            <div class="skeletor-line"></div>
+            <div class="flex gap-2">
+              <div class="skeletor-pill h-8 w-20"></div>
+              <div class="skeletor-pill h-8 w-16"></div>
+            </div>
+          </article>
+        }
+      </div>
     } @else if (addresses().length === 0) {
-      <p class="text-base-content/70">Aún no agregaste direcciones.</p>
+      <p class="text-base-content/70">Todavia no agregaste direcciones.</p>
     } @else {
       @for (addr of addresses(); track addr.id) {
         <article class="p-4 border border-base-300 rounded-lg bg-base-100 shadow-sm">
           <div class="flex items-start justify-between gap-3">
             <div class="space-y-1">
               <h3 class="font-semibold text-lg leading-tight">{{ addr.label }}</h3>
-              <p class="text-sm text-base-content/70 leading-snug">{{ addr.fullName }} · {{ addr.phone }}</p>
+              <p class="text-sm text-base-content/70 leading-snug">{{ addr.fullName }} - {{ addr.phone }}</p>
               <p class="text-sm text-base-content/80 leading-snug">{{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.country }}</p>
             </div>
 
