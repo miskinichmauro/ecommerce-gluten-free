@@ -14,6 +14,7 @@ export class RecipeCardComponent {
     description?: string | null;
     recipeIngredients?: Array<{ ingredient?: { name?: string } }>;
     matchCount?: number;
+    matchedIngredientNames?: string[];
   }>();
 
   ingredients = computed<string[]>(() =>
@@ -29,7 +30,13 @@ export class RecipeCardComponent {
     return new Set(values.map((v) => v.trim().toLowerCase()).filter(Boolean));
   });
 
+  private matchedIngredientSet = computed<Set<string>>(() => {
+    const matches = this.recipe().matchedIngredientNames ?? [];
+    return new Set(matches.map((match) => match.trim().toLowerCase()).filter(Boolean));
+  });
+
   isIngredientSearched(name: string) {
-    return this.ingredientFilterSet().has(name.trim().toLowerCase());
+    const normalized = name.trim().toLowerCase();
+    return this.matchedIngredientSet().has(normalized) || this.ingredientFilterSet().has(normalized);
   }
 }

@@ -23,17 +23,19 @@
           </div>
         </div>
       }
-      @if (queryIngredients().length) {
+      @if (matchedIngredients().length || queryIngredients().length) {
         <div>
           <div class="flex items-center justify-between gap-4">
             <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">Ingredientes</p>
-            <button
-              type="button"
-              class="text-xs cursor-pointer text-primary font-semibold underline hover:text-primary-focus"
-              (click)="clearIngredients()"
-            >
-              Limpiar
-            </button>
+            @if (queryIngredients().length) {
+              <button
+                type="button"
+                class="text-xs cursor-pointer text-primary font-semibold underline hover:text-primary-focus"
+                (click)="clearIngredients()"
+              >
+                Limpiar
+              </button>
+            }
           </div>
           <div class="flex flex-wrap gap-2">
             @for (ing of queryIngredients(); track ing) {
@@ -43,6 +45,9 @@
                   <x-circle />
                 </span>
               </button>
+            }
+            @for (ing of extraMatchedIngredients(); track ing) {
+              <span class="chip-small chip-small--disabled text-base-content/70 border-base-200/70 truncate">{{ ing }}</span>
             }
           </div>
         </div>

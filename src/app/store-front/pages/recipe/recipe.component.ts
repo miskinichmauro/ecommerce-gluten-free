@@ -25,6 +25,31 @@ export class RecipeComponent implements OnInit {
   error = signal<string | null>(null);
   total = signal<number>(0);
   queryIngredients = signal<string[]>([]);
+  matchedIngredients = computed<string[]>(() => {
+    const results = this.ingredientState.results();
+    const recipes = results?.recipes ?? [];
+    const set = new Set<string>();
+    recipes.forEach((recipe) => {
+      (recipe.matchedIngredientNames ?? []).forEach((name) => {
+        const trimmed = name?.trim();
+        if (trimmed) {
+          set.add(trimmed);
+        }
+      });
+    });
+    return Array.from(set);
+  });
+  extraMatchedIngredients = computed<string[]>(() => {
+    const querySet = new Set(
+      this.queryIngredients()
+        .map((value) => value.trim().toLowerCase())
+        .filter(Boolean)
+    );
+    return this.matchedIngredients().filter((name) => {
+      const normalized = name.trim().toLowerCase();
+      return normalized && !querySet.has(normalized);
+    });
+  });
   readonly searchTextRaw = computed(() => this.ingredientState.searchTextRaw());
   readyToShowEmpty = signal<boolean>(false);
 

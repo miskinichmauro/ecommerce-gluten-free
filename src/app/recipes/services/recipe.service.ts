@@ -12,6 +12,7 @@ export interface RecipeSearchResponse {
   pages: number;
   recipes: Array<Recipe & {
     matchCount?: number;
+    matchedIngredientNames?: string[];
     recipeIngredients?: Array<{ ingredient?: { name?: string } }>;
   }>;
 }

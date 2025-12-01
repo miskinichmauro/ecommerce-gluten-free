@@ -33,3 +33,6 @@
   color: hsl(var(--bc));
   font-size: 0.85rem;
 }
+.chip-small--disabled {
+  cursor: default;
+}
