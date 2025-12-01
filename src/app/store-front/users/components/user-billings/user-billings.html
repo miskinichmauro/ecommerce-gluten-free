@@ -9,19 +9,7 @@
 
   <div class="space-y-3">
     @if (loading()) {
-      <div class="grid gap-4">
-        @for (placeholder of [1, 2, 3]; track placeholder) {
-          <article class="skeletor-card p-5 space-y-4">
-            <div class="skeletor-title"></div>
-            <div class="skeletor-line w-3/4"></div>
-            <div class="skeletor-line w-1/2"></div>
-            <div class="flex gap-2">
-              <div class="skeletor-pill h-8 w-28"></div>
-              <div class="skeletor-pill h-8 w-14"></div>
-            </div>
-          </article>
-        }
-      </div>
+      <user-billings-skeleton></user-billings-skeleton>
     } @else if (profiles().length === 0) {
       <p class="text-base-content/70">Aún no agregaste datos de facturación.</p>
     } @else {

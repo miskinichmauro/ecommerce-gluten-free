@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { AccountService } from '@store-front/users/services/account.service';
 import { OrderDto } from '@store-front/users/interfaces/account.interfaces';
 import { GuaraniesPipe } from '@shared/pipes/guaranies-pipe';
+import { UserOrdersSkeleton } from '@store-front/users/components/user-orders-skeleton/user-orders-skeleton';
 
 @Component({
   selector: 'app-user-orders',
   standalone: true,
-  imports: [CommonModule, RouterLink, GuaraniesPipe],
+  imports: [CommonModule, RouterLink, GuaraniesPipe, UserOrdersSkeleton],
   templateUrl: './user-orders.html',
   styleUrl: './user-orders.css',
 })
@@ -30,9 +31,9 @@ export class UserOrders implements OnInit {
     this.loadOrders();
   }
 
-  loadOrders() {
+  loadOrders(force = false) {
     this.loading.set(true);
-    this.accountService.getOrders(20, 0).subscribe({
+    this.accountService.getOrders(20, 0, { force }).subscribe({
       next: (res) => this.orders.set(res ?? []),
       error: () => this.orders.set([]),
       complete: () => this.loading.set(false),

@@ -5,7 +5,7 @@
   </div>
 
   @if (loading()) {
-    <p>Cargando pedidos...</p>
+    <user-orders-skeleton></user-orders-skeleton>
   } @else if (orders().length === 0) {
     <div class="text-base-content/70 space-y-3">
       <p>Aun no tienes pedidos.</p>
