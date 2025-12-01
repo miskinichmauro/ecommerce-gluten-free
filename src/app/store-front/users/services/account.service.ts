@@ -1,9 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ToastService } from '@shared/services/toast.service';
-import { finalize, Observable, of, shareReplay, tap } from 'rxjs';
+import { finalize, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BillingProfileDto, OrderDto, UserAddressDto, UserProfileDto } from '../interfaces/account.interfaces';
+
+interface OrdersResponse {
+  items: OrderDto[];
+  total: number;
+}
 
 const accountBase = `${environment.baseUrl}/account`;
 const ordersBase = `${environment.baseUrl}/orders`;
@@ -24,8 +29,8 @@ export interface CheckoutResponse {
 export class AccountService {
   private readonly http = inject(HttpClient);
   private readonly toast = inject(ToastService);
-  private readonly ordersCache = new Map<string, OrderDto[]>();
-  private readonly ordersRequest = new Map<string, Observable<OrderDto[]>>();
+  private readonly ordersCache = new Map<string, OrdersResponse>();
+  private readonly ordersRequest = new Map<string, Observable<OrdersResponse>>();
   private addressesCache: UserAddressDto[] | null = null;
   private addressesRequest$: Observable<UserAddressDto[]> | null = null;
   private billingsCache: BillingProfileDto[] | null = null;
@@ -166,7 +171,7 @@ export class AccountService {
     );
   }
 
-  getOrders(limit = 10, offset = 0, options?: { force?: boolean }): Observable<OrderDto[]> {
+  getOrders(limit = 10, offset = 0, options?: { force?: boolean }): Observable<OrdersResponse> {
     const key = this.cacheKey(limit, offset);
     if (options?.force) {
       this.ordersCache.delete(key);
@@ -179,11 +184,28 @@ export class AccountService {
 
     let request$ = this.ordersRequest.get(key);
     if (!request$) {
-      request$ = this.http.get<OrderDto[]>(`${ordersBase}?limit=${limit}&offset=${offset}`).pipe(
-        tap(res => this.ordersCache.set(key, res ?? [])),
-        shareReplay({ bufferSize: 1, refCount: true }),
-        finalize(() => this.ordersRequest.delete(key))
-      );
+      request$ = this.http
+        .get<OrderDto[]>(`${ordersBase}?limit=${limit}&offset=${offset}`, { observe: 'response' })
+        .pipe(
+          map((response: HttpResponse<OrderDto[]>) => {
+            const headerValue = response.headers.get('x-total-count') ?? response.headers.get('X-Total-Count');
+            const parsedTotal =
+              typeof headerValue === 'string' && headerValue.trim()
+                ? Number(headerValue)
+                : undefined;
+            const total =
+              typeof parsedTotal === 'number' && !Number.isNaN(parsedTotal)
+                ? parsedTotal
+                : response.body?.length ?? 0;
+            return {
+              items: response.body ?? [],
+              total,
+            };
+          }),
+          tap(res => this.ordersCache.set(key, res)),
+          shareReplay({ bufferSize: 1, refCount: true }),
+          finalize(() => this.ordersRequest.delete(key))
+        );
       this.ordersRequest.set(key, request$);
     }
     return request$;

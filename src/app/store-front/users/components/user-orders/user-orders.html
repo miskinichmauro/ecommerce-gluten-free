@@ -35,5 +35,13 @@
         </article>
       }
     </div>
+    @if (totalPages() > 1) {
+      <div class="pt-4 flex justify-center">
+        <pagination
+          [pages]="totalPages()"
+          [currentPage]="paginationService.currentPage()"
+        ></pagination>
+      </div>
+    }
   }
 </section>
