@@ -1,5 +1,5 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
 import { CartItemsComponent } from 'src/app/carts/cart-items/cart-items.component';
@@ -15,7 +15,7 @@ import { ConfigurationService } from '@shared/services/configuration.service';
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
 })
-export class CartComponent implements OnInit {
+export class CartComponent {
   private readonly cartService = inject(CartService);
   private readonly authService = inject(AuthService);
   private readonly configurationService = inject(ConfigurationService);
@@ -34,10 +34,6 @@ export class CartComponent implements OnInit {
   readonly total$ = combineLatest([this.subtotal$, this.shipping$]).pipe(
     map(([subtotal, shipping]) => subtotal + shipping)
   );
-
-  ngOnInit(): void {
-    this.cartService.loadCart().subscribe();
-  }
 
   goToBuy() {
     const isAuthenticated = this.authService.isAuthenticated();

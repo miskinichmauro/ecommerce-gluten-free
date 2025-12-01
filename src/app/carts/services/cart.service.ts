@@ -22,7 +22,7 @@ export class CartService {
 
   constructor() {
     this.loadCart().subscribe();
-    let previousStatus: string | null = null;
+    let previousStatus: string = this.auth.authStatus();
     effect(() => {
       const status = this.auth.authStatus();
       if (status === 'authenticated' && previousStatus !== status) {
@@ -38,10 +38,10 @@ export class CartService {
       this.cartSubject.next(items);
       return of(items);
     }
+
     if (this.auth.isAuthenticated()) {
       const guestItems = this.getCartFromLocalStorage();
       const hasGuest = guestItems.length > 0;
-
       const loadServer$ = this.http.get<CartItemsSource>(baseUrlCart).pipe(
         map(items => this.normalizeCartItems(items)),
         tap(items => this.updateCacheAndEmit(items))
@@ -75,7 +75,6 @@ export class CartService {
       quantity
     );
     if (this.auth.isAuthenticated()) {
-      // Optimistic append
       this.updateCacheAndEmit([...this.cartSubject.value, cartItem]);
       if (showToast) this.toast.activateLoading();
       return this.http.post<CartItem>(`${baseUrlCart}/items`, { productId: product.id, quantity }).pipe(

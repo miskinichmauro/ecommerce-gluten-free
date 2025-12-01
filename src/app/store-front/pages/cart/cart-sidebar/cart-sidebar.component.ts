@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -15,16 +15,12 @@ import { ConfigurationService } from '@shared/services/configuration.service';
   templateUrl: './cart-sidebar.component.html',
   styleUrls: [],
 })
-export class CartSidebarComponent implements OnInit {
+export class CartSidebarComponent {
   cartService = inject(CartService);
   private readonly configurationService = inject(ConfigurationService);
   private readonly router = inject(Router);
   cartItems$ = this.cartService.cart$;
   clearing = signal(false);
-
-  ngOnInit(): void {
-    this.cartService.loadCart().subscribe();
-  }
 
   readonly total$ = this.cartItems$.pipe(
     map(items => items.reduce((acc, item) => acc + (item.product?.price ?? 0) * item.quantity, 0))
