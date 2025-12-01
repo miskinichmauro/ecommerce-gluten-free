@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RecipeService } from 'src/app/recipes/services/recipe.service';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { RecipeCardComponent } from 'src/app/recipes/components/recipe-card/recipe-card.component';
+import { RecipeSkeleton } from 'src/app/recipes/components/recipe-skeleton/recipe-skeleton';
 import { XCircle } from 'src/app/shared/components/x-circle/x-circle';
 import { IngredientSearchStateService } from '@shared/services/ingredient-search-state.service';
 
 @Component({
   selector: 'app-recipe',
-  imports: [RecipeCardComponent, XCircle],
+  imports: [RecipeCardComponent, RecipeSkeleton, XCircle],
   templateUrl: './recipe.component.html',
   styleUrls: ['./recipe.component.css', './recipe.chips.css'],
 })
@@ -24,6 +25,8 @@ export class RecipeComponent implements OnInit {
   error = signal<string | null>(null);
   total = signal<number>(0);
   queryIngredients = signal<string[]>([]);
+  readonly searchTextRaw = computed(() => this.ingredientState.searchTextRaw());
+  readyToShowEmpty = signal<boolean>(false);
 
   constructor() {
     effect(() => {
@@ -36,12 +39,14 @@ export class RecipeComponent implements OnInit {
         return;
       }
 
+      if (!this.readyToShowEmpty()) {
+        return;
+      }
+
       if (this.queryIngredients().length) {
         this.loading.set(false);
         this.searching.set(false);
-      }
-
-      if (!this.queryIngredients().length) {
+      } else {
         this.loading.set(false);
         this.searching.set(false);
         this.recipes.set(this.allRecipes());
@@ -54,10 +59,12 @@ export class RecipeComponent implements OnInit {
       this.queryIngredients.set(ings ?? []);
 
       if (!ings || !ings.length) {
-        this.loading.set(false);
-        this.searching.set(false);
-        this.recipes.set(this.allRecipes());
-        this.total.set(this.allRecipes().length);
+        if (this.readyToShowEmpty()) {
+          this.loading.set(false);
+          this.searching.set(false);
+          this.recipes.set(this.allRecipes());
+          this.total.set(this.allRecipes().length);
+        }
         return;
       }
 
@@ -73,6 +80,7 @@ export class RecipeComponent implements OnInit {
   async getRecipes() {
     this.loading.set(true);
     this.error.set(null);
+    this.readyToShowEmpty.set(false);
     try {
       const data = await firstValueFrom(this.recipeService.getAll());
       this.recipes.set(data);
@@ -85,6 +93,7 @@ export class RecipeComponent implements OnInit {
   } finally {
       this.loading.set(false);
       this.cdr.markForCheck();
+      this.readyToShowEmpty.set(true);
     }
   }
 
@@ -108,6 +117,8 @@ export class RecipeComponent implements OnInit {
   clearIngredients() {
     this.ingredientState.setIngredients([]);
     this.ingredientState.setResults(null);
+    this.ingredientState.setSearchTextSegments([]);
+    this.ingredientState.setSearchTextRaw('');
     this.queryIngredients.set([]);
     this.recipes.set(this.allRecipes());
     this.total.set(this.allRecipes().length);
@@ -116,9 +127,15 @@ export class RecipeComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
+  clearSearchTextOnly() {
+    this.ingredientState.setSearchTextSegments([]);
+    this.ingredientState.setSearchTextRaw('');
+  }
+
   private async fetchByIngredients(ingredients: string[]) {
     this.loading.set(true);
     this.error.set(null);
+    this.readyToShowEmpty.set(false);
     try {
       const res = await firstValueFrom(this.recipeService.searchByIngredients(ingredients, { limit: 10, offset: 0 }));
       this.recipes.set(res.recipes ?? []);
@@ -131,6 +148,7 @@ export class RecipeComponent implements OnInit {
       this.loading.set(false);
       this.searching.set(false);
       this.cdr.markForCheck();
+      this.readyToShowEmpty.set(true);
     }
   }
 }

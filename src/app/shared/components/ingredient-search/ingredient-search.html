@@ -1,4 +1,4 @@
-<div class="relative w-full sm:min-w-[24rem] lg:min-w-[32rem] xl:min-w-[38rem]" #suggestContainer>
+<div class="relative w-full sm:min-w-[24rem] lg:min-w-lg xl:min-w-152" #suggestContainer>
   <form class="w-full" (submit)="onSubmit($event)">
     <label class="input w-full flex items-center gap-2 focus-within:outline-none">
       <input
@@ -6,8 +6,8 @@
         [attr.id]="inputId"
         type="text"
         [formControl]="searchControl"
-        placeholder="Escribe ingredientes..."
-        class="grow focus:outline-none focus:ring-0 min-w-[8rem]"
+        placeholder="Escribe tus ingredientes o una receta que desees realizar..."
+        class="grow focus:outline-none focus:ring-0 min-w-32"
         aria-label="Buscar por ingredientes"
         (keydown.escape)="onEscapePressed()"
         (keydown)="onKeyDown($event)"
@@ -22,7 +22,15 @@
     </label>
   </form>
 
-  @if (suggestions().length > 0) {
+  @if (suggestionsLoading() && !suggestions().length) {
+    <ul
+      class="absolute top-full left-0 right-0 bg-base-100 shadow-lg rounded-lg border border-base-300 z-50 p-2 flex flex-col gap-1"
+    >
+      @for (placeholder of [1, 2, 3]; track placeholder) {
+        <li class="h-7 rounded-md skeletor-line"></li>
+      }
+    </ul>
+  } @else if (suggestions().length > 0) {
     <ul
       class="absolute top-full left-0 right-0 bg-base-100 shadow-lg rounded-lg border border-base-300 z-50 p-2 flex flex-col gap-1"
     >

@@ -22,12 +22,14 @@ export class RecipeCardComponent {
       .filter((n): n is string => !!n)
   );
 
-  private selectedIngredientSet = computed<Set<string>>(() => {
-    const items = this.ingredientState.ingredients() ?? [];
-    return new Set(items.map((v) => v.trim().toLowerCase()).filter(Boolean));
+  private ingredientFilterSet = computed<Set<string>>(() => {
+    const ingredients = this.ingredientState.ingredients() ?? [];
+    const query = this.ingredientState.queryIngredients() ?? [];
+    const values = [...ingredients, ...query];
+    return new Set(values.map((v) => v.trim().toLowerCase()).filter(Boolean));
   });
 
   isIngredientSearched(name: string) {
-    return this.selectedIngredientSet().has(name.trim().toLowerCase());
+    return this.ingredientFilterSet().has(name.trim().toLowerCase());
   }
 }

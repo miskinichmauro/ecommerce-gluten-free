@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, HostListener, Output, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, map, of, switchMap, tap } from 'rxjs';
+import { firstValueFrom, debounceTime, finalize, map, of, switchMap, tap } from 'rxjs';
 import { RecipeService, RecipeSearchResponse } from 'src/app/recipes/services/recipe.service';
 import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { XCircle } from '../x-circle/x-circle';
@@ -30,6 +30,7 @@ export class IngredientSearch {
   selectedIngredients = signal<string[]>([]);
   activeIndex = signal<number>(-1);
   loading = signal<boolean>(false);
+  suggestionsLoading = signal<boolean>(false);
 
   results = signal<RecipeSearchResponse | null>(null);
 
@@ -114,7 +115,15 @@ export class IngredientSearch {
     this.commitFreeText();
   }
 
-  addIngredient(value: string) {
+  addIngredient(
+    value: string,
+    options?: {
+      skipFetch?: boolean;
+      suppressReset?: boolean;
+      suppressClose?: boolean;
+      suppressEmit?: boolean;
+    }
+  ) {
     const term = (value ?? '').trim();
     if (!term) return;
     const current = this.selectedIngredients();
@@ -125,10 +134,18 @@ export class IngredientSearch {
     }
     this.selectedIngredients.set([...current, term]);
     this.state.setIngredients(this.selectedIngredients());
-    this.resetInput();
-    this.closeSuggestions();
-    this.submitted.emit();
-    this.fetchRecipes();
+    if (!options?.suppressReset) {
+      this.resetInput();
+    }
+    if (!options?.suppressClose) {
+      this.closeSuggestions();
+    }
+    if (!options?.suppressEmit) {
+      this.submitted.emit();
+    }
+    if (!options?.skipFetch) {
+      this.fetchRecipes();
+    }
   }
 
   removeIngredient(value: string) {
@@ -159,7 +176,66 @@ export class IngredientSearch {
   private commitFreeText() {
     const term = (this.searchControl.value ?? '').trim();
     if (!term) return;
-    this.addIngredient(term);
+    void this.addIngredientsFromCommaSeparated(term);
+  }
+
+  private async addIngredientsFromCommaSeparated(text: string) {
+    const normalizedText = text.trim();
+    if (!normalizedText) return;
+
+    this.state.setSearchTextRaw(normalizedText);
+
+    const segments = normalizedText
+      .split(',')
+      .map((segment) => segment.trim())
+      .filter((segment) => segment.length > 0);
+    if (!segments.length) {
+      return;
+    }
+
+    this.state.setSearchTextSegments(segments);
+
+    const matches = new Set<string>();
+    for (const segment of segments) {
+      try {
+        const results = await firstValueFrom(this.recipeService.searchIngredients(segment, { limit: 5 }));
+        results.forEach((name) => {
+          if (name) {
+            matches.add(name);
+          }
+        });
+      } catch {
+        // ignore failing chunks
+      }
+    }
+
+    const hasMatches = matches.size > 0;
+    const currentIngredients = [...this.selectedIngredients()];
+    const normalizedSet = new Set(currentIngredients.map((value) => value.trim().toLowerCase()));
+    if (hasMatches) {
+      const additions: string[] = [];
+      Array.from(matches).forEach((match) => {
+        const normalized = match.trim().toLowerCase();
+        if (!normalizedSet.has(normalized)) {
+          normalizedSet.add(normalized);
+          additions.push(match);
+        }
+      });
+      if (additions.length) {
+        this.selectedIngredients.set([...currentIngredients, ...additions]);
+      }
+    }
+
+    const searchSegments = hasMatches ? undefined : segments;
+
+    this.resetInput();
+    this.closeSuggestions();
+    this.submitted.emit();
+    if (hasMatches) {
+      this.fetchRecipes();
+    } else if (searchSegments?.length) {
+      this.fetchRecipes(searchSegments, { updateState: false });
+    }
   }
 
   resetInput() {
@@ -169,6 +245,7 @@ export class IngredientSearch {
   private buildSuggestions(term: string) {
     const value = term.trim();
     if (!value) {
+      this.suggestionsLoading.set(false);
       if (!this.suggestionPool().length) {
         return this.recipeService.getAll().pipe(
           tap((recipes) => this.updateSuggestionPool(recipes as Recipe[])),
@@ -181,12 +258,17 @@ export class IngredientSearch {
     const local = this.suggestionPool()
       .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
       .slice(0, 8);
-    if (local.length) return of(local);
+    if (local.length) {
+      this.suggestionsLoading.set(false);
+      return of(local);
+    }
 
+    this.suggestionsLoading.set(true);
     const probeIngredients = [...this.selectedIngredients(), value];
     return this.recipeService
       .searchByIngredients(probeIngredients, { limit: 5, offset: 0 })
       .pipe(
+        finalize(() => this.suggestionsLoading.set(false)),
         tap((res) => this.updateSuggestionPool(res)),
         map(() => {
           const pool = this.suggestionPool();
@@ -195,26 +277,34 @@ export class IngredientSearch {
       );
   }
 
-  private fetchRecipes() {
-    const ingredients = this.selectedIngredients();
-    if (!ingredients.length) {
+  private fetchRecipes(ingredients?: string[], options?: { updateState?: boolean }) {
+    const ingredientsToUse = ingredients ?? this.selectedIngredients();
+    if (!ingredientsToUse.length) {
       this.results.set(null);
       this.resultsChange.emit({ count: 0, pages: 0, recipes: [] });
       this.ingredientsChange.emit([]);
-      this.state.setIngredients([]);
+      if (options?.updateState ?? true) {
+        this.state.setIngredients([]);
+      }
       this.state.setResults(null);
+      this.state.setQueryIngredients([]);
+      this.state.setSearchTextSegments([]);
+      this.state.setSearchTextRaw('');
       return;
     }
 
-    this.ingredientsChange.emit(ingredients);
+    this.ingredientsChange.emit(ingredientsToUse);
+    if (options?.updateState ?? true) {
+      this.state.setIngredients(ingredientsToUse);
+    }
+    this.state.setQueryIngredients(ingredientsToUse);
     this.loading.set(true);
     this.recipeService
-      .searchByIngredients(ingredients, { limit: 10, offset: 0 })
+      .searchByIngredients(ingredientsToUse, { limit: 10, offset: 0 })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res) => {
           this.results.set(res);
-          this.state.setIngredients(ingredients);
           this.state.setResults(res);
           this.updateSuggestionPool(res);
           this.resultsChange.emit(res);
