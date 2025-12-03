@@ -1,8 +1,14 @@
 <article class="card">
   <header class="card__header">
     <h3 class="card__title">{{ recipe().title }}</h3>
-    @if (recipe().matchCount) {
-      <span class="card__badge">{{ recipe().matchCount }} ingredientes coinciden</span>
+    @if (matchCountFor(recipe()) || searchTermCount()) {
+      <span class="card__badge">
+        @if (matchCountFor(recipe())) {
+          {{ matchCountFor(recipe()) }} {{ matchLabel(recipe()) }}
+        } @else {
+          Título coincide
+        }
+      </span>
     }
   </header>
   <p class="card__text">

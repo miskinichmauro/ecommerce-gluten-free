@@ -23,6 +23,8 @@ export class RecipeCardComponent {
       .filter((n): n is string => !!n)
   );
 
+  readonly searchTermCount = computed(() => this.ingredientState.searchTerms().length);
+
   private ingredientFilterSet = computed<Set<string>>(() => {
     const values = this.ingredientState.searchTerms() ?? [];
     return new Set(values.map((v) => v.trim().toLowerCase()).filter(Boolean));
@@ -36,5 +38,14 @@ export class RecipeCardComponent {
   isIngredientSearched(name: string) {
     const normalized = name.trim().toLowerCase();
     return this.matchedIngredientSet().has(normalized) || this.ingredientFilterSet().has(normalized);
+  }
+
+  matchCountFor(recipe: Recipe & { matchedIngredientNames?: string[]; matchCount?: number }) {
+    return recipe.matchCount ?? recipe.matchedIngredientNames?.length ?? 0;
+  }
+
+  matchLabel(recipe: Recipe & { matchedIngredientNames?: string[]; matchCount?: number }) {
+    const count = this.matchCountFor(recipe);
+    return count === 1 ? 'ingrediente coincide' : 'ingredientes coinciden';
   }
 }
