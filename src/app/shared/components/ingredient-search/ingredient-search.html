@@ -1,19 +1,21 @@
-<form class="w-full" (submit)="onSubmit($event)">
-  <label class="input w-full flex items-center gap-2 focus-within:outline-none">
-    <input
-      #searchInput
-      [attr.id]="inputId"
-      type="text"
-      [formControl]="searchControl"
-      placeholder="Escribe tus ingredientes o una receta que desees realizar..."
-      class="grow focus:outline-none focus:ring-0 min-w-32"
-      aria-label="Buscar recetas"
-    />
+<div class="relative w-full sm:min-w-[24rem] lg:min-w-lg xl:min-w-152">
+  <form class="w-full" (submit)="onSubmit($event)">
+    <label class="input w-full flex items-center gap-2 focus-within:outline-none">
+      <input
+        #searchInput
+        [attr.id]="inputId"
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Escribe tus ingredientes o una receta que desees realizar..."
+        class="grow focus:outline-none focus:ring-0 min-w-32"
+        aria-label="Buscar recetas"
+      />
 
-    @if (hasValue()) {
-      <span class="inline-flex cursor-pointer">
-        <x-circle (click)="clearInput()" />
-      </span>
-    }
-  </label>
-</form>
+      @if (hasValue()) {
+        <span class="inline-flex cursor-pointer">
+          <x-circle (click)="clearInput()" />
+        </span>
+      }
+    </label>
+  </form>
+</div>
