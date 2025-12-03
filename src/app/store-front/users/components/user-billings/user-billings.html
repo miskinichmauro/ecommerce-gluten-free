@@ -4,14 +4,23 @@
       <h2 class="text-xl font-bold">Datos de facturación</h2>
       <p class="text-sm text-base-content/70">Gestiona tus perfiles de factura.</p>
     </div>
-    <a class="btn btn-primary btn-sm" routerLink="/user/billing/new">Agregar nuevo</a>
+    @if (profiles().length) {
+      <a class="btn btn-primary btn-sm" routerLink="/user/billing/new">Agregar nuevo</a>
+    }
   </div>
 
   <div class="space-y-3">
     @if (loading()) {
       <user-billings-skeleton></user-billings-skeleton>
     } @else if (profiles().length === 0) {
-      <p class="text-base-content/70">Aún no agregaste datos de facturación.</p>
+      <div
+        class="rounded-2xl border border-base-300 border-dashed bg-base-100/60 p-6 text-center shadow-sm"
+      >
+        <p class="text-base-content/80">Todavía no tenés datos de facturación.</p>
+        <a class="btn btn-primary btn-sm mt-3 inline-flex justify-center" routerLink="/user/billing/new">
+          Agregar datos de facturación
+        </a>
+      </div>
     } @else {
       @for (item of profiles(); track item.id) {
         <article class="p-4 border border-base-300 rounded-lg bg-base-100 shadow-sm">

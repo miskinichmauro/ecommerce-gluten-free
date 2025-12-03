@@ -7,9 +7,11 @@
   @if (loading()) {
     <user-orders-skeleton></user-orders-skeleton>
   } @else if (orders().length === 0) {
-    <div class="text-base-content/70 space-y-3">
-      <p>Aun no tienes pedidos.</p>
-      <a class="btn btn-primary btn-sm" routerLink="/products">Ver productos</a>
+    <div
+      class="rounded-2xl border border-base-300 border-dashed bg-base-100/60 p-6 text-center shadow-sm space-y-3"
+    >
+      <p class="text-base-content/80">Todavía no completaste pedidos.</p>
+      <a class="btn btn-primary btn-sm inline-flex justify-center" routerLink="/products">Ver productos</a>
     </div>
   } @else {
     <div class="space-y-3">

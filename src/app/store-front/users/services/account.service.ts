@@ -55,16 +55,43 @@ export class AccountService {
     this.billingsRequest$ = null;
   }
 
-  getProfile(): Observable<UserProfileDto> {
-    return this.http.get<UserProfileDto>(`${accountBase}/profile`);
+  private profileCache: UserProfileDto | null = null;
+  private profileRequest$: Observable<UserProfileDto> | null = null;
+
+  getProfile(options?: { force?: boolean }): Observable<UserProfileDto> {
+    if (options?.force) {
+      this.clearProfileCache();
+    }
+
+    if (this.profileCache) {
+      return of(this.profileCache);
+    }
+
+    if (!this.profileRequest$) {
+      this.profileRequest$ = this.http.get<UserProfileDto>(`${accountBase}/profile`).pipe(
+        tap(profile => (this.profileCache = profile)),
+        shareReplay({ bufferSize: 1, refCount: true }),
+        finalize(() => (this.profileRequest$ = null))
+      );
+    }
+
+    return this.profileRequest$;
   }
 
   updateProfile(data: Partial<UserProfileDto>): Observable<UserProfileDto> {
     this.toast.activateLoading();
     return this.http.patch<UserProfileDto>(`${accountBase}/profile`, data).pipe(
+      tap((profile) => {
+        this.profileCache = profile;
+      }),
       tap(() => this.toast.activateSuccess()),
       finalize(() => this.toast.deactivateLoading())
     );
+  }
+
+  private clearProfileCache() {
+    this.profileCache = null;
+    this.profileRequest$ = null;
   }
 
   getAddresses(options?: { force?: boolean }): Observable<UserAddressDto[]> {

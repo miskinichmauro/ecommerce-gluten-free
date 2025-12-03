@@ -4,14 +4,26 @@
       <h2 class="text-xl font-bold">Mis direcciones</h2>
       <p class="text-sm text-base-content/70">Revisa tus datos de envió.</p>
     </div>
-    <a class="btn btn-primary btn-sm" routerLink="/user/directions/new">Agregar nuevo</a>
+    @if (addresses().length) {
+      <a class="btn btn-primary btn-sm" routerLink="/user/directions/new">Agregar nuevo</a>
+    }
   </div>
 
   <div class="space-y-3">
     @if (loading()) {
       <user-directions-skeleton></user-directions-skeleton>
     } @else if (addresses().length === 0) {
-      <p class="text-base-content/70">Todavía no agregaste direcciones.</p>
+      <div
+        class="rounded-2xl border border-base-300 border-dashed bg-base-100/60 p-6 text-center shadow-sm"
+      >
+        <p class="text-base-content/80">No hay direcciones de entrega por ahora.</p>
+        <a
+          class="btn btn-primary btn-sm mt-3 inline-flex justify-center"
+          routerLink="/user/directions/new"
+        >
+          Agregar nueva dirección
+        </a>
+      </div>
     } @else {
       @for (addr of addresses(); track addr.id) {
         <article class="p-4 border border-base-300 rounded-lg bg-base-100 shadow-sm">
