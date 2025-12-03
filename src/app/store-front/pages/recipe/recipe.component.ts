@@ -5,7 +5,7 @@ import { Recipe } from 'src/app/recipes/interfaces/recipe.interface';
 import { RecipeCardComponent } from 'src/app/recipes/components/recipe-card/recipe-card.component';
 import { RecipeSkeleton } from 'src/app/recipes/components/recipe-skeleton/recipe-skeleton';
 import { XCircle } from 'src/app/shared/components/x-circle/x-circle';
-import { IngredientSearchStateService } from '@shared/services/ingredient-search-state.service';
+import { IngredientSearchOptions, IngredientSearchStateService } from '@shared/services/ingredient-search-state.service';
 
 @Component({
   selector: 'app-recipe',
@@ -26,6 +26,8 @@ export class RecipeComponent implements OnInit {
   readyToShowEmpty = signal<boolean>(false);
 
   readonly searchTerms = computed(() => this.ingredientState.searchTerms());
+  private hiddenMatchedFilters = signal<Set<string>>(new Set());
+
   readonly matchedIngredients = computed<string[]>(() => {
     const results = this.ingredientState.results();
     const set = new Set<string>();
@@ -38,6 +40,14 @@ export class RecipeComponent implements OnInit {
       });
     });
     return Array.from(set);
+  });
+
+  readonly visibleMatchedIngredients = computed<string[]>(() => {
+    const hidden = this.hiddenMatchedFilters();
+    return this.matchedIngredients().filter((ingredient) => {
+      const normalized = this.normalize(ingredient);
+      return !hidden.has(normalized);
+    });
   });
 
   constructor() {
@@ -87,6 +97,11 @@ export class RecipeComponent implements OnInit {
       this.loading.set(false);
     });
 
+    effect(() => {
+      this.ingredientState.results();
+      this.hiddenMatchedFilters.set(new Set());
+    });
+
   }
 
   ngOnInit() {
@@ -117,31 +132,37 @@ export class RecipeComponent implements OnInit {
   async removeSearchTerm(term: string) {
     const normalized = this.normalize(term);
     const remaining = this.searchTerms().filter((item) => this.normalize(item) !== normalized);
-    if (!remaining.length) {
-      this.resetFilters();
-      return;
-    }
-    await this.ingredientState.search(remaining, remaining.join(', '));
-    this.cdr.markForCheck();
+    await this.applyTerms(remaining);
   }
 
   async removeMatchedIngredient(name: string) {
     const normalized = this.normalize(name);
-    const match = this.searchTerms().find((term) => {
-      const candidate = this.normalize(term);
-      return (
-        candidate === normalized ||
-        candidate.includes(normalized) ||
-        normalized.includes(candidate)
-      );
+    const remainingMatches = this.matchedIngredients().filter((value) => this.normalize(value) !== normalized);
+
+    this.hiddenMatchedFilters.update((set) => {
+      const next = new Set(set);
+      next.add(normalized);
+      return next;
     });
 
-    if (match) {
-      await this.removeSearchTerm(match);
+    if (!remainingMatches.length) {
+      this.resetFilters();
       return;
     }
 
-    await this.ingredientState.search(this.searchTerms(), this.searchTerms().join(', '));
+    await this.applyTerms(remainingMatches, { asIngredientFilter: true });
+  }
+
+  private async applyTerms(terms: string[], options?: IngredientSearchOptions) {
+    if (!terms.length) {
+      this.resetFilters();
+      return;
+    }
+
+    this.ingredientState.previewTerms(terms, options);
+    const asIngredientFilter = options?.asIngredientFilter ?? false;
+    const rawText = asIngredientFilter ? '' : terms.join(', ');
+    await this.ingredientState.search(terms, rawText, options);
     this.cdr.markForCheck();
   }
 
