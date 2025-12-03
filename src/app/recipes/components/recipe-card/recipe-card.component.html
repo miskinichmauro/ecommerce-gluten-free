@@ -1,6 +1,6 @@
-<article class="card">
+<article class="card shadow-lg hover:shadow-xl transition-shadow duration-150 bg-base-100 rounded-2xl p-4 h-full flex flex-col gap-3">
   <header class="card__header">
-    <h3 class="card__title">{{ recipe().title }}</h3>
+    <h3 class="card-title text-xl font-semibold text-base-content mb-0">{{ recipe().title }}</h3>
     @if (matchCountFor(recipe()) || searchTermCount()) {
       <span class="card__badge">
         @if (matchCountFor(recipe())) {

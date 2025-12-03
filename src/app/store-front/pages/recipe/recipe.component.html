@@ -1,11 +1,15 @@
-<h1 class="text-3xl font-bold mb-2 mt-6">Recetas</h1>
-
-<section class="recipes-layout">
-  <div class="inline-flex items-center gap-3 text-base-content">
-    <span class="inline-flex items-center gap-2">
-      Total de recetas
-      <span class="font-bold">{{ total() }}</span>
-    </span>
+<section class="recipes-layout space-y-5 mt-6">
+  <div class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-2xl">
+    <div class="card-body flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <h1 class="text-3xl font-bold mb-1">Recetas</h1>
+        <p class="text-sm text-base-content/60">Explora y filtra para encontrar lo que quieras cocinar hoy.</p>
+      </div>
+      <div class="text-sm text-base-content/70 flex items-center gap-2">
+        <span>Total de recetas</span>
+        <span class="font-semibold text-base-content">{{ total() }}</span>
+      </div>
+    </div>
   </div>
 
   @if (searchTerms().length || matchedIngredients().length) {

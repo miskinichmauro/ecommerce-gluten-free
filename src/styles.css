@@ -72,3 +72,8 @@ swiper-container::part(wrapper) {
   }
 }
 
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
