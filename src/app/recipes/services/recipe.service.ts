@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { finalize, map, Observable, of, tap } from 'rxjs';
+import { finalize, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Recipe } from '../interfaces/recipe.interface';
 import { ToastService } from '@shared/services/toast.service';
@@ -90,11 +90,11 @@ export class RecipeService {
     this.recipesCache.set(recipe.id, recipe);
   }
 
-  searchByIngredients(ingredients: string[], options?: { limit?: number; offset?: number }): Observable<RecipeSearchResponse> {
-    const cleaned = (ingredients ?? []).map((i) => i.trim()).filter((i) => !!i);
+  searchRecipes(terms: string[], options?: { limit?: number; offset?: number }): Observable<RecipeSearchResponse> {
+    const cleaned = (terms ?? []).map((term) => term.trim()).filter((term) => !!term);
     const params = new HttpParams({
       fromObject: {
-        ingredients: cleaned.join(','),
+        q: cleaned.join(','),
         limit: String(options?.limit ?? 10),
         offset: String(options?.offset ?? 0),
       },
@@ -103,33 +103,5 @@ export class RecipeService {
       params,
       responseType: 'json',
     });
-  }
-
-  searchIngredients(query: string, options?: { limit?: number }): Observable<string[]> {
-    const trimmed = (query ?? '').trim();
-    if (!trimmed) {
-      return of([]);
-    }
-
-    const params = new HttpParams({
-      fromObject: {
-        query: trimmed,
-        limit: String(options?.limit ?? 5),
-      },
-    });
-
-    return this.http.get<Array<string | { name?: string }>>(`${environment.baseUrl}/ingredients/search`, {
-      params,
-    }).pipe(
-      map((items) => {
-        if (!Array.isArray(items)) return [];
-        return items
-          .map((item) => {
-            if (typeof item === 'string') return item.trim();
-            return item?.name?.trim() ?? '';
-          })
-          .filter((name): name is string => typeof name === 'string' && name.length > 0);
-      })
-    );
   }
 }

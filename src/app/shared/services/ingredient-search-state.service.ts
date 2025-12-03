@@ -1,31 +1,64 @@
-import { Injectable, signal } from '@angular/core';
-import { RecipeSearchResponse } from 'src/app/recipes/services/recipe.service';
+import { Injectable, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { RecipeService, RecipeSearchResponse } from 'src/app/recipes/services/recipe.service';
 
 @Injectable({ providedIn: 'root' })
 export class IngredientSearchStateService {
-  ingredients = signal<string[]>([]);
-  queryIngredients = signal<string[]>([]);
-  searchTextSegments = signal<string[]>([]);
+  private readonly recipeService = inject(RecipeService);
+
+  searchTerms = signal<string[]>([]);
   searchTextRaw = signal<string>('');
   results = signal<RecipeSearchResponse | null>(null);
+  searching = signal<boolean>(false);
+  error = signal<string | null>(null);
 
-  setIngredients(list: string[]) {
-    this.ingredients.set(list);
+  async search(terms: string[], rawText?: string, options?: { limit?: number; offset?: number }) {
+    const cleaned = this.cleanTerms(terms);
+    if (!cleaned.length) {
+      this.clear();
+      return null;
+    }
+
+    const finalRawText = rawText ?? cleaned.join(', ');
+    this.searching.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(this.recipeService.searchRecipes(cleaned, options));
+      this.results.set(response);
+      this.searchTerms.set(cleaned);
+      this.searchTextRaw.set(finalRawText);
+      return response;
+    } catch {
+      this.results.set(null);
+      this.searchTerms.set(cleaned);
+      this.searchTextRaw.set(finalRawText);
+      this.error.set('No se pudieron cargar las recetas');
+      return null;
+    } finally {
+      this.searching.set(false);
+    }
   }
 
-  setQueryIngredients(list: string[]) {
-    this.queryIngredients.set(list);
+  clear() {
+    this.searchTerms.set([]);
+    this.searchTextRaw.set('');
+    this.results.set(null);
+    this.error.set(null);
   }
 
-  setSearchTextSegments(list: string[]) {
-    this.searchTextSegments.set(list);
-  }
-
-  setSearchTextRaw(text: string) {
-    this.searchTextRaw.set(text);
-  }
-
-  setResults(res: RecipeSearchResponse | null) {
-    this.results.set(res);
+  private cleanTerms(terms: string[]) {
+    const seen = new Set<string>();
+    return terms
+      .map((term) => term.trim().replace(/\s+/g, ' '))
+      .filter((term) => term.length >= 3)
+      .filter((term) => {
+        const normalized = term.toLowerCase();
+        if (seen.has(normalized)) {
+          return false;
+        }
+        seen.add(normalized);
+        return true;
+      });
   }
 }

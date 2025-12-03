@@ -21,15 +21,15 @@ export class RecipeComponent implements OnInit {
   recipes = signal<Recipe[] | null>(null);
   allRecipes = signal<Recipe[]>([]);
   loading = signal<boolean>(true);
-  searching = signal<boolean>(false);
   error = signal<string | null>(null);
   total = signal<number>(0);
-  queryIngredients = signal<string[]>([]);
-  matchedIngredients = computed<string[]>(() => {
+  readyToShowEmpty = signal<boolean>(false);
+
+  readonly searchTerms = computed(() => this.ingredientState.searchTerms());
+  readonly matchedIngredients = computed<string[]>(() => {
     const results = this.ingredientState.results();
-    const recipes = results?.recipes ?? [];
     const set = new Set<string>();
-    recipes.forEach((recipe) => {
+    results?.recipes?.forEach((recipe) => {
       (recipe.matchedIngredientNames ?? []).forEach((name) => {
         const trimmed = name?.trim();
         if (trimmed) {
@@ -39,28 +39,26 @@ export class RecipeComponent implements OnInit {
     });
     return Array.from(set);
   });
-  extraMatchedIngredients = computed<string[]>(() => {
-    const querySet = new Set(
-      this.queryIngredients()
-        .map((value) => value.trim().toLowerCase())
-        .filter(Boolean)
-    );
-    return this.matchedIngredients().filter((name) => {
-      const normalized = name.trim().toLowerCase();
-      return normalized && !querySet.has(normalized);
-    });
-  });
-  readonly searchTextRaw = computed(() => this.ingredientState.searchTextRaw());
-  readyToShowEmpty = signal<boolean>(false);
 
   constructor() {
     effect(() => {
-      const res = this.ingredientState.results();
-      if (res) {
-        this.recipes.set(res.recipes ?? []);
-        this.total.set(res.count ?? res.recipes?.length ?? 0);
-        this.loading.set(false);
-        this.searching.set(false);
+      const stateResults = this.ingredientState.results();
+      const stateError = this.ingredientState.error();
+      const terms = this.searchTerms();
+
+      if (stateResults) {
+        this.recipes.set(stateResults.recipes ?? []);
+        this.total.set(stateResults.count ?? stateResults.recipes?.length ?? 0);
+        this.error.set(stateError);
+        this.cdr.markForCheck();
+        return;
+      }
+
+      if (terms.length && stateError) {
+        this.recipes.set([]);
+        this.total.set(0);
+        this.error.set(stateError);
+        this.cdr.markForCheck();
         return;
       }
 
@@ -68,112 +66,95 @@ export class RecipeComponent implements OnInit {
         return;
       }
 
-      if (this.queryIngredients().length) {
-        this.loading.set(false);
-        this.searching.set(false);
-      } else {
-        this.loading.set(false);
-        this.searching.set(false);
+      if (!terms.length) {
         this.recipes.set(this.allRecipes());
         this.total.set(this.allRecipes().length);
+        this.error.set(null);
+        this.cdr.markForCheck();
       }
     });
 
     effect(() => {
-      const ings = this.ingredientState.ingredients();
-      this.queryIngredients.set(ings ?? []);
-
-      if (!ings || !ings.length) {
-        if (this.readyToShowEmpty()) {
-          this.loading.set(false);
-          this.searching.set(false);
-          this.recipes.set(this.allRecipes());
-          this.total.set(this.allRecipes().length);
-        }
+      if (this.ingredientState.searching()) {
+        this.loading.set(true);
         return;
       }
 
-      this.searching.set(true);
-      this.loading.set(true);
+      if (!this.readyToShowEmpty()) {
+        return;
+      }
+
+      this.loading.set(false);
     });
+
   }
 
-  ngOnInit(): void {
-    this.getRecipes();
+  ngOnInit() {
+    void this.loadAllRecipes();
   }
 
-  async getRecipes() {
+  private async loadAllRecipes() {
     this.loading.set(true);
     this.error.set(null);
-    this.readyToShowEmpty.set(false);
     try {
       const data = await firstValueFrom(this.recipeService.getAll());
-      this.recipes.set(data);
       this.allRecipes.set(data ?? []);
-      this.total.set(data?.length ?? 0);
-      this.cdr.markForCheck();
-    } catch (err) {
+      if (!this.ingredientState.results()) {
+        this.recipes.set(data ?? []);
+        this.total.set(data?.length ?? 0);
+        this.cdr.markForCheck();
+      }
+    } catch {
       this.error.set('Error al cargar las recetas');
-      this.cdr.markForCheck();
-  } finally {
+      this.recipes.set([]);
+    } finally {
       this.loading.set(false);
-      this.cdr.markForCheck();
       this.readyToShowEmpty.set(true);
+      this.cdr.markForCheck();
     }
   }
 
-  removeIngredient(ing: string) {
-    const next = this.ingredientState.ingredients().filter((i) => i !== ing);
-    this.ingredientState.setIngredients(next);
-    this.queryIngredients.set(next);
-    if (!next.length) {
-      this.recipes.set(this.allRecipes());
-      this.total.set(this.allRecipes().length);
-      this.searching.set(false);
-      this.loading.set(false);
-      this.ingredientState.setResults(null);
-      this.cdr.markForCheck();
+  async removeSearchTerm(term: string) {
+    const normalized = this.normalize(term);
+    const remaining = this.searchTerms().filter((item) => this.normalize(item) !== normalized);
+    if (!remaining.length) {
+      this.resetFilters();
+      return;
+    }
+    await this.ingredientState.search(remaining, remaining.join(', '));
+    this.cdr.markForCheck();
+  }
+
+  async removeMatchedIngredient(name: string) {
+    const normalized = this.normalize(name);
+    const match = this.searchTerms().find((term) => {
+      const candidate = this.normalize(term);
+      return (
+        candidate === normalized ||
+        candidate.includes(normalized) ||
+        normalized.includes(candidate)
+      );
+    });
+
+    if (match) {
+      await this.removeSearchTerm(match);
       return;
     }
 
-    this.fetchByIngredients(next);
+    await this.ingredientState.search(this.searchTerms(), this.searchTerms().join(', '));
+    this.cdr.markForCheck();
   }
 
-  clearIngredients() {
-    this.ingredientState.setIngredients([]);
-    this.ingredientState.setResults(null);
-    this.ingredientState.setSearchTextSegments([]);
-    this.ingredientState.setSearchTextRaw('');
-    this.queryIngredients.set([]);
+  resetFilters() {
+    this.ingredientState.clear();
     this.recipes.set(this.allRecipes());
     this.total.set(this.allRecipes().length);
-    this.searching.set(false);
+    this.error.set(null);
     this.loading.set(false);
     this.cdr.markForCheck();
   }
 
-  clearSearchTextOnly() {
-    this.ingredientState.setSearchTextSegments([]);
-    this.ingredientState.setSearchTextRaw('');
-  }
-
-  private async fetchByIngredients(ingredients: string[]) {
-    this.loading.set(true);
-    this.error.set(null);
-    this.readyToShowEmpty.set(false);
-    try {
-      const res = await firstValueFrom(this.recipeService.searchByIngredients(ingredients, { limit: 10, offset: 0 }));
-      this.recipes.set(res.recipes ?? []);
-      this.total.set(res.count ?? res.recipes?.length ?? 0);
-      this.ingredientState.setResults(res);
-    } catch (err) {
-      this.error.set('Error al buscar recetas');
-      this.recipes.set([]);
-    } finally {
-      this.loading.set(false);
-      this.searching.set(false);
-      this.cdr.markForCheck();
-      this.readyToShowEmpty.set(true);
-    }
+  private normalize(value: string) {
+    return value.trim().toLowerCase();
   }
 }

@@ -1,46 +1,19 @@
-<div class="relative w-full sm:min-w-[24rem] lg:min-w-lg xl:min-w-152" #suggestContainer>
-  <form class="w-full" (submit)="onSubmit($event)">
-    <label class="input w-full flex items-center gap-2 focus-within:outline-none">
-      <input
-        #searchInput
-        [attr.id]="inputId"
-        type="text"
-        [formControl]="searchControl"
-        placeholder="Escribe tus ingredientes o una receta que desees realizar..."
-        class="grow focus:outline-none focus:ring-0 min-w-32"
-        aria-label="Buscar por ingredientes"
-        (keydown.escape)="onEscapePressed()"
-        (keydown)="onKeyDown($event)"
-        (focus)="onFocusInput()"
-      />
+<form class="w-full" (submit)="onSubmit($event)">
+  <label class="input w-full flex items-center gap-2 focus-within:outline-none">
+    <input
+      #searchInput
+      [attr.id]="inputId"
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Escribe tus ingredientes o una receta que desees realizar..."
+      class="grow focus:outline-none focus:ring-0 min-w-32"
+      aria-label="Buscar recetas"
+    />
 
-      @if (hasValue()) {
-        <span class="inline-flex">
-          <x-circle (click)="resetInput()" />
-        </span>
-      }
-    </label>
-  </form>
-
-  @if (suggestionsLoading() && !suggestions().length) {
-    <ul
-      class="absolute top-full left-0 right-0 bg-base-100 shadow-lg rounded-lg border border-base-300 z-50 p-2 flex flex-col gap-1"
-    >
-      <li class="h-7 rounded-md skeletor-line"></li>
-    </ul>
-  } @else if (suggestions().length > 0) {
-    <ul
-      class="absolute top-full left-0 right-0 bg-base-100 shadow-lg rounded-lg border border-base-300 z-50 p-2 flex flex-col gap-1"
-    >
-      @for (item of suggestions(); track item; let i = $index) {
-        <li
-          (click)="selectSuggestion(item)"
-          class="suggestion"
-          [class.suggestion--active]="i === activeIndex()"
-        >
-          <span class="truncate">{{ item }}</span>
-        </li>
-      }
-    </ul>
-  }
-</div>
+    @if (hasValue()) {
+      <span class="inline-flex cursor-pointer">
+        <x-circle (click)="clearInput()" />
+      </span>
+    }
+  </label>
+</form>

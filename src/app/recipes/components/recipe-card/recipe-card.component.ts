@@ -24,9 +24,7 @@ export class RecipeCardComponent {
   );
 
   private ingredientFilterSet = computed<Set<string>>(() => {
-    const ingredients = this.ingredientState.ingredients() ?? [];
-    const query = this.ingredientState.queryIngredients() ?? [];
-    const values = [...ingredients, ...query];
+    const values = this.ingredientState.searchTerms() ?? [];
     return new Set(values.map((v) => v.trim().toLowerCase()).filter(Boolean));
   });
 

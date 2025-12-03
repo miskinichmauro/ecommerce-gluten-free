@@ -8,46 +8,44 @@
     </span>
   </div>
 
-  @if (searchTextRaw() || queryIngredients().length) {
+  @if (searchTerms().length || matchedIngredients().length) {
     <div class="mt-4 space-y-4 border border-base-200 bg-base-100/50 rounded-2xl p-4 shadow-sm">
-      @if (searchTextRaw()) {
+      @if (searchTerms().length) {
         <div>
           <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">Texto buscado</p>
           <div class="flex flex-wrap gap-2">
-            <button type="button" class="chip-pill" (click)="clearSearchTextOnly()">
-              <span class="truncate">{{ searchTextRaw() }}</span>
-              <span class="inline-flex items-center justify-center shrink-0">
-                <x-circle />
-              </span>
-            </button>
-          </div>
-        </div>
-      }
-      @if (matchedIngredients().length || queryIngredients().length) {
-        <div>
-          <div class="flex items-center justify-between gap-4">
-            <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">Ingredientes</p>
-            @if (queryIngredients().length) {
-              <button
-                type="button"
-                class="text-xs cursor-pointer text-primary font-semibold underline hover:text-primary-focus"
-                (click)="clearIngredients()"
-              >
-                Limpiar
-              </button>
-            }
-          </div>
-          <div class="flex flex-wrap gap-2">
-            @for (ing of queryIngredients(); track ing) {
-              <button type="button" class="chip-pill" (click)="removeIngredient(ing)">
-                <span class="truncate">{{ ing }}</span>
+            @for (term of searchTerms(); track term) {
+              <button type="button" class="chip-pill" (click)="removeSearchTerm(term)">
+                <span class="truncate">{{ term }}</span>
                 <span class="inline-flex items-center justify-center shrink-0">
                   <x-circle />
                 </span>
               </button>
             }
-            @for (ing of extraMatchedIngredients(); track ing) {
-              <span class="chip-small chip-small--disabled text-base-content/70 border-base-200/70 truncate">{{ ing }}</span>
+          </div>
+        </div>
+      }
+
+      @if (matchedIngredients().length) {
+        <div>
+          <div class="flex items-center justify-between gap-4">
+            <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-2">Ingredientes</p>
+            <button
+              type="button"
+              class="text-xs cursor-pointer text-primary font-semibold underline hover:text-primary-focus"
+              (click)="resetFilters()"
+            >
+              Limpiar
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            @for (ingredient of matchedIngredients(); track ingredient) {
+              <button type="button" class="chip-pill" (click)="removeMatchedIngredient(ingredient)">
+                <span class="truncate">{{ ingredient }}</span>
+                <span class="inline-flex items-center justify-center shrink-0">
+                  <x-circle />
+                </span>
+              </button>
             }
           </div>
         </div>
