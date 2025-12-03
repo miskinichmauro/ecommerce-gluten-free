@@ -6,6 +6,7 @@ export interface IngredientSearchOptions {
   limit?: number;
   offset?: number;
   asIngredientFilter?: boolean;
+  includeIngredientFilters?: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -21,7 +22,9 @@ export class IngredientSearchStateService {
 
   async search(terms: string[], rawText?: string, options?: IngredientSearchOptions) {
     const cleaned = this.cleanTerms(terms);
-    if (!cleaned.length) {
+    const includeFilters = options?.includeIngredientFilters ?? [];
+
+    if (!cleaned.length && !includeFilters.length) {
       this.clear();
       return null;
     }
@@ -32,8 +35,12 @@ export class IngredientSearchStateService {
     this.error.set(null);
 
     try {
-      const response = await firstValueFrom(this.recipeService.searchRecipes(cleaned, { limit, offset }));
+      const mergedTerms = Array.from(new Set([...includeFilters, ...cleaned]));
+      const response = await firstValueFrom(this.recipeService.searchRecipes(mergedTerms, { limit, offset }));
       this.results.set(response);
+      if (includeFilters.length) {
+        this.ingredientFilters.set(includeFilters);
+      }
       if (asIngredientFilter) {
         this.applyIngredientFilters(cleaned);
       } else {
@@ -42,6 +49,9 @@ export class IngredientSearchStateService {
       return response;
     } catch {
       this.results.set(null);
+      if (includeFilters.length) {
+        this.ingredientFilters.set(includeFilters);
+      }
       if (asIngredientFilter) {
         this.applyIngredientFilters(cleaned);
       } else {
@@ -76,7 +86,6 @@ export class IngredientSearchStateService {
   private applySearchText(cleaned: string[], rawText: string) {
     this.searchTerms.set(cleaned);
     this.searchTextRaw.set(rawText);
-    this.ingredientFilters.set([]);
   }
 
   private applyIngredientFilters(filters: string[]) {
@@ -98,5 +107,9 @@ export class IngredientSearchStateService {
         seen.add(normalized);
         return true;
       });
+  }
+
+  getActiveIngredientFilters() {
+    return this.ingredientFilters();
   }
 }

@@ -28,26 +28,37 @@ export class RecipeComponent implements OnInit {
   readonly searchTerms = computed(() => this.ingredientState.searchTerms());
   private hiddenMatchedFilters = signal<Set<string>>(new Set());
 
-  readonly matchedIngredients = computed<string[]>(() => {
-    const results = this.ingredientState.results();
-    const set = new Set<string>();
-    results?.recipes?.forEach((recipe) => {
-      (recipe.matchedIngredientNames ?? []).forEach((name) => {
-        const trimmed = name?.trim();
-        if (trimmed) {
-          set.add(trimmed);
-        }
-      });
-    });
-    return Array.from(set);
-  });
-
   readonly visibleMatchedIngredients = computed<string[]>(() => {
+    const results = this.ingredientState.results();
+    const filters = this.ingredientState.getActiveIngredientFilters();
     const hidden = this.hiddenMatchedFilters();
-    return this.matchedIngredients().filter((ingredient) => {
-      const normalized = this.normalize(ingredient);
-      return !hidden.has(normalized);
+    const normalizedSeen = new Set<string>();
+    const chips: string[] = [];
+
+    const addChip = (value?: string) => {
+      if (!value) {
+        return;
+      }
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return;
+      }
+      const normalized = this.normalize(trimmed);
+      if (normalizedSeen.has(normalized)) {
+        return;
+      }
+      normalizedSeen.add(normalized);
+      if (!hidden.has(normalized)) {
+        chips.push(trimmed);
+      }
+    };
+
+    filters.forEach(addChip);
+    results?.recipes?.forEach((recipe) => {
+      (recipe.matchedIngredientNames ?? []).forEach(addChip);
     });
+
+    return chips;
   });
 
   constructor() {
@@ -97,11 +108,6 @@ export class RecipeComponent implements OnInit {
       this.loading.set(false);
     });
 
-    effect(() => {
-      this.ingredientState.results();
-      this.hiddenMatchedFilters.set(new Set());
-    });
-
   }
 
   ngOnInit() {
@@ -137,7 +143,8 @@ export class RecipeComponent implements OnInit {
 
   async removeMatchedIngredient(name: string) {
     const normalized = this.normalize(name);
-    const remainingMatches = this.matchedIngredients().filter((value) => this.normalize(value) !== normalized);
+    const filters = this.ingredientState.getActiveIngredientFilters();
+    const remainingFilters = filters.filter((value) => this.normalize(value) !== normalized);
 
     this.hiddenMatchedFilters.update((set) => {
       const next = new Set(set);
@@ -145,12 +152,12 @@ export class RecipeComponent implements OnInit {
       return next;
     });
 
-    if (!remainingMatches.length) {
+    if (!remainingFilters.length) {
       this.resetFilters();
       return;
     }
 
-    await this.applyTerms(remainingMatches, { asIngredientFilter: true });
+    await this.applyTerms(remainingFilters, { asIngredientFilter: true });
   }
 
   private async applyTerms(terms: string[], options?: IngredientSearchOptions) {
@@ -159,6 +166,7 @@ export class RecipeComponent implements OnInit {
       return;
     }
 
+    this.revealFilters(terms);
     this.ingredientState.previewTerms(terms, options);
     const asIngredientFilter = options?.asIngredientFilter ?? false;
     const rawText = asIngredientFilter ? '' : terms.join(', ');
@@ -173,9 +181,22 @@ export class RecipeComponent implements OnInit {
     this.error.set(null);
     this.loading.set(false);
     this.cdr.markForCheck();
+    this.hiddenMatchedFilters.set(new Set());
   }
 
   private normalize(value: string) {
     return value.trim().toLowerCase();
+  }
+
+  private revealFilters(terms: string[]) {
+    if (!terms.length) {
+      return;
+    }
+
+    this.hiddenMatchedFilters.update((set) => {
+      const next = new Set(set);
+      terms.forEach((term) => next.delete(this.normalize(term)));
+      return next;
+    });
   }
 }

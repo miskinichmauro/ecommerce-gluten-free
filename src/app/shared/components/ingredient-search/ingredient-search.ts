@@ -48,13 +48,30 @@ export class IngredientSearch {
   async commitSearch() {
     const raw = (this.searchControl.value ?? '').trim();
     const terms = this.buildSearchTerms(raw);
-    if (!terms.length) {
+    const existingFilters = this.state.getActiveIngredientFilters();
+
+    if (!terms.length && !existingFilters.length) {
+      this.closeSearchInput();
       this.state.clear();
       this.submitted.emit();
       return;
     }
-    await this.state.search(terms, terms.join(', '));
+
+    this.closeSearchInput();
     this.submitted.emit();
+
+    if (!terms.length) {
+      await this.state.search([], '', { includeIngredientFilters: existingFilters });
+      return;
+    }
+
+    const aggregatedFilters = Array.from(new Set([...existingFilters, ...terms]));
+    await this.state.search(terms, '', { includeIngredientFilters: aggregatedFilters });
+  }
+
+  private closeSearchInput() {
+    this.searchInput?.nativeElement.blur();
+    this.clearInput();
   }
 
   private buildSearchTerms(text: string): string[] {
